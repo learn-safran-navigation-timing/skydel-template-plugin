@@ -14,36 +14,13 @@ else()
     set(PLUGIN_INSTALL_DIR "$ENV{HOMEPATH}/Documents/Skydel-SDX/Plug-ins" CACHE PATH "Define the destination folder where the plug-in examples are installed")
 endif()
 
-### Dependencies
+# Dependencies
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
-### Project
+# Skydel Plugins SDK
 add_library(SkydelPlugin INTERFACE)
-
-target_include_directories(SkydelPlugin INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
-
+target_include_directories(SkydelPlugin INTERFACE include )
 target_link_libraries(SkydelPlugin INTERFACE Qt5::Core Qt5::Widgets)
 
-add_library(Skydel::SkydelPlugin ALIAS SkydelPlugin)
-
+# Skydel Plugin
 add_subdirectory(source)
-
-### Installation / Export
-include(CMakePackageConfigHelpers)
-
-configure_package_config_file(cmake/SkydelPluginConfig.cmake.in
-    ${CMAKE_BINARY_DIR}/cmake/SkydelPluginConfig.cmake
-    INSTALL_DESTINATION lib/cmake/SkydelPlugin
-    )
-
-install(
-    TARGETS SkydelPlugin # And others if there is
-    EXPORT SkydelPluginTargets
-    PUBLIC_HEADER DESTINATION include
-    )
-
-install(EXPORT SkydelPluginTargets NAMESPACE "Skydel::" DESTINATION lib/cmake/SkydelPlugin)
-
-install(FILES ${CMAKE_BINARY_DIR}/cmake/SkydelPluginConfig.cmake DESTINATION lib/cmake/SkydelPlugin)
-
-install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN *.h)
