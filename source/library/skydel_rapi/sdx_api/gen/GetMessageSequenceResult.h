@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 #include <vector>
 
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetMessageSequenceResult();
 
+      GetMessageSequenceResult(const std::string& signal, const std::vector<int>& sequence);
+
       GetMessageSequenceResult(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& sequence);
-  
+
+      static GetMessageSequenceResultPtr create(const std::string& signal, const std::vector<int>& sequence);
+
       static GetMessageSequenceResultPtr create(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& sequence);
       static GetMessageSequenceResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** signal ****
@@ -48,6 +55,7 @@ namespace Sdx
       std::vector<int> sequence() const;
       void setSequence(const std::vector<int>& sequence);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetMessageSequenceResult);
   }
 }
 

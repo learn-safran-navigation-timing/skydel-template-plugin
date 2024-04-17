@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 #include <vector>
 
@@ -27,16 +28,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetUdreiForEachSV();
 
       SetUdreiForEachSV(const std::string& system, const std::vector<int>& udreis);
-  
+
       static SetUdreiForEachSVPtr create(const std::string& system, const std::vector<int>& udreis);
       static SetUdreiForEachSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -50,6 +53,7 @@ namespace Sdx
       std::vector<int> udreis() const;
       void setUdreis(const std::vector<int>& udreis);
     };
+    
   }
 }
 

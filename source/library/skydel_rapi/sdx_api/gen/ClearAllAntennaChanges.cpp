@@ -1,11 +1,12 @@
+
+#include "ClearAllAntennaChanges.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ClearAllAntennaChanges
 ///
-#include "gen/ClearAllAntennaChanges.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const ClearAllAntennaChanges::CmdName = "ClearAllAntennaChanges";
     const char* const ClearAllAntennaChanges::Documentation = "Clear all antenna changes.";
+    const char* const ClearAllAntennaChanges::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ClearAllAntennaChanges);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ClearAllAntennaChanges);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ClearAllAntennaChanges);
 
 
     ClearAllAntennaChanges::ClearAllAntennaChanges()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     ClearAllAntennaChangesPtr ClearAllAntennaChanges::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string ClearAllAntennaChanges::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ClearAllAntennaChanges::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int ClearAllAntennaChanges::executePermission() const

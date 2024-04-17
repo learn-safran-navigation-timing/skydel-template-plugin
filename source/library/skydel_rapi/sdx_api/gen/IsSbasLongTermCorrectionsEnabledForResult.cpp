@@ -1,34 +1,54 @@
+
+#include "IsSbasLongTermCorrectionsEnabledForResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSbasLongTermCorrectionsEnabledForResult
 ///
-#include "gen/IsSbasLongTermCorrectionsEnabledForResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSbasLongTermCorrectionsEnabledForResult::CmdName = "IsSbasLongTermCorrectionsEnabledForResult";
-    const char* const IsSbasLongTermCorrectionsEnabledForResult::Documentation = "Result of IsSbasLongTermCorrectionsEnabledFor.";
+    const char* const IsSbasLongTermCorrectionsEnabledForResult::Documentation = "Result of IsSbasLongTermCorrectionsEnabledFor.\n"
+      "\n"
+      "Name      Type   Description\n"
+      "--------- ------ -------------------------------------\n"
+      "System    string As of today, only \"GPS\" is supported.\n"
+      "IsEnabled bool   True if corrections are enabled.";
+    const char* const IsSbasLongTermCorrectionsEnabledForResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsSbasLongTermCorrectionsEnabledForResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSbasLongTermCorrectionsEnabledForResult);
 
 
     IsSbasLongTermCorrectionsEnabledForResult::IsSbasLongTermCorrectionsEnabledForResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsSbasLongTermCorrectionsEnabledForResult::IsSbasLongTermCorrectionsEnabledForResult(CommandBasePtr relatedCommand, const std::string& system, bool isEnabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsSbasLongTermCorrectionsEnabledForResult::IsSbasLongTermCorrectionsEnabledForResult(const std::string& system, bool isEnabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
       setIsEnabled(isEnabled);
     }
 
+    IsSbasLongTermCorrectionsEnabledForResult::IsSbasLongTermCorrectionsEnabledForResult(CommandBasePtr relatedCommand, const std::string& system, bool isEnabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setIsEnabled(isEnabled);
+    }
+
+
+    IsSbasLongTermCorrectionsEnabledForResultPtr IsSbasLongTermCorrectionsEnabledForResult::create(const std::string& system, bool isEnabled)
+    {
+      return std::make_shared<IsSbasLongTermCorrectionsEnabledForResult>(system, isEnabled);
+    }
 
     IsSbasLongTermCorrectionsEnabledForResultPtr IsSbasLongTermCorrectionsEnabledForResult::create(CommandBasePtr relatedCommand, const std::string& system, bool isEnabled)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string IsSbasLongTermCorrectionsEnabledForResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSbasLongTermCorrectionsEnabledForResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "IsEnabled"}; 
+      return names; 
+    }
 
 
     std::string IsSbasLongTermCorrectionsEnabledForResult::system() const

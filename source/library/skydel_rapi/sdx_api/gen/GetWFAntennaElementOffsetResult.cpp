@@ -1,28 +1,40 @@
+
+#include "GetWFAntennaElementOffsetResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetWFAntennaElementOffsetResult
 ///
-#include "gen/GetWFAntennaElementOffsetResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetWFAntennaElementOffsetResult::CmdName = "GetWFAntennaElementOffsetResult";
-    const char* const GetWFAntennaElementOffsetResult::Documentation = "Result of GetWFAntennaElementOffset.";
+    const char* const GetWFAntennaElementOffsetResult::Documentation = "Result of GetWFAntennaElementOffset.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ -------------------------------------------------------\n"
+      "X       double WF Element X offset in the CRPA antenna frame (meter)\n"
+      "Y       double WF Element Y offset in the CRPA antenna frame (meter)\n"
+      "Z       double WF Element Z offset in the CRPA antenna frame (meter)\n"
+      "Yaw     double WF Element Yaw offset in the CRPA antenna frame (rad)\n"
+      "Pitch   double WF Element Pitch offset in the CRPA antenna frame (rad)\n"
+      "Roll    double WF Element Roll offset in the CRPA antenna frame (rad)\n"
+      "Element int    One-based index for element in antenna.";
+    const char* const GetWFAntennaElementOffsetResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetWFAntennaElementOffsetResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetWFAntennaElementOffsetResult);
 
 
     GetWFAntennaElementOffsetResult::GetWFAntennaElementOffsetResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetWFAntennaElementOffsetResult::GetWFAntennaElementOffsetResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, int element)
-      : CommandResult(CmdName, relatedCommand)
+    GetWFAntennaElementOffsetResult::GetWFAntennaElementOffsetResult(double x, double y, double z, double yaw, double pitch, double roll, int element)
+      : CommandResult(CmdName, TargetId)
     {
 
       setX(x);
@@ -34,6 +46,24 @@ namespace Sdx
       setElement(element);
     }
 
+    GetWFAntennaElementOffsetResult::GetWFAntennaElementOffsetResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, int element)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setX(x);
+      setY(y);
+      setZ(z);
+      setYaw(yaw);
+      setPitch(pitch);
+      setRoll(roll);
+      setElement(element);
+    }
+
+
+    GetWFAntennaElementOffsetResultPtr GetWFAntennaElementOffsetResult::create(double x, double y, double z, double yaw, double pitch, double roll, int element)
+    {
+      return std::make_shared<GetWFAntennaElementOffsetResult>(x, y, z, yaw, pitch, roll, element);
+    }
 
     GetWFAntennaElementOffsetResultPtr GetWFAntennaElementOffsetResult::create(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, int element)
     {
@@ -61,6 +91,12 @@ namespace Sdx
     }
 
     std::string GetWFAntennaElementOffsetResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetWFAntennaElementOffsetResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"X", "Y", "Z", "Yaw", "Pitch", "Roll", "Element"}; 
+      return names; 
+    }
 
 
     double GetWFAntennaElementOffsetResult::x() const

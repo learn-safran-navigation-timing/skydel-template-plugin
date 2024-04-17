@@ -1,34 +1,54 @@
+
+#include "GetIntTxVehicleTypeResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxVehicleTypeResult
 ///
-#include "gen/GetIntTxVehicleTypeResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxVehicleTypeResult::CmdName = "GetIntTxVehicleTypeResult";
-    const char* const GetIntTxVehicleTypeResult::Documentation = "Result of GetIntTxVehicleType.";
+    const char* const GetIntTxVehicleTypeResult::Documentation = "Result of GetIntTxVehicleType.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ -----------------------------------------------------------\n"
+      "Type string Vehicle type (\"Ground / Water\" or \"Airborne / Spaceborne\").\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetIntTxVehicleTypeResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxVehicleTypeResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxVehicleTypeResult);
 
 
     GetIntTxVehicleTypeResult::GetIntTxVehicleTypeResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxVehicleTypeResult::GetIntTxVehicleTypeResult(CommandBasePtr relatedCommand, const std::string& type, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxVehicleTypeResult::GetIntTxVehicleTypeResult(const std::string& type, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setType(type);
       setId(id);
     }
 
+    GetIntTxVehicleTypeResult::GetIntTxVehicleTypeResult(CommandBasePtr relatedCommand, const std::string& type, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setType(type);
+      setId(id);
+    }
+
+
+    GetIntTxVehicleTypeResultPtr GetIntTxVehicleTypeResult::create(const std::string& type, const std::string& id)
+    {
+      return std::make_shared<GetIntTxVehicleTypeResult>(type, id);
+    }
 
     GetIntTxVehicleTypeResultPtr GetIntTxVehicleTypeResult::create(CommandBasePtr relatedCommand, const std::string& type, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetIntTxVehicleTypeResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxVehicleTypeResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Type", "Id"}; 
+      return names; 
+    }
 
 
     std::string GetIntTxVehicleTypeResult::type() const

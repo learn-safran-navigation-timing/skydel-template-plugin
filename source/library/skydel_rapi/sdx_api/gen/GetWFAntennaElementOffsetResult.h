@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 
 
 namespace Sdx
@@ -31,16 +32,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetWFAntennaElementOffsetResult();
 
+      GetWFAntennaElementOffsetResult(double x, double y, double z, double yaw, double pitch, double roll, int element);
+
       GetWFAntennaElementOffsetResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, int element);
-  
+
+      static GetWFAntennaElementOffsetResultPtr create(double x, double y, double z, double yaw, double pitch, double roll, int element);
+
       static GetWFAntennaElementOffsetResultPtr create(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, int element);
       static GetWFAntennaElementOffsetResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** x ****
@@ -77,6 +84,7 @@ namespace Sdx
       int element() const;
       void setElement(int element);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetWFAntennaElementOffsetResult);
   }
 }
 

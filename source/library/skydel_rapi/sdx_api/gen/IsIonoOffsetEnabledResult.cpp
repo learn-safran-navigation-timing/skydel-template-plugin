@@ -1,33 +1,51 @@
+
+#include "IsIonoOffsetEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsIonoOffsetEnabledResult
 ///
-#include "gen/IsIonoOffsetEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsIonoOffsetEnabledResult::CmdName = "IsIonoOffsetEnabledResult";
-    const char* const IsIonoOffsetEnabledResult::Documentation = "Result of IsIonoOffsetEnabled.";
+    const char* const IsIonoOffsetEnabledResult::Documentation = "Result of IsIonoOffsetEnabled.\n"
+      "\n"
+      "Name      Type Description\n"
+      "--------- ---- ---------------------------------------------\n"
+      "IsEnabled bool True if offsets are applied on the ionosphere";
+    const char* const IsIonoOffsetEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsIonoOffsetEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsIonoOffsetEnabledResult);
 
 
     IsIonoOffsetEnabledResult::IsIonoOffsetEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsIonoOffsetEnabledResult::IsIonoOffsetEnabledResult(CommandBasePtr relatedCommand, bool isEnabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsIonoOffsetEnabledResult::IsIonoOffsetEnabledResult(bool isEnabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIsEnabled(isEnabled);
     }
 
+    IsIonoOffsetEnabledResult::IsIonoOffsetEnabledResult(CommandBasePtr relatedCommand, bool isEnabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIsEnabled(isEnabled);
+    }
+
+
+    IsIonoOffsetEnabledResultPtr IsIonoOffsetEnabledResult::create(bool isEnabled)
+    {
+      return std::make_shared<IsIonoOffsetEnabledResult>(isEnabled);
+    }
 
     IsIonoOffsetEnabledResultPtr IsIonoOffsetEnabledResult::create(CommandBasePtr relatedCommand, bool isEnabled)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsIonoOffsetEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsIonoOffsetEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"IsEnabled"}; 
+      return names; 
+    }
 
 
     bool IsIonoOffsetEnabledResult::isEnabled() const

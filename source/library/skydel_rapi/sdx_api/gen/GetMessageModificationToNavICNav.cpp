@@ -1,33 +1,39 @@
+
+#include "GetMessageModificationToNavICNav.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageModificationToNavICNav
 ///
-#include "gen/GetMessageModificationToNavICNav.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageModificationToNavICNav::CmdName = "GetMessageModificationToNavICNav";
-    const char* const GetMessageModificationToNavICNav::Documentation = "Get infos about the NavIC NAV message modification with this ID.";
+    const char* const GetMessageModificationToNavICNav::Documentation = "Get infos about the NavIC NAV message modification with this ID.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Unique identifier of the event";
+    const char* const GetMessageModificationToNavICNav::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetMessageModificationToNavICNav);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetMessageModificationToNavICNav);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageModificationToNavICNav);
 
 
     GetMessageModificationToNavICNav::GetMessageModificationToNavICNav()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetMessageModificationToNavICNav::GetMessageModificationToNavICNav(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetMessageModificationToNavICNavPtr GetMessageModificationToNavICNav::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetMessageModificationToNavICNav::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageModificationToNavICNav::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetMessageModificationToNavICNav::executePermission() const

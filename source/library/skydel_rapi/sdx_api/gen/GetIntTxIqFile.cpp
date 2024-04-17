@@ -1,34 +1,41 @@
+
+#include "GetIntTxIqFile.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxIqFile
 ///
-#include "gen/GetIntTxIqFile.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxIqFile::CmdName = "GetIntTxIqFile";
-    const char* const GetIntTxIqFile::Documentation = "Get IQ file signal interference.";
+    const char* const GetIntTxIqFile::Documentation = "Get IQ file signal interference.\n"
+      "\n"
+      "Name          Type   Description\n"
+      "------------- ------ ------------------------------\n"
+      "TransmitterId string Transmitter unique identifier.\n"
+      "SignalId      string AWGN unique identifier.";
+    const char* const GetIntTxIqFile::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTxIqFile);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxIqFile);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxIqFile);
 
 
     GetIntTxIqFile::GetIntTxIqFile()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTxIqFile::GetIntTxIqFile(const std::string& transmitterId, const std::string& signalId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTransmitterId(transmitterId);
       setSignalId(signalId);
     }
-
 
     GetIntTxIqFilePtr GetIntTxIqFile::create(const std::string& transmitterId, const std::string& signalId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetIntTxIqFile::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxIqFile::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"TransmitterId", "SignalId"}; 
+      return names; 
+    }
 
 
     int GetIntTxIqFile::executePermission() const

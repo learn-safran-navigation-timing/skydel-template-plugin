@@ -1,33 +1,51 @@
+
+#include "GetTropoModelResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetTropoModelResult
 ///
-#include "gen/GetTropoModelResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetTropoModelResult::CmdName = "GetTropoModelResult";
-    const char* const GetTropoModelResult::Documentation = "Result of GetTropoModel.";
+    const char* const GetTropoModelResult::Documentation = "Result of GetTropoModel.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ -----------------------------------------------------------------\n"
+      "Model string Tropospheric model (\"None\", \"Saastamoinen\", \"Stanag\" or \"DO-229\")";
+    const char* const GetTropoModelResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetTropoModelResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetTropoModelResult);
 
 
     GetTropoModelResult::GetTropoModelResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetTropoModelResult::GetTropoModelResult(CommandBasePtr relatedCommand, const std::string& model)
-      : CommandResult(CmdName, relatedCommand)
+    GetTropoModelResult::GetTropoModelResult(const std::string& model)
+      : CommandResult(CmdName, TargetId)
     {
 
       setModel(model);
     }
 
+    GetTropoModelResult::GetTropoModelResult(CommandBasePtr relatedCommand, const std::string& model)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setModel(model);
+    }
+
+
+    GetTropoModelResultPtr GetTropoModelResult::create(const std::string& model)
+    {
+      return std::make_shared<GetTropoModelResult>(model);
+    }
 
     GetTropoModelResultPtr GetTropoModelResult::create(CommandBasePtr relatedCommand, const std::string& model)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetTropoModelResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetTropoModelResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Model"}; 
+      return names; 
+    }
 
 
     std::string GetTropoModelResult::model() const

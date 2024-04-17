@@ -1,33 +1,51 @@
+
+#include "GetOfficialLeapSecondResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetOfficialLeapSecondResult
 ///
-#include "gen/GetOfficialLeapSecondResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetOfficialLeapSecondResult::CmdName = "GetOfficialLeapSecondResult";
-    const char* const GetOfficialLeapSecondResult::Documentation = "Result of GetOfficialLeapSecond";
+    const char* const GetOfficialLeapSecondResult::Documentation = "Result of GetOfficialLeapSecond\n"
+      "\n"
+      "Name       Type Description\n"
+      "---------- ---- -----------------\n"
+      "LeapSecond int  Leap second value";
+    const char* const GetOfficialLeapSecondResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetOfficialLeapSecondResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetOfficialLeapSecondResult);
 
 
     GetOfficialLeapSecondResult::GetOfficialLeapSecondResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetOfficialLeapSecondResult::GetOfficialLeapSecondResult(CommandBasePtr relatedCommand, int leapSecond)
-      : CommandResult(CmdName, relatedCommand)
+    GetOfficialLeapSecondResult::GetOfficialLeapSecondResult(int leapSecond)
+      : CommandResult(CmdName, TargetId)
     {
 
       setLeapSecond(leapSecond);
     }
 
+    GetOfficialLeapSecondResult::GetOfficialLeapSecondResult(CommandBasePtr relatedCommand, int leapSecond)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setLeapSecond(leapSecond);
+    }
+
+
+    GetOfficialLeapSecondResultPtr GetOfficialLeapSecondResult::create(int leapSecond)
+    {
+      return std::make_shared<GetOfficialLeapSecondResult>(leapSecond);
+    }
 
     GetOfficialLeapSecondResultPtr GetOfficialLeapSecondResult::create(CommandBasePtr relatedCommand, int leapSecond)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetOfficialLeapSecondResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetOfficialLeapSecondResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"LeapSecond"}; 
+      return names; 
+    }
 
 
     int GetOfficialLeapSecondResult::leapSecond() const

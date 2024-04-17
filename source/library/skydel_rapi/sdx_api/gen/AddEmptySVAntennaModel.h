@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -12,9 +13,9 @@ namespace Sdx
     /// Create an empty space vehicle antenna model.
     ///
     /// Name   Type   Description
-    /// ------ ------ ----------------------------------------------------------------
+    /// ------ ------ --------------------------------------------------------------------------
     /// Name   string SV antenna model name
-    /// System string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     ///
 
     class AddEmptySVAntennaModel;
@@ -26,16 +27,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       AddEmptySVAntennaModel();
 
       AddEmptySVAntennaModel(const std::string& name, const std::string& system);
-  
+
       static AddEmptySVAntennaModelPtr create(const std::string& name, const std::string& system);
       static AddEmptySVAntennaModelPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -49,6 +52,7 @@ namespace Sdx
       std::string system() const;
       void setSystem(const std::string& system);
     };
+    
   }
 }
 

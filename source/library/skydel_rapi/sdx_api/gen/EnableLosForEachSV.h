@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 #include <vector>
 
@@ -14,7 +15,7 @@ namespace Sdx
     ///
     /// Name    Type       Description
     /// ------- ---------- -----------------------------------------------------------------------------------------------------------
-    /// System  string     "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System  string     "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// Enabled array bool Direct Line of Sight enabled or not. Zero based index (index 0 => SV ID 1, index 1 => second SV ID 2, etc).
     ///
 
@@ -27,16 +28,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       EnableLosForEachSV();
 
       EnableLosForEachSV(const std::string& system, const std::vector<bool>& enabled);
-  
+
       static EnableLosForEachSVPtr create(const std::string& system, const std::vector<bool>& enabled);
       static EnableLosForEachSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -50,6 +53,7 @@ namespace Sdx
       std::vector<bool> enabled() const;
       void setEnabled(const std::vector<bool>& enabled);
     };
+    
   }
 }
 

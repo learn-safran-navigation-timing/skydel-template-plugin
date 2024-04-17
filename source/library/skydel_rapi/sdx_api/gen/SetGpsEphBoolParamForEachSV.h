@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "sdx_optional.h"
 #include <string>
 #include <vector>
@@ -11,6 +12,8 @@ namespace Sdx
   namespace Cmd
   {
     ///
+    /// Please note the command SetGpsEphBoolParamForEachSV is deprecated since 23.11. You may use SetConstellationParameterForSV.
+    /// 
     /// Set GPS ephemeris boolean parameter value for all satellites
     ///
     /// Name        Type            Description
@@ -29,16 +32,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
+
+      static const char* const Deprecated;
 
 
       SetGpsEphBoolParamForEachSV();
 
       SetGpsEphBoolParamForEachSV(const std::string& paramName, const std::vector<bool>& val, const Sdx::optional<std::string>& dataSetName = {});
-  
+
       static SetGpsEphBoolParamForEachSVPtr create(const std::string& paramName, const std::vector<bool>& val, const Sdx::optional<std::string>& dataSetName = {});
       static SetGpsEphBoolParamForEachSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
+
+      virtual Sdx::optional<std::string> deprecated() const override;
 
       virtual int executePermission() const override;
 
@@ -57,6 +66,7 @@ namespace Sdx
       Sdx::optional<std::string> dataSetName() const;
       void setDataSetName(const Sdx::optional<std::string>& dataSetName);
     };
+    
   }
 }
 

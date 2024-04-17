@@ -1,34 +1,41 @@
+
+#include "IsRFOutputEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsRFOutputEnabled
 ///
-#include "gen/IsRFOutputEnabled.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsRFOutputEnabled::CmdName = "IsRFOutputEnabled";
-    const char* const IsRFOutputEnabled::Documentation = "Tells if the RF output is enabled or disabled for the specified satellite.";
+    const char* const IsRFOutputEnabled::Documentation = "Tells if the RF output is enabled or disabled for the specified satellite.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId   int    The satellite's SV ID";
+    const char* const IsRFOutputEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsRFOutputEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsRFOutputEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsRFOutputEnabled);
 
 
     IsRFOutputEnabled::IsRFOutputEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     IsRFOutputEnabled::IsRFOutputEnabled(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     IsRFOutputEnabledPtr IsRFOutputEnabled::create(const std::string& system, int svId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string IsRFOutputEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsRFOutputEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int IsRFOutputEnabled::executePermission() const

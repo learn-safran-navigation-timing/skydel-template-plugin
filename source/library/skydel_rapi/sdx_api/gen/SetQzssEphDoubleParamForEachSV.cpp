@@ -1,35 +1,47 @@
+
+#include "SetQzssEphDoubleParamForEachSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetQzssEphDoubleParamForEachSV
 ///
-#include "gen/SetQzssEphDoubleParamForEachSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetQzssEphDoubleParamForEachSV::CmdName = "SetQzssEphDoubleParamForEachSV";
-    const char* const SetQzssEphDoubleParamForEachSV::Documentation = "Please note the command SetQzssEphemerisDoubleParams is deprecated since 21.3. You may use SetQzssEphDoubleParamForEachSV.\n\nSet QZSS ephemeris parameter value for all satellites";
+    const char* const SetQzssEphDoubleParamForEachSV::Documentation = "Please note the command SetQzssEphDoubleParamForEachSV is deprecated since 23.11. You may use SetConstellationParameterForSV.\n"
+      "\n"
+      "Set QZSS ephemeris parameter value for all satellites\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- --------------------------------------------------------------------------------------------------\n"
+      "ParamName   string          Refer to SetQzssEphDoubleParamForSV for accepted names\n"
+      "Val         array double    Parameter value for each satellite. Zero based index (index 0 => SV ID 1, index 1 => SV ID 2, etc)\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetQzssEphDoubleParamForEachSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetQzssEphDoubleParamForEachSV);
+    const char* const SetQzssEphDoubleParamForEachSV::Deprecated = "Please note the command SetQzssEphDoubleParamForEachSV is deprecated since 23.11. You may use SetConstellationParameterForSV.";
+
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetQzssEphDoubleParamForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetQzssEphDoubleParamForEachSV);
 
 
     SetQzssEphDoubleParamForEachSV::SetQzssEphDoubleParamForEachSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetQzssEphDoubleParamForEachSV::SetQzssEphDoubleParamForEachSV(const std::string& paramName, const std::vector<double>& val, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setParamName(paramName);
       setVal(val);
       setDataSetName(dataSetName);
     }
-
 
     SetQzssEphDoubleParamForEachSVPtr SetQzssEphDoubleParamForEachSV::create(const std::string& paramName, const std::vector<double>& val, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +65,14 @@ namespace Sdx
     }
 
     std::string SetQzssEphDoubleParamForEachSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetQzssEphDoubleParamForEachSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ParamName", "Val", "DataSetName"}; 
+      return names; 
+    }
+
+    Sdx::optional<std::string> SetQzssEphDoubleParamForEachSV::deprecated() const { return Sdx::optional<std::string>{Deprecated}; }
 
 
     int SetQzssEphDoubleParamForEachSV::executePermission() const

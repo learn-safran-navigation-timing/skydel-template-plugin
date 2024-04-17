@@ -1,34 +1,41 @@
+
+#include "SetSpoofTxIgnoreRxAntennaPatterns.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSpoofTxIgnoreRxAntennaPatterns
 ///
-#include "gen/SetSpoofTxIgnoreRxAntennaPatterns.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSpoofTxIgnoreRxAntennaPatterns::CmdName = "SetSpoofTxIgnoreRxAntennaPatterns";
-    const char* const SetSpoofTxIgnoreRxAntennaPatterns::Documentation = "Set whether a spoofer should ignore the receiver's antenna patterns (gain and phase).";
+    const char* const SetSpoofTxIgnoreRxAntennaPatterns::Documentation = "Set whether a spoofer should ignore the receiver's antenna patterns (gain and phase).\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "Ignore bool   If true, the receiver's antenna patterns (gain and phase) will be ignored.\n"
+      "Id     string Transmitter unique identifier.";
+    const char* const SetSpoofTxIgnoreRxAntennaPatterns::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSpoofTxIgnoreRxAntennaPatterns);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSpoofTxIgnoreRxAntennaPatterns);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSpoofTxIgnoreRxAntennaPatterns);
 
 
     SetSpoofTxIgnoreRxAntennaPatterns::SetSpoofTxIgnoreRxAntennaPatterns()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSpoofTxIgnoreRxAntennaPatterns::SetSpoofTxIgnoreRxAntennaPatterns(bool ignore, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setIgnore(ignore);
       setId(id);
     }
-
 
     SetSpoofTxIgnoreRxAntennaPatternsPtr SetSpoofTxIgnoreRxAntennaPatterns::create(bool ignore, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSpoofTxIgnoreRxAntennaPatterns::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSpoofTxIgnoreRxAntennaPatterns::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ignore", "Id"}; 
+      return names; 
+    }
 
 
     int SetSpoofTxIgnoreRxAntennaPatterns::executePermission() const

@@ -1,34 +1,41 @@
+
+#include "SetSbasServiceHealthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSbasServiceHealthForSV
 ///
-#include "gen/SetSbasServiceHealthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSbasServiceHealthForSV::CmdName = "SetSbasServiceHealthForSV";
-    const char* const SetSbasServiceHealthForSV::Documentation = "Apply service provider for a satellite";
+    const char* const SetSbasServiceHealthForSV::Documentation = "Apply service provider for a satellite\n"
+      "\n"
+      "Name   Type Description\n"
+      "------ ---- ---------------------\n"
+      "SvId   int  The satellite's SV ID\n"
+      "Health int  The service provider";
+    const char* const SetSbasServiceHealthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSbasServiceHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSbasServiceHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSbasServiceHealthForSV);
 
 
     SetSbasServiceHealthForSV::SetSbasServiceHealthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSbasServiceHealthForSV::SetSbasServiceHealthForSV(int svId, int health)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setHealth(health);
     }
-
 
     SetSbasServiceHealthForSVPtr SetSbasServiceHealthForSV::create(int svId, int health)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSbasServiceHealthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSbasServiceHealthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health"}; 
+      return names; 
+    }
 
 
     int SetSbasServiceHealthForSV::executePermission() const

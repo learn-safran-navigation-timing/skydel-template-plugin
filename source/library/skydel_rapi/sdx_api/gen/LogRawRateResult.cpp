@@ -1,33 +1,51 @@
+
+#include "LogRawRateResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of LogRawRateResult
 ///
-#include "gen/LogRawRateResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const LogRawRateResult::CmdName = "LogRawRateResult";
-    const char* const LogRawRateResult::Documentation = "Result of GetLogRawRate.";
+    const char* const LogRawRateResult::Documentation = "Result of GetLogRawRate.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- --------------------------------------\n"
+      "Rate int  Accepted rates are 10, 100 and 1000 Hz";
+    const char* const LogRawRateResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(LogRawRateResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(LogRawRateResult);
 
 
     LogRawRateResult::LogRawRateResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    LogRawRateResult::LogRawRateResult(CommandBasePtr relatedCommand, int rate)
-      : CommandResult(CmdName, relatedCommand)
+    LogRawRateResult::LogRawRateResult(int rate)
+      : CommandResult(CmdName, TargetId)
     {
 
       setRate(rate);
     }
 
+    LogRawRateResult::LogRawRateResult(CommandBasePtr relatedCommand, int rate)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setRate(rate);
+    }
+
+
+    LogRawRateResultPtr LogRawRateResult::create(int rate)
+    {
+      return std::make_shared<LogRawRateResult>(rate);
+    }
 
     LogRawRateResultPtr LogRawRateResult::create(CommandBasePtr relatedCommand, int rate)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string LogRawRateResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& LogRawRateResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Rate"}; 
+      return names; 
+    }
 
 
     int LogRawRateResult::rate() const

@@ -1,28 +1,36 @@
+
+#include "GetGpuResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGpuResult
 ///
-#include "gen/GetGpuResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGpuResult::CmdName = "GetGpuResult";
-    const char* const GetGpuResult::Documentation = "Result of GetGpu.";
+    const char* const GetGpuResult::Documentation = "Result of GetGpu.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------\n"
+      "GpuIdx int    The gpu associated with the RF output.\n"
+      "Output int    Output index (zero based)\n"
+      "Id     string Target identifier";
+    const char* const GetGpuResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetGpuResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGpuResult);
 
 
     GetGpuResult::GetGpuResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetGpuResult::GetGpuResult(CommandBasePtr relatedCommand, int gpuIdx, int output, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetGpuResult::GetGpuResult(int gpuIdx, int output, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setGpuIdx(gpuIdx);
@@ -30,6 +38,20 @@ namespace Sdx
       setId(id);
     }
 
+    GetGpuResult::GetGpuResult(CommandBasePtr relatedCommand, int gpuIdx, int output, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setGpuIdx(gpuIdx);
+      setOutput(output);
+      setId(id);
+    }
+
+
+    GetGpuResultPtr GetGpuResult::create(int gpuIdx, int output, const std::string& id)
+    {
+      return std::make_shared<GetGpuResult>(gpuIdx, output, id);
+    }
 
     GetGpuResultPtr GetGpuResult::create(CommandBasePtr relatedCommand, int gpuIdx, int output, const std::string& id)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetGpuResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGpuResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"GpuIdx", "Output", "Id"}; 
+      return names; 
+    }
 
 
     int GetGpuResult::gpuIdx() const

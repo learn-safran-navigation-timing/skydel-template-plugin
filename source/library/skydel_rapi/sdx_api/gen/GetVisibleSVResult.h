@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 #include <vector>
 
@@ -13,8 +14,8 @@ namespace Sdx
     /// Result of GetVisibleSV.
     ///
     /// Name   Type      Description
-    /// ------ --------- -----------------------------------------------------------------------------------
-    /// System string    The system, can be "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// ------ --------- ---------------------------------------------------------------------------------------------
+    /// System string    The system, can be "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// SvId   array int A list containing the visible satellites' SV IDs
     ///
 
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetVisibleSVResult();
 
+      GetVisibleSVResult(const std::string& system, const std::vector<int>& svId);
+
       GetVisibleSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<int>& svId);
-  
+
+      static GetVisibleSVResultPtr create(const std::string& system, const std::vector<int>& svId);
+
       static GetVisibleSVResultPtr create(CommandBasePtr relatedCommand, const std::string& system, const std::vector<int>& svId);
       static GetVisibleSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** system ****
@@ -48,6 +55,7 @@ namespace Sdx
       std::vector<int> svId() const;
       void setSvId(const std::vector<int>& svId);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetVisibleSVResult);
   }
 }
 

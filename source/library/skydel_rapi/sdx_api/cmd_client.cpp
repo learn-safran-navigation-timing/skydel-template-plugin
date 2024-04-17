@@ -9,20 +9,21 @@
 #include <winsock2.h>
 #endif
 #else
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 #endif
 
-#include "command_base.h"
-#include "command_result.h"
-#include "command_result_factory.h"
-#include "all_commands.h"
-#include <iostream>
 #include <chrono>
+#include <iostream>
+
+#include "all_commands.h"
+#include "command_base.h"
+#include "command_factory.h"
+#include "command_result.h"
 
 #define CMD_BLOCK_SIZE 65535
 
@@ -60,7 +61,6 @@ CmdClient::CmdClient(bool exceptionOnError) : m(new Pimpl)
 #endif
 }
 
-
 CmdClient::~CmdClient(void)
 {
   m->stop_request = true;
@@ -74,7 +74,7 @@ CmdClient::~CmdClient(void)
 
 int CmdClient::port() const
 {
-  return (int)m->serv_addr.sin_port;
+  return static_cast<int>(m->serv_addr.sin_port);
 }
 
 const std::string& CmdClient::address() const
@@ -113,15 +113,15 @@ bool CmdClient::connectToHost(const std::string& ip, int port)
   memset(&m->serv_addr, 0, sizeof(m->serv_addr));
   m->serv_addr.sin_family = AF_INET;
   memcpy(&m->serv_addr.sin_addr.s_addr, m->server->h_addr, m->server->h_length);
-  m->serv_addr.sin_port = htons(port);
+  m->serv_addr.sin_port = htons(static_cast<u_short>(port));
 
 #ifndef _WIN32
   // Add a 10 second timeout to the socket SEND calls
-  timeval timeout{ 10, 0 };
+  timeval timeout {10, 0};
   setsockopt(m->s, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 #endif
 
-  if (connect(m->s, (struct sockaddr*)&m->serv_addr, sizeof(m->serv_addr)) < 0)
+  if (connect(m->s, reinterpret_cast<sockaddr*>(&m->serv_addr), sizeof(m->serv_addr)) < 0)
   {
     closeSocket();
     errorMessage("Unable to connect to the Simulator. Please, make sure that the simulator process is running");
@@ -143,11 +143,11 @@ bool CmdClient::isVerbose() const
 
 void CmdClient::errorMessage(const std::string& msg)
 {
-   m->error_message = msg;
-   if (m->exceptionOnError)
-     throw std::runtime_error(msg);
-   if (m->verbose)
-     std::cout << msg << std::endl;
+  m->error_message = msg;
+  if (m->exceptionOnError)
+    throw std::runtime_error(msg);
+  if (m->verbose)
+    std::cout << msg << std::endl;
 }
 
 bool CmdClient::isConnected() const
@@ -158,24 +158,24 @@ bool CmdClient::isConnected() const
 int CmdClient::getServerApiVersion()
 {
   int msgSize = 7;
-  ((uint16_t*)&m->message2Send)[0] = msgSize - 2;
-  m->message2Send[2] = (char)CmdMsgId_ApiVersion;
-  ((uint32_t*)&m->message2Send[3])[0] = COMMANDS_API_VERSION;
+  reinterpret_cast<uint16_t*>(&m->message2Send)[0] = msgSize - 2;
+  m->message2Send[2] = static_cast<char>(CmdMsgId_ApiVersion);
+  reinterpret_cast<uint32_t*>(&m->message2Send[3])[0] = Cmd::COMMANDS_API_VERSION;
 
-  if(sendMessage(m->message2Send, msgSize))
+  if (sendMessage(m->message2Send, msgSize))
   {
     while (true)
     {
       if (!receiveMessage())
         return 0;
 
-      int msgId = (int)m->message[2];
+      int msgId = static_cast<int>(m->message[2]);
       switch (msgId)
       {
-      case CmdMsgId_ApiVersion:
-        return ((uint32_t*)&m->message[3])[0];
-      default:
-        break;
+        case CmdMsgId_ApiVersion:
+          return reinterpret_cast<uint32_t*>(&m->message[3])[0];
+        default:
+          break;
       }
     }
   }
@@ -186,11 +186,11 @@ int CmdClient::getServerApiVersion()
 bool CmdClient::sendCommand(CommandBasePtr cmd)
 {
   std::string jsonStr = cmd->toString();
-  m->message2Send[2] = (char)CmdMsgId_Command;
-  memcpy(&m->message2Send[3], jsonStr.c_str(), jsonStr.size()+1);
+  m->message2Send[2] = static_cast<char>(CmdMsgId_Command);
+  memcpy(&m->message2Send[3], jsonStr.c_str(), jsonStr.size() + 1);
 
-  int msgSize = (int)jsonStr.size() + 4;
-  ((uint16_t*)&m->message2Send)[0] = msgSize - 2;
+  int msgSize = static_cast<int>(jsonStr.size()) + 4;
+  reinterpret_cast<uint16_t*>(&m->message2Send)[0] = msgSize - 2;
 
   return sendMessage(m->message2Send, msgSize);
 }
@@ -205,26 +205,28 @@ CommandResultPtr CmdClient::waitCommand(CommandBasePtr cmd)
       throw std::runtime_error("Failed to receive command result. Is server still running?");
     }
 
-    int msgId = (int)m->message[2];
+    int msgId = static_cast<int>(m->message[2]);
     switch (msgId)
     {
-    case CmdMsgId_Result:
-    {
-      char* msgJson = &m->message[7];
-      std::string errorMsg;
-      CommandResultPtr result = CommandResultFactory::instance()->createCommandResult(msgJson, &errorMsg);
-      if(!result)
+      case CmdMsgId_Result:
       {
-        std::cout << "Failed to parse " << msgJson << std::endl;
-        std::cout << errorMsg << std::endl;
-        throw std::runtime_error(errorMsg.c_str());
+        char* msgJson = &m->message[7];
+        std::string errorMsg;
+        if (auto result = CommandFactory::instance()->createCommandResult(msgJson, &errorMsg))
+        {
+          if (cmd->uuid() == result->relatedCommand()->uuid())
+            return result;
+        }
+        else
+        {
+          std::cout << "Failed to parse " << msgJson << std::endl;
+          std::cout << errorMsg << std::endl;
+          throw std::runtime_error(errorMsg.c_str());
+        }
+        break;
       }
-      if (cmd->uuid() == result->relatedCommand()->uuid())
-        return result;
-      break;
-    }
-    default:
-      break;
+      default:
+        break;
     }
   }
 }
@@ -242,10 +244,9 @@ bool CmdClient::receiveMessage()
       checkStopRequest();
       return false;
     }
-  }
-  while (rx < 2);
-  
-  int bytesToRead = (int)((uint16_t*)&m->message[0])[0] + 2;
+  } while (rx < 2);
+
+  int bytesToRead = static_cast<int>(reinterpret_cast<uint16_t*>(&m->message[0])[0]) + 2;
   char* messagePtr = m->message;
 
   do
@@ -260,8 +261,7 @@ bool CmdClient::receiveMessage()
 
     bytesToRead -= rx;
     messagePtr += rx;
-  }
-  while (bytesToRead > 0);
+  } while (bytesToRead > 0);
 
   return true;
 }
@@ -269,39 +269,40 @@ bool CmdClient::receiveMessage()
 #ifndef _WIN32
 bool haveInput(int fd, double timeout)
 {
-   int status;
-   fd_set fds;
-   struct timeval tv;
-   FD_ZERO(&fds);
-   FD_SET(fd, &fds);
-   tv.tv_sec  = (long)timeout; // cast needed for C++
-   tv.tv_usec = (long)((timeout - tv.tv_sec) * 1000000); // 'suseconds_t'
+  int status;
+  fd_set fds;
+  struct timeval tv;
+  FD_ZERO(&fds);
+  FD_SET(fd, &fds);
+  tv.tv_sec = static_cast<long>(timeout);                          // cast needed for C++
+  tv.tv_usec = static_cast<long>((timeout - tv.tv_sec) * 1000000); // 'suseconds_t'
 
-   while (1) {
-      if (!(status = select(fd + 1, &fds, 0, 0, &tv)))
-         return false;
-      else if (status > 0 && FD_ISSET(fd, &fds))
-         return true;
-      else if (status > 0 || errno != EINTR)
-         return false;
-   }
+  while (1)
+  {
+    if (!(status = select(fd + 1, &fds, 0, 0, &tv)))
+      return false;
+    else if (status > 0 && FD_ISSET(fd, &fds))
+      return true;
+    else if (status > 0 || errno != EINTR)
+      return false;
+  }
 }
 
 double getWallTimeEpoch()
 {
   using namespace std::chrono;
-	return duration_cast<seconds>(high_resolution_clock::now().time_since_epoch()).count();
+  return duration_cast<seconds>(high_resolution_clock::now().time_since_epoch()).count();
 }
 
 bool flushSocketBeforeClose(int fd, double timeout)
 {
-   const double start = getWallTimeEpoch();
-   char discard[99];
-   if (shutdown(fd, 1) != -1)
-      while (getWallTimeEpoch() < start + timeout)
-         while (haveInput(fd, 0.01)) // can block for 0.01 secs
-            return !read(fd, discard, sizeof discard);
-   return false;
+  const double start = getWallTimeEpoch();
+  char discard[99];
+  if (shutdown(fd, 1) != -1)
+    while (getWallTimeEpoch() < start + timeout)
+      while (haveInput(fd, 0.01)) // can block for 0.01 secs
+        return !read(fd, discard, sizeof discard);
+  return false;
 }
 #endif
 
@@ -325,7 +326,7 @@ void CmdClient::checkStopRequest()
   m->connected = false;
   if (!m->stop_request)
   {
-   errorMessage("Connection lost with host");
+    errorMessage("Connection lost with host");
   }
 }
 

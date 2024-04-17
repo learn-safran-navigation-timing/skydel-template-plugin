@@ -1,28 +1,39 @@
+
+#include "GetIntTxResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxResult
 ///
-#include "gen/GetIntTxResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxResult::CmdName = "GetIntTxResult";
-    const char* const GetIntTxResult::Documentation = "Result of GetIntTx.";
+    const char* const GetIntTxResult::Documentation = "Result of GetIntTx.\n"
+      "\n"
+      "Name      Type   Description\n"
+      "--------- ------ ----------------------------------------------------------------------------------------\n"
+      "UsualName string Usual name for the transmitter.\n"
+      "Enabled   bool   Enable (true) or disable (false) the transmitter\n"
+      "Group     int    Interference group number [1..16]\n"
+      "Dynamic   bool   Set to true for a dynamic transmitter (propagation loss and doppler shift are simulated)\n"
+      "Power     double Set the transmitter reference power\n"
+      "Id        string Transmitter unique identifier.";
+    const char* const GetIntTxResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxResult);
 
 
     GetIntTxResult::GetIntTxResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxResult::GetIntTxResult(CommandBasePtr relatedCommand, const std::string& usualName, bool enabled, int group, bool dynamic, double power, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxResult::GetIntTxResult(const std::string& usualName, bool enabled, int group, bool dynamic, double power, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setUsualName(usualName);
@@ -33,6 +44,23 @@ namespace Sdx
       setId(id);
     }
 
+    GetIntTxResult::GetIntTxResult(CommandBasePtr relatedCommand, const std::string& usualName, bool enabled, int group, bool dynamic, double power, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setUsualName(usualName);
+      setEnabled(enabled);
+      setGroup(group);
+      setDynamic(dynamic);
+      setPower(power);
+      setId(id);
+    }
+
+
+    GetIntTxResultPtr GetIntTxResult::create(const std::string& usualName, bool enabled, int group, bool dynamic, double power, const std::string& id)
+    {
+      return std::make_shared<GetIntTxResult>(usualName, enabled, group, dynamic, power, id);
+    }
 
     GetIntTxResultPtr GetIntTxResult::create(CommandBasePtr relatedCommand, const std::string& usualName, bool enabled, int group, bool dynamic, double power, const std::string& id)
     {
@@ -59,6 +87,12 @@ namespace Sdx
     }
 
     std::string GetIntTxResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"UsualName", "Enabled", "Group", "Dynamic", "Power", "Id"}; 
+      return names; 
+    }
 
 
     std::string GetIntTxResult::usualName() const

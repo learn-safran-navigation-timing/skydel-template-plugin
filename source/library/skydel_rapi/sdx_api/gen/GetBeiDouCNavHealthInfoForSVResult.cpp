@@ -1,28 +1,36 @@
+
+#include "GetBeiDouCNavHealthInfoForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetBeiDouCNavHealthInfoForSVResult
 ///
-#include "gen/GetBeiDouCNavHealthInfoForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetBeiDouCNavHealthInfoForSVResult::CmdName = "GetBeiDouCNavHealthInfoForSVResult";
-    const char* const GetBeiDouCNavHealthInfoForSVResult::Documentation = "Result of GetBeiDouCNavHealthInfoForSV.";
+    const char* const GetBeiDouCNavHealthInfoForSVResult::Documentation = "Result of GetBeiDouCNavHealthInfoForSV.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite SV ID 1..35, or use 0 to apply new value to all satellites.\n"
+      "Health      int             Health Info, 8-bit integer : 0, 32, 64, 96, 128 or 255\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetBeiDouCNavHealthInfoForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetBeiDouCNavHealthInfoForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetBeiDouCNavHealthInfoForSVResult);
 
 
     GetBeiDouCNavHealthInfoForSVResult::GetBeiDouCNavHealthInfoForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetBeiDouCNavHealthInfoForSVResult::GetBeiDouCNavHealthInfoForSVResult(CommandBasePtr relatedCommand, int svId, int health, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetBeiDouCNavHealthInfoForSVResult::GetBeiDouCNavHealthInfoForSVResult(int svId, int health, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSvId(svId);
@@ -30,6 +38,20 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetBeiDouCNavHealthInfoForSVResult::GetBeiDouCNavHealthInfoForSVResult(CommandBasePtr relatedCommand, int svId, int health, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSvId(svId);
+      setHealth(health);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetBeiDouCNavHealthInfoForSVResultPtr GetBeiDouCNavHealthInfoForSVResult::create(int svId, int health, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetBeiDouCNavHealthInfoForSVResult>(svId, health, dataSetName);
+    }
 
     GetBeiDouCNavHealthInfoForSVResultPtr GetBeiDouCNavHealthInfoForSVResult::create(CommandBasePtr relatedCommand, int svId, int health, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetBeiDouCNavHealthInfoForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetBeiDouCNavHealthInfoForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health", "DataSetName"}; 
+      return names; 
+    }
 
 
     int GetBeiDouCNavHealthInfoForSVResult::svId() const

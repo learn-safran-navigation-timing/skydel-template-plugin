@@ -1,33 +1,39 @@
+
+#include "SetSbasMonitoredSystems.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSbasMonitoredSystems
 ///
-#include "gen/SetSbasMonitoredSystems.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSbasMonitoredSystems::CmdName = "SetSbasMonitoredSystems";
-    const char* const SetSbasMonitoredSystems::Documentation = "Set the systems monitored by SBAS.";
+    const char* const SetSbasMonitoredSystems::Documentation = "Set the systems monitored by SBAS.\n"
+      "\n"
+      "Name    Type         Description\n"
+      "------- ------------ ------------------------------------------------------------------------------------\n"
+      "Systems array string A list containing the name of monitored systems, only \"GPS\" and \"SBAS\" are supported";
+    const char* const SetSbasMonitoredSystems::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSbasMonitoredSystems);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSbasMonitoredSystems);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSbasMonitoredSystems);
 
 
     SetSbasMonitoredSystems::SetSbasMonitoredSystems()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSbasMonitoredSystems::SetSbasMonitoredSystems(const std::vector<std::string>& systems)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystems(systems);
     }
-
 
     SetSbasMonitoredSystemsPtr SetSbasMonitoredSystems::create(const std::vector<std::string>& systems)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetSbasMonitoredSystems::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSbasMonitoredSystems::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Systems"}; 
+      return names; 
+    }
 
 
     int SetSbasMonitoredSystems::executePermission() const

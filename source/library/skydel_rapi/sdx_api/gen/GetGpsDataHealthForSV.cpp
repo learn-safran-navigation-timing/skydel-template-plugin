@@ -1,34 +1,41 @@
+
+#include "GetGpsDataHealthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGpsDataHealthForSV
 ///
-#include "gen/GetGpsDataHealthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGpsDataHealthForSV::CmdName = "GetGpsDataHealthForSV";
-    const char* const GetGpsDataHealthForSV::Documentation = "Get GPS nav data health";
+    const char* const GetGpsDataHealthForSV::Documentation = "Get GPS nav data health\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite's SV ID 1..32\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetGpsDataHealthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetGpsDataHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGpsDataHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGpsDataHealthForSV);
 
 
     GetGpsDataHealthForSV::GetGpsDataHealthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetGpsDataHealthForSV::GetGpsDataHealthForSV(int svId, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setDataSetName(dataSetName);
     }
-
 
     GetGpsDataHealthForSVPtr GetGpsDataHealthForSV::create(int svId, const Sdx::optional<std::string>& dataSetName)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetGpsDataHealthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGpsDataHealthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "DataSetName"}; 
+      return names; 
+    }
 
 
     int GetGpsDataHealthForSV::executePermission() const

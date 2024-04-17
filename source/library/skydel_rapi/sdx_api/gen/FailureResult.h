@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -25,16 +26,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       FailureResult();
 
+      FailureResult(const std::string& errorMsg);
+
       FailureResult(CommandBasePtr relatedCommand, const std::string& errorMsg);
-  
+
+      static FailureResultPtr create(const std::string& errorMsg);
+
       static FailureResultPtr create(CommandBasePtr relatedCommand, const std::string& errorMsg);
       static FailureResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       inline virtual bool isSuccess() const override { return false; }
 
@@ -43,6 +50,7 @@ namespace Sdx
       std::string errorMsg() const;
       void setErrorMsg(const std::string& errorMsg);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(FailureResult);
   }
 }
 

@@ -1,34 +1,54 @@
+
+#include "IsRFOutputEnabledForEachSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsRFOutputEnabledForEachSVResult
 ///
-#include "gen/IsRFOutputEnabledForEachSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsRFOutputEnabledForEachSVResult::CmdName = "IsRFOutputEnabledForEachSVResult";
-    const char* const IsRFOutputEnabledForEachSVResult::Documentation = "Result of IsRFOutputEnabledForEachSV.";
+    const char* const IsRFOutputEnabledForEachSVResult::Documentation = "Result of IsRFOutputEnabledForEachSV.\n"
+      "\n"
+      "Name    Type       Description\n"
+      "------- ---------- -------------------------------------------------------------------------------------------------\n"
+      "System  string     \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "Enabled array bool RF is enabled when value is True. Zero based index (index 0 => SV ID 1, index 1 => SV ID 2, etc).";
+    const char* const IsRFOutputEnabledForEachSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsRFOutputEnabledForEachSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsRFOutputEnabledForEachSVResult);
 
 
     IsRFOutputEnabledForEachSVResult::IsRFOutputEnabledForEachSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsRFOutputEnabledForEachSVResult::IsRFOutputEnabledForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<bool>& enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsRFOutputEnabledForEachSVResult::IsRFOutputEnabledForEachSVResult(const std::string& system, const std::vector<bool>& enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
       setEnabled(enabled);
     }
 
+    IsRFOutputEnabledForEachSVResult::IsRFOutputEnabledForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<bool>& enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setEnabled(enabled);
+    }
+
+
+    IsRFOutputEnabledForEachSVResultPtr IsRFOutputEnabledForEachSVResult::create(const std::string& system, const std::vector<bool>& enabled)
+    {
+      return std::make_shared<IsRFOutputEnabledForEachSVResult>(system, enabled);
+    }
 
     IsRFOutputEnabledForEachSVResultPtr IsRFOutputEnabledForEachSVResult::create(CommandBasePtr relatedCommand, const std::string& system, const std::vector<bool>& enabled)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string IsRFOutputEnabledForEachSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsRFOutputEnabledForEachSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Enabled"}; 
+      return names; 
+    }
 
 
     std::string IsRFOutputEnabledForEachSVResult::system() const

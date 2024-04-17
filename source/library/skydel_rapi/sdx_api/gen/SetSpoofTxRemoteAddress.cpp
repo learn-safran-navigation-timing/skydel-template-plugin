@@ -1,35 +1,44 @@
+
+#include "SetSpoofTxRemoteAddress.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSpoofTxRemoteAddress
 ///
-#include "gen/SetSpoofTxRemoteAddress.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSpoofTxRemoteAddress::CmdName = "SetSpoofTxRemoteAddress";
-    const char* const SetSpoofTxRemoteAddress::Documentation = "Set the address of the spoofer instance that will\ngenerate the signal for this spoofer transmitter.";
+    const char* const SetSpoofTxRemoteAddress::Documentation = "Set the address of the spoofer instance that will\n"
+      "generate the signal for this spoofer transmitter.\n"
+      "\n"
+      "Name       Type   Description\n"
+      "---------- ------ ------------------------------\n"
+      "Address    string Remote instance IP address.\n"
+      "InstanceId int    Remote instance ID.\n"
+      "Id         string Transmitter unique identifier.";
+    const char* const SetSpoofTxRemoteAddress::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSpoofTxRemoteAddress);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSpoofTxRemoteAddress);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSpoofTxRemoteAddress);
 
 
     SetSpoofTxRemoteAddress::SetSpoofTxRemoteAddress()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSpoofTxRemoteAddress::SetSpoofTxRemoteAddress(const std::string& address, int instanceId, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setAddress(address);
       setInstanceId(instanceId);
       setId(id);
     }
-
 
     SetSpoofTxRemoteAddressPtr SetSpoofTxRemoteAddress::create(const std::string& address, int instanceId, const std::string& id)
     {
@@ -53,6 +62,12 @@ namespace Sdx
     }
 
     std::string SetSpoofTxRemoteAddress::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSpoofTxRemoteAddress::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Address", "InstanceId", "Id"}; 
+      return names; 
+    }
 
 
     int SetSpoofTxRemoteAddress::executePermission() const

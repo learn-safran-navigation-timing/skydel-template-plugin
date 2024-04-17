@@ -1,33 +1,40 @@
+
+#include "SetSyncTime.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSyncTime
 ///
-#include "gen/SetSyncTime.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSyncTime::CmdName = "SetSyncTime";
-    const char* const SetSyncTime::Documentation = "Set time delay to start streaming, in order to allign PPS out Signal with RF.\n2000 ms is a calibrated value.";
+    const char* const SetSyncTime::Documentation = "Set time delay to start streaming, in order to allign PPS out Signal with RF.\n"
+      "2000 ms is a calibrated value.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ----------------------------------------\n"
+      "Time double Time delay in msec (minimum is 500 msec)";
+    const char* const SetSyncTime::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSyncTime);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSyncTime);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSyncTime);
 
 
     SetSyncTime::SetSyncTime()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSyncTime::SetSyncTime(double time)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTime(time);
     }
-
 
     SetSyncTimePtr SetSyncTime::create(double time)
     {
@@ -49,6 +56,12 @@ namespace Sdx
     }
 
     std::string SetSyncTime::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSyncTime::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Time"}; 
+      return names; 
+    }
 
 
     int SetSyncTime::executePermission() const

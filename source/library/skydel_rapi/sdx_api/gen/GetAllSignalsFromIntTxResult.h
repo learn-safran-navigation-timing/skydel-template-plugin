@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 #include <vector>
 
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetAllSignalsFromIntTxResult();
 
+      GetAllSignalsFromIntTxResult(const std::string& id, const std::vector<std::string>& idsSignal);
+
       GetAllSignalsFromIntTxResult(CommandBasePtr relatedCommand, const std::string& id, const std::vector<std::string>& idsSignal);
-  
+
+      static GetAllSignalsFromIntTxResultPtr create(const std::string& id, const std::vector<std::string>& idsSignal);
+
       static GetAllSignalsFromIntTxResultPtr create(CommandBasePtr relatedCommand, const std::string& id, const std::vector<std::string>& idsSignal);
       static GetAllSignalsFromIntTxResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** id ****
@@ -48,6 +55,7 @@ namespace Sdx
       std::vector<std::string> idsSignal() const;
       void setIdsSignal(const std::vector<std::string>& idsSignal);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAllSignalsFromIntTxResult);
   }
 }
 

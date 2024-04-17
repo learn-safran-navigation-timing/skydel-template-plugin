@@ -1,34 +1,41 @@
+
+#include "SetSbasRangingHealthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSbasRangingHealthForSV
 ///
-#include "gen/SetSbasRangingHealthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSbasRangingHealthForSV::CmdName = "SetSbasRangingHealthForSV";
-    const char* const SetSbasRangingHealthForSV::Documentation = "Apply ranging flag for a SBAS satellite";
+    const char* const SetSbasRangingHealthForSV::Documentation = "Apply ranging flag for a SBAS satellite\n"
+      "\n"
+      "Name   Type Description\n"
+      "------ ---- --------------------------\n"
+      "SvId   int  The satellite's SV ID\n"
+      "Health bool The ranging unhealthy flag";
+    const char* const SetSbasRangingHealthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSbasRangingHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSbasRangingHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSbasRangingHealthForSV);
 
 
     SetSbasRangingHealthForSV::SetSbasRangingHealthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSbasRangingHealthForSV::SetSbasRangingHealthForSV(int svId, bool health)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setHealth(health);
     }
-
 
     SetSbasRangingHealthForSVPtr SetSbasRangingHealthForSV::create(int svId, bool health)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSbasRangingHealthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSbasRangingHealthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health"}; 
+      return names; 
+    }
 
 
     int SetSbasRangingHealthForSV::executePermission() const

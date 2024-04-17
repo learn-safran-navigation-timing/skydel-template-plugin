@@ -1,28 +1,37 @@
+
+#include "GetBeiDouEphBoolParamForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetBeiDouEphBoolParamForSVResult
 ///
-#include "gen/GetBeiDouEphBoolParamForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetBeiDouEphBoolParamForSVResult::CmdName = "GetBeiDouEphBoolParamForSVResult";
-    const char* const GetBeiDouEphBoolParamForSVResult::Documentation = "Result of GetBeiDouEphBoolParamForSV.";
+    const char* const GetBeiDouEphBoolParamForSVResult::Documentation = "Result of GetBeiDouEphBoolParamForSV.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite SV ID 1..35, or use 0 to apply new value to all satellites\n"
+      "ParamName   string          Parameter name (see table above for accepted names)\n"
+      "Val         bool            Parameter value (see table above for unit)\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetBeiDouEphBoolParamForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetBeiDouEphBoolParamForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetBeiDouEphBoolParamForSVResult);
 
 
     GetBeiDouEphBoolParamForSVResult::GetBeiDouEphBoolParamForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetBeiDouEphBoolParamForSVResult::GetBeiDouEphBoolParamForSVResult(CommandBasePtr relatedCommand, int svId, const std::string& paramName, bool val, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetBeiDouEphBoolParamForSVResult::GetBeiDouEphBoolParamForSVResult(int svId, const std::string& paramName, bool val, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSvId(svId);
@@ -31,6 +40,21 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetBeiDouEphBoolParamForSVResult::GetBeiDouEphBoolParamForSVResult(CommandBasePtr relatedCommand, int svId, const std::string& paramName, bool val, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSvId(svId);
+      setParamName(paramName);
+      setVal(val);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetBeiDouEphBoolParamForSVResultPtr GetBeiDouEphBoolParamForSVResult::create(int svId, const std::string& paramName, bool val, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetBeiDouEphBoolParamForSVResult>(svId, paramName, val, dataSetName);
+    }
 
     GetBeiDouEphBoolParamForSVResultPtr GetBeiDouEphBoolParamForSVResult::create(CommandBasePtr relatedCommand, int svId, const std::string& paramName, bool val, const Sdx::optional<std::string>& dataSetName)
     {
@@ -55,6 +79,12 @@ namespace Sdx
     }
 
     std::string GetBeiDouEphBoolParamForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetBeiDouEphBoolParamForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "ParamName", "Val", "DataSetName"}; 
+      return names; 
+    }
 
 
     int GetBeiDouEphBoolParamForSVResult::svId() const

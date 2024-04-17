@@ -1,28 +1,36 @@
+
+#include "IsRFOutputEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsRFOutputEnabledResult
 ///
-#include "gen/IsRFOutputEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsRFOutputEnabledResult::CmdName = "IsRFOutputEnabledResult";
-    const char* const IsRFOutputEnabledResult::Documentation = "Result of IsRFOutputEnabled.";
+    const char* const IsRFOutputEnabledResult::Documentation = "Result of IsRFOutputEnabled.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ --------------------------------------------------------------------------\n"
+      "System  string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId    int    The satellite's SV ID\n"
+      "Enabled bool   RF is enabled when value is True";
+    const char* const IsRFOutputEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsRFOutputEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsRFOutputEnabledResult);
 
 
     IsRFOutputEnabledResult::IsRFOutputEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsRFOutputEnabledResult::IsRFOutputEnabledResult(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsRFOutputEnabledResult::IsRFOutputEnabledResult(const std::string& system, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -30,6 +38,20 @@ namespace Sdx
       setEnabled(enabled);
     }
 
+    IsRFOutputEnabledResult::IsRFOutputEnabledResult(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setSvId(svId);
+      setEnabled(enabled);
+    }
+
+
+    IsRFOutputEnabledResultPtr IsRFOutputEnabledResult::create(const std::string& system, int svId, bool enabled)
+    {
+      return std::make_shared<IsRFOutputEnabledResult>(system, svId, enabled);
+    }
 
     IsRFOutputEnabledResultPtr IsRFOutputEnabledResult::create(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string IsRFOutputEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsRFOutputEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Enabled"}; 
+      return names; 
+    }
 
 
     std::string IsRFOutputEnabledResult::system() const

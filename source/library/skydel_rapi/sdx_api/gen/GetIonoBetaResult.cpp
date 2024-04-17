@@ -1,34 +1,54 @@
+
+#include "GetIonoBetaResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIonoBetaResult
 ///
-#include "gen/GetIonoBetaResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIonoBetaResult::CmdName = "GetIonoBetaResult";
-    const char* const GetIonoBetaResult::Documentation = "Result of GetIonoBeta.";
+    const char* const GetIonoBetaResult::Documentation = "Result of GetIonoBeta.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ------------------------\n"
+      "Index int    Coefficient index [0..3]\n"
+      "Val   double Coefficient value";
+    const char* const GetIonoBetaResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIonoBetaResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIonoBetaResult);
 
 
     GetIonoBetaResult::GetIonoBetaResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIonoBetaResult::GetIonoBetaResult(CommandBasePtr relatedCommand, int index, double val)
-      : CommandResult(CmdName, relatedCommand)
+    GetIonoBetaResult::GetIonoBetaResult(int index, double val)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIndex(index);
       setVal(val);
     }
 
+    GetIonoBetaResult::GetIonoBetaResult(CommandBasePtr relatedCommand, int index, double val)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIndex(index);
+      setVal(val);
+    }
+
+
+    GetIonoBetaResultPtr GetIonoBetaResult::create(int index, double val)
+    {
+      return std::make_shared<GetIonoBetaResult>(index, val);
+    }
 
     GetIonoBetaResultPtr GetIonoBetaResult::create(CommandBasePtr relatedCommand, int index, double val)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetIonoBetaResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIonoBetaResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Index", "Val"}; 
+      return names; 
+    }
 
 
     int GetIonoBetaResult::index() const

@@ -1,33 +1,39 @@
+
+#include "SetUsingVelocityInSbasMessage25.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetUsingVelocityInSbasMessage25
 ///
-#include "gen/SetUsingVelocityInSbasMessage25.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetUsingVelocityInSbasMessage25::CmdName = "SetUsingVelocityInSbasMessage25";
-    const char* const SetUsingVelocityInSbasMessage25::Documentation = "Set whether SBAS message 25 should send velocity corrections";
+    const char* const SetUsingVelocityInSbasMessage25::Documentation = "Set whether SBAS message 25 should send velocity corrections\n"
+      "\n"
+      "Name        Type Description\n"
+      "----------- ---- --------------------------------------------------------\n"
+      "UseVelocity bool Whether SBAS message 25 should send velocity corrections";
+    const char* const SetUsingVelocityInSbasMessage25::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetUsingVelocityInSbasMessage25);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetUsingVelocityInSbasMessage25);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetUsingVelocityInSbasMessage25);
 
 
     SetUsingVelocityInSbasMessage25::SetUsingVelocityInSbasMessage25()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetUsingVelocityInSbasMessage25::SetUsingVelocityInSbasMessage25(bool useVelocity)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setUseVelocity(useVelocity);
     }
-
 
     SetUsingVelocityInSbasMessage25Ptr SetUsingVelocityInSbasMessage25::create(bool useVelocity)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetUsingVelocityInSbasMessage25::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetUsingVelocityInSbasMessage25::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"UseVelocity"}; 
+      return names; 
+    }
 
 
     int SetUsingVelocityInSbasMessage25::executePermission() const

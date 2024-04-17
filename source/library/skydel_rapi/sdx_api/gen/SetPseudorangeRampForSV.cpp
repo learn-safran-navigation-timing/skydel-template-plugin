@@ -1,28 +1,55 @@
+
+#include "SetPseudorangeRampForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetPseudorangeRampForSV
 ///
-#include "gen/SetPseudorangeRampForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetPseudorangeRampForSV::CmdName = "SetPseudorangeRampForSV";
-    const char* const SetPseudorangeRampForSV::Documentation = "Set PSR ramp event. This function lets user change the pseudorange of any satellite.\nIf SV ID is set to 0, the change is applied to all satellites.\n\n         Hold Start Time\n         |     Hold Stop Time\n         |     |\n         ...........\n       ..       ...\n       ..        ...\n  .......           .........> Time\n      |           |\n      Start Time      Stop Time\n";
+    const char* const SetPseudorangeRampForSV::Documentation = "Set PSR ramp event. This function lets user change the pseudorange of any satellite.\n"
+      "If SV ID is set to 0, the change is applied to all satellites.\n"
+      "\n"
+      "          Hold Start Time\n"
+      "          |         Hold Stop Time\n"
+      "          |         |\n"
+      "          ...........\n"
+      "         ..         ...\n"
+      "        ..            ...\n"
+      "  .......               .........> Time\n"
+      "        |               |\n"
+      "        Start Time      Stop Time\n"
+      "\n"
+      "\n"
+      "Name          Type   Description\n"
+      "------------- ------ ----------------------------------------------------------------------------------\n"
+      "System        string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId          int    The satellite's SV ID.\n"
+      "Offset        double Change to satellite pseudorange in meter when ramp is at maximum. Range -1e7..+1e7\n"
+      "StartTime     int    Elapsed time in seconds since start of simulation.\n"
+      "HoldStartTime int    Elapsed time in seconds since start of simulation. HoldStartTime >= StartTime\n"
+      "HoldStopTime  int    Elapsed time in seconds since start of simulation. HoldStopTime >= HoldStartTime\n"
+      "StopTime      int    Elapsed time in seconds since start of simulation. StopTime >= HoldStopTime\n"
+      "Id            string Unique identifier automatically set by simulator if empty string.\n"
+      "                     The IDs pool is common between all system.";
+    const char* const SetPseudorangeRampForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetPseudorangeRampForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetPseudorangeRampForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetPseudorangeRampForSV);
 
 
     SetPseudorangeRampForSV::SetPseudorangeRampForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetPseudorangeRampForSV::SetPseudorangeRampForSV(const std::string& system, int svId, double offset, int startTime, int holdStartTime, int holdStopTime, int stopTime, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -34,7 +61,6 @@ namespace Sdx
       setStopTime(stopTime);
       setId(id);
     }
-
 
     SetPseudorangeRampForSVPtr SetPseudorangeRampForSV::create(const std::string& system, int svId, double offset, int startTime, int holdStartTime, int holdStopTime, int stopTime, const std::string& id)
     {
@@ -63,6 +89,12 @@ namespace Sdx
     }
 
     std::string SetPseudorangeRampForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetPseudorangeRampForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Offset", "StartTime", "HoldStartTime", "HoldStopTime", "StopTime", "Id"}; 
+      return names; 
+    }
 
 
     int SetPseudorangeRampForSV::executePermission() const

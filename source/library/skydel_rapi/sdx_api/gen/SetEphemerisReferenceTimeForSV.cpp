@@ -1,28 +1,38 @@
+
+#include "SetEphemerisReferenceTimeForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetEphemerisReferenceTimeForSV
 ///
-#include "gen/SetEphemerisReferenceTimeForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetEphemerisReferenceTimeForSV::CmdName = "SetEphemerisReferenceTimeForSV";
-    const char* const SetEphemerisReferenceTimeForSV::Documentation = "Please note the command SetEphemerisReferenceTime is deprecated since 21.3. You may use SetEphemerisReferenceTimeForSV.\n\nSet the ephemeris reference time for the specified constellation.";
+    const char* const SetEphemerisReferenceTimeForSV::Documentation = "Set the ephemeris reference time for the specified constellation.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "System      string          \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId        int             The satellite's SV ID.\n"
+      "Time        datetime        GPS date and time (it is the GPS time expressed in UTC format)\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetEphemerisReferenceTimeForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetEphemerisReferenceTimeForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetEphemerisReferenceTimeForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetEphemerisReferenceTimeForSV);
 
 
     SetEphemerisReferenceTimeForSV::SetEphemerisReferenceTimeForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetEphemerisReferenceTimeForSV::SetEphemerisReferenceTimeForSV(const std::string& system, int svId, const Sdx::DateTime& time, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -30,7 +40,6 @@ namespace Sdx
       setTime(time);
       setDataSetName(dataSetName);
     }
-
 
     SetEphemerisReferenceTimeForSVPtr SetEphemerisReferenceTimeForSV::create(const std::string& system, int svId, const Sdx::DateTime& time, const Sdx::optional<std::string>& dataSetName)
     {
@@ -55,6 +64,12 @@ namespace Sdx
     }
 
     std::string SetEphemerisReferenceTimeForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetEphemerisReferenceTimeForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Time", "DataSetName"}; 
+      return names; 
+    }
 
 
     int SetEphemerisReferenceTimeForSV::executePermission() const

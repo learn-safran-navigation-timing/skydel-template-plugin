@@ -1,28 +1,39 @@
+
+#include "ForceSVGeo.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ForceSVGeo
 ///
-#include "gen/ForceSVGeo.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ForceSVGeo::CmdName = "ForceSVGeo";
-    const char* const ForceSVGeo::Documentation = "Set whether a satellite is geostationary";
+    const char* const ForceSVGeo::Documentation = "Set whether a satellite is geostationary\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "System      string          \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId        int             The satellite SV ID\n"
+      "IsGeo       bool            True for geostationary satellite\n"
+      "Longitude   double          The longitude to use, in degree\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const ForceSVGeo::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ForceSVGeo);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ForceSVGeo);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ForceSVGeo);
 
 
     ForceSVGeo::ForceSVGeo()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ForceSVGeo::ForceSVGeo(const std::string& system, int svId, bool isGeo, double longitude, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -31,7 +42,6 @@ namespace Sdx
       setLongitude(longitude);
       setDataSetName(dataSetName);
     }
-
 
     ForceSVGeoPtr ForceSVGeo::create(const std::string& system, int svId, bool isGeo, double longitude, const Sdx::optional<std::string>& dataSetName)
     {
@@ -57,6 +67,12 @@ namespace Sdx
     }
 
     std::string ForceSVGeo::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ForceSVGeo::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "IsGeo", "Longitude", "DataSetName"}; 
+      return names; 
+    }
 
 
     int ForceSVGeo::executePermission() const

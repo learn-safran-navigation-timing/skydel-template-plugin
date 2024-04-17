@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 
 
 namespace Sdx
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetIonoGridErrorResult();
 
+      GetIonoGridErrorResult(int band, int point, double error);
+
       GetIonoGridErrorResult(CommandBasePtr relatedCommand, int band, int point, double error);
-  
+
+      static GetIonoGridErrorResultPtr create(int band, int point, double error);
+
       static GetIonoGridErrorResultPtr create(CommandBasePtr relatedCommand, int band, int point, double error);
       static GetIonoGridErrorResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** band ****
@@ -53,6 +60,7 @@ namespace Sdx
       double error() const;
       void setError(double error);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIonoGridErrorResult);
   }
 }
 

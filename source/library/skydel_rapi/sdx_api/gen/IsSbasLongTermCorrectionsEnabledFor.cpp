@@ -1,33 +1,39 @@
+
+#include "IsSbasLongTermCorrectionsEnabledFor.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSbasLongTermCorrectionsEnabledFor
 ///
-#include "gen/IsSbasLongTermCorrectionsEnabledFor.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSbasLongTermCorrectionsEnabledFor::CmdName = "IsSbasLongTermCorrectionsEnabledFor";
-    const char* const IsSbasLongTermCorrectionsEnabledFor::Documentation = "Get whether ephemeris errors for this constellation should be compensated in SBAS long term corrections.";
+    const char* const IsSbasLongTermCorrectionsEnabledFor::Documentation = "Get whether ephemeris errors for this constellation should be compensated in SBAS long term corrections.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------\n"
+      "System string As of today, only \"GPS\" is supported.";
+    const char* const IsSbasLongTermCorrectionsEnabledFor::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsSbasLongTermCorrectionsEnabledFor);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsSbasLongTermCorrectionsEnabledFor);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSbasLongTermCorrectionsEnabledFor);
 
 
     IsSbasLongTermCorrectionsEnabledFor::IsSbasLongTermCorrectionsEnabledFor()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     IsSbasLongTermCorrectionsEnabledFor::IsSbasLongTermCorrectionsEnabledFor(const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
     }
-
 
     IsSbasLongTermCorrectionsEnabledForPtr IsSbasLongTermCorrectionsEnabledFor::create(const std::string& system)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string IsSbasLongTermCorrectionsEnabledFor::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSbasLongTermCorrectionsEnabledFor::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System"}; 
+      return names; 
+    }
 
 
     int IsSbasLongTermCorrectionsEnabledFor::executePermission() const

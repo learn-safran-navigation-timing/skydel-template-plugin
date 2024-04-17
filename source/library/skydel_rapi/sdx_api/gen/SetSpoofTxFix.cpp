@@ -1,28 +1,41 @@
+
+#include "SetSpoofTxFix.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSpoofTxFix
 ///
-#include "gen/SetSpoofTxFix.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSpoofTxFix::CmdName = "SetSpoofTxFix";
-    const char* const SetSpoofTxFix::Documentation = "Set spoofer transmitter static position and orientation";
+    const char* const SetSpoofTxFix::Documentation = "Set spoofer transmitter static position and orientation\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ------------------------------\n"
+      "Lat   double Latitude (rad)\n"
+      "Lon   double Longitude (rad)\n"
+      "Alt   double Altitude (m)\n"
+      "Yaw   double Yaw (rad)\n"
+      "Pitch double Pitch (rad)\n"
+      "Roll  double Roll (rad)\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const SetSpoofTxFix::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSpoofTxFix);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSpoofTxFix);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSpoofTxFix);
 
 
     SetSpoofTxFix::SetSpoofTxFix()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSpoofTxFix::SetSpoofTxFix(double lat, double lon, double alt, double yaw, double pitch, double roll, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setLat(lat);
@@ -33,7 +46,6 @@ namespace Sdx
       setRoll(roll);
       setId(id);
     }
-
 
     SetSpoofTxFixPtr SetSpoofTxFix::create(double lat, double lon, double alt, double yaw, double pitch, double roll, const std::string& id)
     {
@@ -61,6 +73,12 @@ namespace Sdx
     }
 
     std::string SetSpoofTxFix::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSpoofTxFix::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Lat", "Lon", "Alt", "Yaw", "Pitch", "Roll", "Id"}; 
+      return names; 
+    }
 
 
     int SetSpoofTxFix::executePermission() const

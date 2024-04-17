@@ -1,33 +1,39 @@
+
+#include "SetStreamingBuffer.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetStreamingBuffer
 ///
-#include "gen/SetStreamingBuffer.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetStreamingBuffer::CmdName = "SetStreamingBuffer";
-    const char* const SetStreamingBuffer::Documentation = "Set streaming buffer size.";
+    const char* const SetStreamingBuffer::Documentation = "Set streaming buffer size.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- -----------------------------\n"
+      "Size int  Streaming buffer size in msec";
+    const char* const SetStreamingBuffer::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetStreamingBuffer);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetStreamingBuffer);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetStreamingBuffer);
 
 
     SetStreamingBuffer::SetStreamingBuffer()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetStreamingBuffer::SetStreamingBuffer(int size)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSize(size);
     }
-
 
     SetStreamingBufferPtr SetStreamingBuffer::create(int size)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetStreamingBuffer::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetStreamingBuffer::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Size"}; 
+      return names; 
+    }
 
 
     int SetStreamingBuffer::executePermission() const

@@ -1,33 +1,39 @@
+
+#include "SetSpoofTxHil.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSpoofTxHil
 ///
-#include "gen/SetSpoofTxHil.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSpoofTxHil::CmdName = "SetSpoofTxHil";
-    const char* const SetSpoofTxHil::Documentation = "Set spoofer transmitter HIL trajectory";
+    const char* const SetSpoofTxHil::Documentation = "Set spoofer transmitter HIL trajectory\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const SetSpoofTxHil::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSpoofTxHil);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSpoofTxHil);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSpoofTxHil);
 
 
     SetSpoofTxHil::SetSpoofTxHil()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSpoofTxHil::SetSpoofTxHil(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     SetSpoofTxHilPtr SetSpoofTxHil::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetSpoofTxHil::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSpoofTxHil::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int SetSpoofTxHil::executePermission() const

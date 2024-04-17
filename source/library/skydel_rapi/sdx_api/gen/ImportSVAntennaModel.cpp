@@ -1,34 +1,41 @@
+
+#include "ImportSVAntennaModel.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ImportSVAntennaModel
 ///
-#include "gen/ImportSVAntennaModel.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ImportSVAntennaModel::CmdName = "ImportSVAntennaModel";
-    const char* const ImportSVAntennaModel::Documentation = "Import a space vehicle antenna model from a XML file.";
+    const char* const ImportSVAntennaModel::Documentation = "Import a space vehicle antenna model from a XML file.\n"
+      "\n"
+      "Name     Type   Description\n"
+      "-------- ------ --------------------------------------------------------------------------\n"
+      "FilePath string File path of the antenna model\n"
+      "System   string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const ImportSVAntennaModel::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ImportSVAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ImportSVAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ImportSVAntennaModel);
 
 
     ImportSVAntennaModel::ImportSVAntennaModel()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ImportSVAntennaModel::ImportSVAntennaModel(const std::string& filePath, const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setFilePath(filePath);
       setSystem(system);
     }
-
 
     ImportSVAntennaModelPtr ImportSVAntennaModel::create(const std::string& filePath, const std::string& system)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string ImportSVAntennaModel::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ImportSVAntennaModel::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"FilePath", "System"}; 
+      return names; 
+    }
 
 
     int ImportSVAntennaModel::executePermission() const

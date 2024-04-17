@@ -1,11 +1,12 @@
+
+#include "GetSbasMessagesEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSbasMessagesEnabled
 ///
-#include "gen/GetSbasMessagesEnabled.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetSbasMessagesEnabled::CmdName = "GetSbasMessagesEnabled";
     const char* const GetSbasMessagesEnabled::Documentation = "Get the enabled SBAS messages. Message 63 is always enabled";
+    const char* const GetSbasMessagesEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSbasMessagesEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSbasMessagesEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSbasMessagesEnabled);
 
 
     GetSbasMessagesEnabled::GetSbasMessagesEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetSbasMessagesEnabledPtr GetSbasMessagesEnabled::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetSbasMessagesEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSbasMessagesEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetSbasMessagesEnabled::executePermission() const

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -12,8 +13,8 @@ namespace Sdx
     /// Get a list of all the pseudorange ramps IDs for a system's satellite.
     ///
     /// Name   Type   Description
-    /// ------ ------ ----------------------------------------------------------------
-    /// System string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// ------ ------ --------------------------------------------------------------------------
+    /// System string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// SvId   int    The satellite's SV ID.
     ///
 
@@ -26,16 +27,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetAllPseudorangeRampForSV();
 
       GetAllPseudorangeRampForSV(const std::string& system, int svId);
-  
+
       static GetAllPseudorangeRampForSVPtr create(const std::string& system, int svId);
       static GetAllPseudorangeRampForSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -49,6 +52,7 @@ namespace Sdx
       int svId() const;
       void setSvId(int svId);
     };
+    
   }
 }
 

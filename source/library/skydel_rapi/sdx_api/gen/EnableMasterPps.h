@@ -4,17 +4,20 @@
 #include "command_base.h"
 
 
+
 namespace Sdx
 {
   namespace Cmd
   {
     ///
-    /// Enable/Disable Time Synchronization Master.
-    /// The Master will control other Skydel simulators with Slave PPS Enabled.
+    /// Please note the command EnableMasterPps is deprecated since 23.11. You may use EnableMainInstanceSync.
+    /// 
+    /// Enable/Disable Time Synchronization on main instance.
+    /// The main instance will control other Skydel simulators with main instance PPS Enabled.
     ///
     /// Name    Type Description
-    /// ------- ---- ---------------------------------------------------------------------
-    /// Enabled bool If true, this simulator will be the master to synchronize simulators.
+    /// ------- ---- ----------------------------------------------------------------------------
+    /// Enabled bool If true, this simulator will be the main instance to synchronize simulators.
     ///
 
     class EnableMasterPps;
@@ -26,16 +29,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       EnableMasterPps();
 
       EnableMasterPps(bool enabled);
-  
+
       static EnableMasterPpsPtr create(bool enabled);
       static EnableMasterPpsPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -44,6 +49,7 @@ namespace Sdx
       bool enabled() const;
       void setEnabled(bool enabled);
     };
+    
   }
 }
 

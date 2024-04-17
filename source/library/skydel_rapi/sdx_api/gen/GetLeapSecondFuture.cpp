@@ -1,11 +1,12 @@
+
+#include "GetLeapSecondFuture.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetLeapSecondFuture
 ///
-#include "gen/GetLeapSecondFuture.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetLeapSecondFuture::CmdName = "GetLeapSecondFuture";
     const char* const GetLeapSecondFuture::Documentation = "Get the next leap second event";
+    const char* const GetLeapSecondFuture::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetLeapSecondFuture);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetLeapSecondFuture);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetLeapSecondFuture);
 
 
     GetLeapSecondFuture::GetLeapSecondFuture()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetLeapSecondFuturePtr GetLeapSecondFuture::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetLeapSecondFuture::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetLeapSecondFuture::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetLeapSecondFuture::executePermission() const

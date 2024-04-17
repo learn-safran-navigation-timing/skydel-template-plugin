@@ -1,34 +1,41 @@
+
+#include "RemoveAllMultipathForSystem.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RemoveAllMultipathForSystem
 ///
-#include "gen/RemoveAllMultipathForSystem.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RemoveAllMultipathForSystem::CmdName = "RemoveAllMultipathForSystem";
-    const char* const RemoveAllMultipathForSystem::Documentation = "Disable all multipath for the specified constellation.";
+    const char* const RemoveAllMultipathForSystem::Documentation = "Disable all multipath for the specified constellation.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "Reset  bool   Reset attributes (PSR offset, power loss, Doppler shift and carrier phase offset are set to zero)";
+    const char* const RemoveAllMultipathForSystem::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RemoveAllMultipathForSystem);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RemoveAllMultipathForSystem);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RemoveAllMultipathForSystem);
 
 
     RemoveAllMultipathForSystem::RemoveAllMultipathForSystem()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RemoveAllMultipathForSystem::RemoveAllMultipathForSystem(const std::string& system, bool reset)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setReset(reset);
     }
-
 
     RemoveAllMultipathForSystemPtr RemoveAllMultipathForSystem::create(const std::string& system, bool reset)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string RemoveAllMultipathForSystem::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RemoveAllMultipathForSystem::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Reset"}; 
+      return names; 
+    }
 
 
     int RemoveAllMultipathForSystem::executePermission() const

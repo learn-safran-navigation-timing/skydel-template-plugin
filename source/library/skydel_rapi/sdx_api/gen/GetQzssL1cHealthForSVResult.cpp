@@ -1,28 +1,36 @@
+
+#include "GetQzssL1cHealthForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetQzssL1cHealthForSVResult
 ///
-#include "gen/GetQzssL1cHealthForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetQzssL1cHealthForSVResult::CmdName = "GetQzssL1cHealthForSVResult";
-    const char* const GetQzssL1cHealthForSVResult::Documentation = "Result of GetQzssL1cHealthForSV.";
+    const char* const GetQzssL1cHealthForSVResult::Documentation = "Result of GetQzssL1cHealthForSV.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite SV ID 1..10, or use 0 to apply new value to all satellites.\n"
+      "Health      bool            L1C health, false = signal OK, true = signal bad\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetQzssL1cHealthForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetQzssL1cHealthForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetQzssL1cHealthForSVResult);
 
 
     GetQzssL1cHealthForSVResult::GetQzssL1cHealthForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetQzssL1cHealthForSVResult::GetQzssL1cHealthForSVResult(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetQzssL1cHealthForSVResult::GetQzssL1cHealthForSVResult(int svId, bool health, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSvId(svId);
@@ -30,6 +38,20 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetQzssL1cHealthForSVResult::GetQzssL1cHealthForSVResult(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSvId(svId);
+      setHealth(health);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetQzssL1cHealthForSVResultPtr GetQzssL1cHealthForSVResult::create(int svId, bool health, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetQzssL1cHealthForSVResult>(svId, health, dataSetName);
+    }
 
     GetQzssL1cHealthForSVResultPtr GetQzssL1cHealthForSVResult::create(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetQzssL1cHealthForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetQzssL1cHealthForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health", "DataSetName"}; 
+      return names; 
+    }
 
 
     int GetQzssL1cHealthForSVResult::svId() const

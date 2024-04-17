@@ -1,33 +1,39 @@
+
+#include "IsPropagationDelayEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsPropagationDelayEnabled
 ///
-#include "gen/IsPropagationDelayEnabled.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsPropagationDelayEnabled::CmdName = "IsPropagationDelayEnabled";
-    const char* const IsPropagationDelayEnabled::Documentation = "Tells if the propagation delay is enabled.";
+    const char* const IsPropagationDelayEnabled::Documentation = "Tells if the propagation delay is enabled.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const IsPropagationDelayEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsPropagationDelayEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsPropagationDelayEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsPropagationDelayEnabled);
 
 
     IsPropagationDelayEnabled::IsPropagationDelayEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     IsPropagationDelayEnabled::IsPropagationDelayEnabled(const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
     }
-
 
     IsPropagationDelayEnabledPtr IsPropagationDelayEnabled::create(const std::string& system)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string IsPropagationDelayEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsPropagationDelayEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System"}; 
+      return names; 
+    }
 
 
     int IsPropagationDelayEnabled::executePermission() const

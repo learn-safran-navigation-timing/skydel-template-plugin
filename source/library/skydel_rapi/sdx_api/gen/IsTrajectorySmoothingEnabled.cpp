@@ -1,11 +1,12 @@
+
+#include "IsTrajectorySmoothingEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsTrajectorySmoothingEnabled
 ///
-#include "gen/IsTrajectorySmoothingEnabled.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const IsTrajectorySmoothingEnabled::CmdName = "IsTrajectorySmoothingEnabled";
     const char* const IsTrajectorySmoothingEnabled::Documentation = "Get trajectory smoothing for Track or Route enabled or disabled";
+    const char* const IsTrajectorySmoothingEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsTrajectorySmoothingEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsTrajectorySmoothingEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsTrajectorySmoothingEnabled);
 
 
     IsTrajectorySmoothingEnabled::IsTrajectorySmoothingEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     IsTrajectorySmoothingEnabledPtr IsTrajectorySmoothingEnabled::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string IsTrajectorySmoothingEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsTrajectorySmoothingEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int IsTrajectorySmoothingEnabled::executePermission() const

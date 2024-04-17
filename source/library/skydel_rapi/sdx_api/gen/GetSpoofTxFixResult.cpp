@@ -1,28 +1,40 @@
+
+#include "GetSpoofTxFixResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxFixResult
 ///
-#include "gen/GetSpoofTxFixResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxFixResult::CmdName = "GetSpoofTxFixResult";
-    const char* const GetSpoofTxFixResult::Documentation = "Result of GetSpoofTxFix.";
+    const char* const GetSpoofTxFixResult::Documentation = "Result of GetSpoofTxFix.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ------------------------------\n"
+      "Lat   double Latitude (rad)\n"
+      "Lon   double Longitude (rad)\n"
+      "Alt   double Altitude (m)\n"
+      "Yaw   double Yaw (rad)\n"
+      "Pitch double Pitch (rad)\n"
+      "Roll  double Roll (rad)\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const GetSpoofTxFixResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetSpoofTxFixResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxFixResult);
 
 
     GetSpoofTxFixResult::GetSpoofTxFixResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetSpoofTxFixResult::GetSpoofTxFixResult(CommandBasePtr relatedCommand, double lat, double lon, double alt, double yaw, double pitch, double roll, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetSpoofTxFixResult::GetSpoofTxFixResult(double lat, double lon, double alt, double yaw, double pitch, double roll, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setLat(lat);
@@ -34,6 +46,24 @@ namespace Sdx
       setId(id);
     }
 
+    GetSpoofTxFixResult::GetSpoofTxFixResult(CommandBasePtr relatedCommand, double lat, double lon, double alt, double yaw, double pitch, double roll, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setLat(lat);
+      setLon(lon);
+      setAlt(alt);
+      setYaw(yaw);
+      setPitch(pitch);
+      setRoll(roll);
+      setId(id);
+    }
+
+
+    GetSpoofTxFixResultPtr GetSpoofTxFixResult::create(double lat, double lon, double alt, double yaw, double pitch, double roll, const std::string& id)
+    {
+      return std::make_shared<GetSpoofTxFixResult>(lat, lon, alt, yaw, pitch, roll, id);
+    }
 
     GetSpoofTxFixResultPtr GetSpoofTxFixResult::create(CommandBasePtr relatedCommand, double lat, double lon, double alt, double yaw, double pitch, double roll, const std::string& id)
     {
@@ -61,6 +91,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxFixResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxFixResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Lat", "Lon", "Alt", "Yaw", "Pitch", "Roll", "Id"}; 
+      return names; 
+    }
 
 
     double GetSpoofTxFixResult::lat() const

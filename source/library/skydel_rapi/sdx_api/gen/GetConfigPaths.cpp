@@ -1,11 +1,12 @@
+
+#include "GetConfigPaths.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetConfigPaths
 ///
-#include "gen/GetConfigPaths.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetConfigPaths::CmdName = "GetConfigPaths";
     const char* const GetConfigPaths::Documentation = "Get a list of paths for all the files in the Configurations folder.";
+    const char* const GetConfigPaths::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetConfigPaths);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetConfigPaths);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetConfigPaths);
 
 
     GetConfigPaths::GetConfigPaths()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetConfigPathsPtr GetConfigPaths::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetConfigPaths::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetConfigPaths::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetConfigPaths::executePermission() const

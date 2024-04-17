@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "date_time.h"
 #include <string>
 
@@ -33,16 +34,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetVehicleTrajectoryOrbitResult();
 
+      GetVehicleTrajectoryOrbitResult(const std::string& type, const Sdx::DateTime& reference, double semiMajorAxis, double inclination, double rightAscension, double eccentricity, double meanAnomaly, double argumentOfPerigee);
+
       GetVehicleTrajectoryOrbitResult(CommandBasePtr relatedCommand, const std::string& type, const Sdx::DateTime& reference, double semiMajorAxis, double inclination, double rightAscension, double eccentricity, double meanAnomaly, double argumentOfPerigee);
-  
+
+      static GetVehicleTrajectoryOrbitResultPtr create(const std::string& type, const Sdx::DateTime& reference, double semiMajorAxis, double inclination, double rightAscension, double eccentricity, double meanAnomaly, double argumentOfPerigee);
+
       static GetVehicleTrajectoryOrbitResultPtr create(CommandBasePtr relatedCommand, const std::string& type, const Sdx::DateTime& reference, double semiMajorAxis, double inclination, double rightAscension, double eccentricity, double meanAnomaly, double argumentOfPerigee);
       static GetVehicleTrajectoryOrbitResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** type ****
@@ -84,6 +91,7 @@ namespace Sdx
       double argumentOfPerigee() const;
       void setArgumentOfPerigee(double argumentOfPerigee);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetVehicleTrajectoryOrbitResult);
   }
 }
 

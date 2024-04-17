@@ -1,34 +1,41 @@
+
+#include "SetPowerSbasOffset.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetPowerSbasOffset
 ///
-#include "gen/SetPowerSbasOffset.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetPowerSbasOffset::CmdName = "SetPowerSbasOffset";
-    const char* const SetPowerSbasOffset::Documentation = "Set power offset default value for the SBAS Service Provider given in argument";
+    const char* const SetPowerSbasOffset::Documentation = "Set power offset default value for the SBAS Service Provider given in argument\n"
+      "\n"
+      "Name            Type   Description\n"
+      "--------------- ------ ------------------------------------------------------------------------------\n"
+      "ServiceProvider string Service Provider key, allowed values: \"WAAS\", \"EGNOS\", \"MSAS\", \"GAGAN\", \"SDCM\"\n"
+      "Offset          double Offset in dB (negative value will attenuate signal)";
+    const char* const SetPowerSbasOffset::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetPowerSbasOffset);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetPowerSbasOffset);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetPowerSbasOffset);
 
 
     SetPowerSbasOffset::SetPowerSbasOffset()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetPowerSbasOffset::SetPowerSbasOffset(const std::string& serviceProvider, double offset)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setServiceProvider(serviceProvider);
       setOffset(offset);
     }
-
 
     SetPowerSbasOffsetPtr SetPowerSbasOffset::create(const std::string& serviceProvider, double offset)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetPowerSbasOffset::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetPowerSbasOffset::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ServiceProvider", "Offset"}; 
+      return names; 
+    }
 
 
     int SetPowerSbasOffset::executePermission() const

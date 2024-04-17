@@ -1,11 +1,12 @@
+
+#include "GetIssueOfDataQzss.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIssueOfDataQzss
 ///
-#include "gen/GetIssueOfDataQzss.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetIssueOfDataQzss::CmdName = "GetIssueOfDataQzss";
     const char* const GetIssueOfDataQzss::Documentation = "Get QZSS Issue of data, Ephemeris (IODE) and Issue of data, Clock (IODC)";
+    const char* const GetIssueOfDataQzss::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIssueOfDataQzss);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIssueOfDataQzss);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIssueOfDataQzss);
 
 
     GetIssueOfDataQzss::GetIssueOfDataQzss()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetIssueOfDataQzssPtr GetIssueOfDataQzss::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetIssueOfDataQzss::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIssueOfDataQzss::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetIssueOfDataQzss::executePermission() const

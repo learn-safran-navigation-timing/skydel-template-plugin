@@ -1,34 +1,41 @@
+
+#include "GetPseudorangeNoiseGaussMarkovForEachSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetPseudorangeNoiseGaussMarkovForEachSV
 ///
-#include "gen/GetPseudorangeNoiseGaussMarkovForEachSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetPseudorangeNoiseGaussMarkovForEachSV::CmdName = "GetPseudorangeNoiseGaussMarkovForEachSV";
-    const char* const GetPseudorangeNoiseGaussMarkovForEachSV::Documentation = "Please note the command GetAllSatellitesPseudorangeNoiseGaussMarkov is deprecated since 21.3. You may use GetPseudorangeNoiseGaussMarkovForEachSV.\n\nGet the satellite pseudorange noise Gauss-Markov process attributes for all satellites.";
+    const char* const GetPseudorangeNoiseGaussMarkovForEachSV::Documentation = "Get the satellite pseudorange noise Gauss-Markov process attributes for all satellites.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ --------------------------------------------------------------------------\n"
+      "System  string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "Process int    Gauss-Markov Process number (0 or 1)";
+    const char* const GetPseudorangeNoiseGaussMarkovForEachSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetPseudorangeNoiseGaussMarkovForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetPseudorangeNoiseGaussMarkovForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetPseudorangeNoiseGaussMarkovForEachSV);
 
 
     GetPseudorangeNoiseGaussMarkovForEachSV::GetPseudorangeNoiseGaussMarkovForEachSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetPseudorangeNoiseGaussMarkovForEachSV::GetPseudorangeNoiseGaussMarkovForEachSV(const std::string& system, int process)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setProcess(process);
     }
-
 
     GetPseudorangeNoiseGaussMarkovForEachSVPtr GetPseudorangeNoiseGaussMarkovForEachSV::create(const std::string& system, int process)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetPseudorangeNoiseGaussMarkovForEachSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetPseudorangeNoiseGaussMarkovForEachSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Process"}; 
+      return names; 
+    }
 
 
     int GetPseudorangeNoiseGaussMarkovForEachSV::executePermission() const

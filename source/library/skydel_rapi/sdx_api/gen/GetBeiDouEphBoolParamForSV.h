@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "sdx_optional.h"
 #include <string>
 
@@ -10,6 +11,8 @@ namespace Sdx
   namespace Cmd
   {
     ///
+    /// Please note the command GetBeiDouEphBoolParamForSV is deprecated since 23.11. You may use GetConstellationParameterForSV.
+    /// 
     /// Get various boolean parameters in the BeiDou ephemeris
     /// 
     ///   ParamName
@@ -32,16 +35,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
+
+      static const char* const Deprecated;
 
 
       GetBeiDouEphBoolParamForSV();
 
       GetBeiDouEphBoolParamForSV(int svId, const std::string& paramName, const Sdx::optional<std::string>& dataSetName = {});
-  
+
       static GetBeiDouEphBoolParamForSVPtr create(int svId, const std::string& paramName, const Sdx::optional<std::string>& dataSetName = {});
       static GetBeiDouEphBoolParamForSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
+
+      virtual Sdx::optional<std::string> deprecated() const override;
 
       virtual int executePermission() const override;
 
@@ -60,6 +69,7 @@ namespace Sdx
       Sdx::optional<std::string> dataSetName() const;
       void setDataSetName(const Sdx::optional<std::string>& dataSetName);
     };
+    
   }
 }
 

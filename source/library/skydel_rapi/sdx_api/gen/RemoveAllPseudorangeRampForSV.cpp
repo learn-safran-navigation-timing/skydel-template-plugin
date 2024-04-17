@@ -1,34 +1,41 @@
+
+#include "RemoveAllPseudorangeRampForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RemoveAllPseudorangeRampForSV
 ///
-#include "gen/RemoveAllPseudorangeRampForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RemoveAllPseudorangeRampForSV::CmdName = "RemoveAllPseudorangeRampForSV";
-    const char* const RemoveAllPseudorangeRampForSV::Documentation = "Remove all PSR Ramps for the specified system's satellite.";
+    const char* const RemoveAllPseudorangeRampForSV::Documentation = "Remove all PSR Ramps for the specified system's satellite.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId   int    The satellite's SV ID (use 0 for all SVs).";
+    const char* const RemoveAllPseudorangeRampForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RemoveAllPseudorangeRampForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RemoveAllPseudorangeRampForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RemoveAllPseudorangeRampForSV);
 
 
     RemoveAllPseudorangeRampForSV::RemoveAllPseudorangeRampForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RemoveAllPseudorangeRampForSV::RemoveAllPseudorangeRampForSV(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     RemoveAllPseudorangeRampForSVPtr RemoveAllPseudorangeRampForSV::create(const std::string& system, int svId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string RemoveAllPseudorangeRampForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RemoveAllPseudorangeRampForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int RemoveAllPseudorangeRampForSV::executePermission() const

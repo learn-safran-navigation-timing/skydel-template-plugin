@@ -1,28 +1,36 @@
+
+#include "GetGalileoEphDoubleParamForEachSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGalileoEphDoubleParamForEachSVResult
 ///
-#include "gen/GetGalileoEphDoubleParamForEachSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGalileoEphDoubleParamForEachSVResult::CmdName = "GetGalileoEphDoubleParamForEachSVResult";
-    const char* const GetGalileoEphDoubleParamForEachSVResult::Documentation = "Result of GetGalileoEphDoubleParamForEachSV.";
+    const char* const GetGalileoEphDoubleParamForEachSVResult::Documentation = "Result of GetGalileoEphDoubleParamForEachSV.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- --------------------------------------------------------------------------------------------------\n"
+      "ParamName   string          Refer to SetGalileoEphDoubleParamForSV for accepted names\n"
+      "Val         array double    Parameter value for each satellite. Zero based index (index 0 => SV ID 1, index 1 => SV ID 2, etc)\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetGalileoEphDoubleParamForEachSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetGalileoEphDoubleParamForEachSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGalileoEphDoubleParamForEachSVResult);
 
 
     GetGalileoEphDoubleParamForEachSVResult::GetGalileoEphDoubleParamForEachSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetGalileoEphDoubleParamForEachSVResult::GetGalileoEphDoubleParamForEachSVResult(CommandBasePtr relatedCommand, const std::string& paramName, const std::vector<double>& val, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetGalileoEphDoubleParamForEachSVResult::GetGalileoEphDoubleParamForEachSVResult(const std::string& paramName, const std::vector<double>& val, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setParamName(paramName);
@@ -30,6 +38,20 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetGalileoEphDoubleParamForEachSVResult::GetGalileoEphDoubleParamForEachSVResult(CommandBasePtr relatedCommand, const std::string& paramName, const std::vector<double>& val, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setParamName(paramName);
+      setVal(val);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetGalileoEphDoubleParamForEachSVResultPtr GetGalileoEphDoubleParamForEachSVResult::create(const std::string& paramName, const std::vector<double>& val, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetGalileoEphDoubleParamForEachSVResult>(paramName, val, dataSetName);
+    }
 
     GetGalileoEphDoubleParamForEachSVResultPtr GetGalileoEphDoubleParamForEachSVResult::create(CommandBasePtr relatedCommand, const std::string& paramName, const std::vector<double>& val, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetGalileoEphDoubleParamForEachSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGalileoEphDoubleParamForEachSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ParamName", "Val", "DataSetName"}; 
+      return names; 
+    }
 
 
     std::string GetGalileoEphDoubleParamForEachSVResult::paramName() const

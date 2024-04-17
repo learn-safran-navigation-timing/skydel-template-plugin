@@ -1,34 +1,41 @@
+
+#include "EnableIntTxTrajectorySmoothing.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of EnableIntTxTrajectorySmoothing
 ///
-#include "gen/EnableIntTxTrajectorySmoothing.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const EnableIntTxTrajectorySmoothing::CmdName = "EnableIntTxTrajectorySmoothing";
-    const char* const EnableIntTxTrajectorySmoothing::Documentation = "Set trajectory smoothing for interference Track enabled or disabled";
+    const char* const EnableIntTxTrajectorySmoothing::Documentation = "Set trajectory smoothing for interference Track enabled or disabled\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ -------------------------------------------------------------------\n"
+      "Enabled bool   If true, interference trajectory will be smoothed during simulation\n"
+      "Id      string Transmitter unique identifier.";
+    const char* const EnableIntTxTrajectorySmoothing::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(EnableIntTxTrajectorySmoothing);
+    REGISTER_COMMAND_TO_FACTORY_DECL(EnableIntTxTrajectorySmoothing);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(EnableIntTxTrajectorySmoothing);
 
 
     EnableIntTxTrajectorySmoothing::EnableIntTxTrajectorySmoothing()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     EnableIntTxTrajectorySmoothing::EnableIntTxTrajectorySmoothing(bool enabled, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
       setId(id);
     }
-
 
     EnableIntTxTrajectorySmoothingPtr EnableIntTxTrajectorySmoothing::create(bool enabled, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string EnableIntTxTrajectorySmoothing::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& EnableIntTxTrajectorySmoothing::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "Id"}; 
+      return names; 
+    }
 
 
     int EnableIntTxTrajectorySmoothing::executePermission() const

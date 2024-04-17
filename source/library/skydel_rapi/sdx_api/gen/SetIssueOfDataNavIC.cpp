@@ -1,34 +1,41 @@
+
+#include "SetIssueOfDataNavIC.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIssueOfDataNavIC
 ///
-#include "gen/SetIssueOfDataNavIC.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIssueOfDataNavIC::CmdName = "SetIssueOfDataNavIC";
-    const char* const SetIssueOfDataNavIC::Documentation = "Set NavIC Issue of data, Ephemeris and Clock (IODEC)";
+    const char* const SetIssueOfDataNavIC::Documentation = "Set NavIC Issue of data, Ephemeris and Clock (IODEC)\n"
+      "\n"
+      "Name              Type          Description\n"
+      "----------------- ------------- -------------------------------------------------------\n"
+      "EphemerisAndClock int           Issue of data, ephemeris and clock\n"
+      "OverrideRinex     optional bool If the IODEC overrides the RINEX IODEC, default is True";
+    const char* const SetIssueOfDataNavIC::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIssueOfDataNavIC);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIssueOfDataNavIC);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIssueOfDataNavIC);
 
 
     SetIssueOfDataNavIC::SetIssueOfDataNavIC()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIssueOfDataNavIC::SetIssueOfDataNavIC(int ephemerisAndClock, const Sdx::optional<bool>& overrideRinex)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEphemerisAndClock(ephemerisAndClock);
       setOverrideRinex(overrideRinex);
     }
-
 
     SetIssueOfDataNavICPtr SetIssueOfDataNavIC::create(int ephemerisAndClock, const Sdx::optional<bool>& overrideRinex)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetIssueOfDataNavIC::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIssueOfDataNavIC::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"EphemerisAndClock", "OverrideRinex"}; 
+      return names; 
+    }
 
 
     int SetIssueOfDataNavIC::executePermission() const

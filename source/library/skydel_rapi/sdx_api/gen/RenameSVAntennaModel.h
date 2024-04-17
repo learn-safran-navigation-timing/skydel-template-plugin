@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -12,10 +13,10 @@ namespace Sdx
     /// Rename a space vehicle antenna model.
     ///
     /// Name    Type   Description
-    /// ------- ------ ----------------------------------------------------------------
+    /// ------- ------ --------------------------------------------------------------------------
     /// Name    string Reference space vehicle antenna model name
     /// NewName string New space vehicle antenna model name
-    /// System  string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System  string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     ///
 
     class RenameSVAntennaModel;
@@ -27,16 +28,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       RenameSVAntennaModel();
 
       RenameSVAntennaModel(const std::string& name, const std::string& newName, const std::string& system);
-  
+
       static RenameSVAntennaModelPtr create(const std::string& name, const std::string& newName, const std::string& system);
       static RenameSVAntennaModelPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -55,6 +58,7 @@ namespace Sdx
       std::string system() const;
       void setSystem(const std::string& system);
     };
+    
   }
 }
 

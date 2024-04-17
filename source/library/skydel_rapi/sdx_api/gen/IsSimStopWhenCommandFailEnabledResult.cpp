@@ -1,33 +1,51 @@
+
+#include "IsSimStopWhenCommandFailEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSimStopWhenCommandFailEnabledResult
 ///
-#include "gen/IsSimStopWhenCommandFailEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSimStopWhenCommandFailEnabledResult::CmdName = "IsSimStopWhenCommandFailEnabledResult";
-    const char* const IsSimStopWhenCommandFailEnabledResult::Documentation = "Result of IsSimStopWhenCommandFailEnabled.";
+    const char* const IsSimStopWhenCommandFailEnabledResult::Documentation = "Result of IsSimStopWhenCommandFailEnabled.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ----------------------------------\n"
+      "Enabled bool Enable stop when command fail flag";
+    const char* const IsSimStopWhenCommandFailEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsSimStopWhenCommandFailEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSimStopWhenCommandFailEnabledResult);
 
 
     IsSimStopWhenCommandFailEnabledResult::IsSimStopWhenCommandFailEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsSimStopWhenCommandFailEnabledResult::IsSimStopWhenCommandFailEnabledResult(CommandBasePtr relatedCommand, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsSimStopWhenCommandFailEnabledResult::IsSimStopWhenCommandFailEnabledResult(bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
 
+    IsSimStopWhenCommandFailEnabledResult::IsSimStopWhenCommandFailEnabledResult(CommandBasePtr relatedCommand, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+    }
+
+
+    IsSimStopWhenCommandFailEnabledResultPtr IsSimStopWhenCommandFailEnabledResult::create(bool enabled)
+    {
+      return std::make_shared<IsSimStopWhenCommandFailEnabledResult>(enabled);
+    }
 
     IsSimStopWhenCommandFailEnabledResultPtr IsSimStopWhenCommandFailEnabledResult::create(CommandBasePtr relatedCommand, bool enabled)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsSimStopWhenCommandFailEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSimStopWhenCommandFailEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     bool IsSimStopWhenCommandFailEnabledResult::enabled() const

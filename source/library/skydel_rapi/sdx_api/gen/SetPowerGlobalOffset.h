@@ -4,6 +4,7 @@
 #include "command_base.h"
 
 
+
 namespace Sdx
 {
   namespace Cmd
@@ -27,16 +28,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetPowerGlobalOffset();
 
       SetPowerGlobalOffset(double offset);
-  
+
       static SetPowerGlobalOffsetPtr create(double offset);
       static SetPowerGlobalOffsetPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -45,6 +48,7 @@ namespace Sdx
       double offset() const;
       void setOffset(double offset);
     };
+    
   }
 }
 

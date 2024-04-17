@@ -1,34 +1,41 @@
+
+#include "GetAllMultipathForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAllMultipathForSV
 ///
-#include "gen/GetAllMultipathForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetAllMultipathForSV::CmdName = "GetAllMultipathForSV";
-    const char* const GetAllMultipathForSV::Documentation = "Get all multipath ID for the specified satellite of the constellation.";
+    const char* const GetAllMultipathForSV::Documentation = "Get all multipath ID for the specified satellite of the constellation.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId   int    The satellite's SV ID";
+    const char* const GetAllMultipathForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetAllMultipathForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAllMultipathForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAllMultipathForSV);
 
 
     GetAllMultipathForSV::GetAllMultipathForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetAllMultipathForSV::GetAllMultipathForSV(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     GetAllMultipathForSVPtr GetAllMultipathForSV::create(const std::string& system, int svId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetAllMultipathForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAllMultipathForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int GetAllMultipathForSV::executePermission() const

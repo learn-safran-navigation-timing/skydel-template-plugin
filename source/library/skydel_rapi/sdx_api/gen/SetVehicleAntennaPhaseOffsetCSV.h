@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "gen/AntennaPatternFileType.h"
 #include "gen/AntennaPatternType.h"
 #include "gen/GNSSBand.h"
@@ -33,16 +34,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetVehicleAntennaPhaseOffsetCSV();
 
       SetVehicleAntennaPhaseOffsetCSV(const std::string& filePath, const Sdx::AntennaPatternFileType& fileFormat, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name = {});
-  
+
       static SetVehicleAntennaPhaseOffsetCSVPtr create(const std::string& filePath, const Sdx::AntennaPatternFileType& fileFormat, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name = {});
       static SetVehicleAntennaPhaseOffsetCSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -71,6 +74,7 @@ namespace Sdx
       Sdx::optional<std::string> name() const;
       void setName(const Sdx::optional<std::string>& name);
     };
+    
   }
 }
 

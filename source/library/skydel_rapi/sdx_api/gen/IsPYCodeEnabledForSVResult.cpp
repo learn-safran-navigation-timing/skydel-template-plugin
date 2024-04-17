@@ -1,28 +1,36 @@
+
+#include "IsPYCodeEnabledForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsPYCodeEnabledForSVResult
 ///
-#include "gen/IsPYCodeEnabledForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsPYCodeEnabledForSVResult::CmdName = "IsPYCodeEnabledForSVResult";
-    const char* const IsPYCodeEnabledForSVResult::Documentation = "Result of IsPYCodeEnabledForSV.";
+    const char* const IsPYCodeEnabledForSVResult::Documentation = "Result of IsPYCodeEnabledForSV.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ -----------------------------------------------\n"
+      "Signal  string Accepted signal keys: \"L1P\", \"L2P\"\n"
+      "SvId    int    The satellite's SV ID 1..32 (use 0 for all SVs)\n"
+      "Enabled bool   Enable P(Y)-Code if True";
+    const char* const IsPYCodeEnabledForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsPYCodeEnabledForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsPYCodeEnabledForSVResult);
 
 
     IsPYCodeEnabledForSVResult::IsPYCodeEnabledForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsPYCodeEnabledForSVResult::IsPYCodeEnabledForSVResult(CommandBasePtr relatedCommand, const std::string& signal, int svId, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsPYCodeEnabledForSVResult::IsPYCodeEnabledForSVResult(const std::string& signal, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSignal(signal);
@@ -30,6 +38,20 @@ namespace Sdx
       setEnabled(enabled);
     }
 
+    IsPYCodeEnabledForSVResult::IsPYCodeEnabledForSVResult(CommandBasePtr relatedCommand, const std::string& signal, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSignal(signal);
+      setSvId(svId);
+      setEnabled(enabled);
+    }
+
+
+    IsPYCodeEnabledForSVResultPtr IsPYCodeEnabledForSVResult::create(const std::string& signal, int svId, bool enabled)
+    {
+      return std::make_shared<IsPYCodeEnabledForSVResult>(signal, svId, enabled);
+    }
 
     IsPYCodeEnabledForSVResultPtr IsPYCodeEnabledForSVResult::create(CommandBasePtr relatedCommand, const std::string& signal, int svId, bool enabled)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string IsPYCodeEnabledForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsPYCodeEnabledForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Signal", "SvId", "Enabled"}; 
+      return names; 
+    }
 
 
     std::string IsPYCodeEnabledForSVResult::signal() const

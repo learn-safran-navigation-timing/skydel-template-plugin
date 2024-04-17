@@ -1,33 +1,39 @@
+
+#include "ResetToDefaultPrn.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ResetToDefaultPrn
 ///
-#include "gen/ResetToDefaultPrn.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ResetToDefaultPrn::CmdName = "ResetToDefaultPrn";
-    const char* const ResetToDefaultPrn::Documentation = "Reset the PRNs of all satellites in specified system, for all signals.";
+    const char* const ResetToDefaultPrn::Documentation = "Reset the PRNs of all satellites in specified system, for all signals.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const ResetToDefaultPrn::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ResetToDefaultPrn);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ResetToDefaultPrn);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ResetToDefaultPrn);
 
 
     ResetToDefaultPrn::ResetToDefaultPrn()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ResetToDefaultPrn::ResetToDefaultPrn(const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
     }
-
 
     ResetToDefaultPrnPtr ResetToDefaultPrn::create(const std::string& system)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string ResetToDefaultPrn::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ResetToDefaultPrn::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System"}; 
+      return names; 
+    }
 
 
     int ResetToDefaultPrn::executePermission() const

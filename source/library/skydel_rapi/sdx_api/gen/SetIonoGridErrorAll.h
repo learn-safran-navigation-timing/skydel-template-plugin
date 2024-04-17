@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <vector>
 
 namespace Sdx
@@ -25,16 +26,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetIonoGridErrorAll();
 
       SetIonoGridErrorAll(const std::vector<std::vector<double>>& grid);
-  
+
       static SetIonoGridErrorAllPtr create(const std::vector<std::vector<double>>& grid);
       static SetIonoGridErrorAllPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -43,6 +46,7 @@ namespace Sdx
       std::vector<std::vector<double>> grid() const;
       void setGrid(const std::vector<std::vector<double>>& grid);
     };
+    
   }
 }
 

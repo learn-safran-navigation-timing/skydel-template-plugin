@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <vector>
 
 namespace Sdx
@@ -25,22 +26,29 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetCnav2PagesEnabledResult();
 
+      GetCnav2PagesEnabledResult(const std::vector<int>& messages);
+
       GetCnav2PagesEnabledResult(CommandBasePtr relatedCommand, const std::vector<int>& messages);
-  
+
+      static GetCnav2PagesEnabledResultPtr create(const std::vector<int>& messages);
+
       static GetCnav2PagesEnabledResultPtr create(CommandBasePtr relatedCommand, const std::vector<int>& messages);
       static GetCnav2PagesEnabledResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** messages ****
       std::vector<int> messages() const;
       void setMessages(const std::vector<int>& messages);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetCnav2PagesEnabledResult);
   }
 }
 

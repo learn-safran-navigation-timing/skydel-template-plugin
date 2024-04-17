@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 
 
 namespace Sdx
@@ -26,16 +27,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetIssueOfDataBeiDouResult();
 
+      GetIssueOfDataBeiDouResult(int clock, int ephemeris);
+
       GetIssueOfDataBeiDouResult(CommandBasePtr relatedCommand, int clock, int ephemeris);
-  
+
+      static GetIssueOfDataBeiDouResultPtr create(int clock, int ephemeris);
+
       static GetIssueOfDataBeiDouResultPtr create(CommandBasePtr relatedCommand, int clock, int ephemeris);
       static GetIssueOfDataBeiDouResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** clock ****
@@ -47,6 +54,7 @@ namespace Sdx
       int ephemeris() const;
       void setEphemeris(int ephemeris);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIssueOfDataBeiDouResult);
   }
 }
 

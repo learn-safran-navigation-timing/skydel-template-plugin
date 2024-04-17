@@ -1,11 +1,12 @@
+
+#include "Arm.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of Arm
 ///
-#include "gen/Arm.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const Arm::CmdName = "Arm";
     const char* const Arm::Documentation = "Arm the simulation. Simulation may or may not arm depending on the current state of the simulator.";
+    const char* const Arm::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(Arm);
+    REGISTER_COMMAND_TO_FACTORY_DECL(Arm);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(Arm);
 
 
     Arm::Arm()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     ArmPtr Arm::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string Arm::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& Arm::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int Arm::executePermission() const

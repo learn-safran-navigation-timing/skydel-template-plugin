@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 
 
 namespace Sdx
@@ -26,16 +27,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetEffectiveIonisationLevelCoefficientResult();
 
+      GetEffectiveIonisationLevelCoefficientResult(int index, double val);
+
       GetEffectiveIonisationLevelCoefficientResult(CommandBasePtr relatedCommand, int index, double val);
-  
+
+      static GetEffectiveIonisationLevelCoefficientResultPtr create(int index, double val);
+
       static GetEffectiveIonisationLevelCoefficientResultPtr create(CommandBasePtr relatedCommand, int index, double val);
       static GetEffectiveIonisationLevelCoefficientResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** index ****
@@ -47,6 +54,7 @@ namespace Sdx
       double val() const;
       void setVal(double val);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetEffectiveIonisationLevelCoefficientResult);
   }
 }
 

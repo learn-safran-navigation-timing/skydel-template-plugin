@@ -1,35 +1,43 @@
+
+#include "SetGalileoSisaE1E5aIndexForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetGalileoSisaE1E5aIndexForSV
 ///
-#include "gen/SetGalileoSisaE1E5aIndexForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetGalileoSisaE1E5aIndexForSV::CmdName = "SetGalileoSisaE1E5aIndexForSV";
-    const char* const SetGalileoSisaE1E5aIndexForSV::Documentation = "Set the SISA(E1,E5a) index of a Galileo satellite";
+    const char* const SetGalileoSisaE1E5aIndexForSV::Documentation = "Set the SISA(E1,E5a) index of a Galileo satellite\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             The satellite SV ID, or use 0 to apply new value to all satellites.\n"
+      "Sisai       int             SISA index.\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetGalileoSisaE1E5aIndexForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetGalileoSisaE1E5aIndexForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetGalileoSisaE1E5aIndexForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetGalileoSisaE1E5aIndexForSV);
 
 
     SetGalileoSisaE1E5aIndexForSV::SetGalileoSisaE1E5aIndexForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetGalileoSisaE1E5aIndexForSV::SetGalileoSisaE1E5aIndexForSV(int svId, int sisai, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setSisai(sisai);
       setDataSetName(dataSetName);
     }
-
 
     SetGalileoSisaE1E5aIndexForSVPtr SetGalileoSisaE1E5aIndexForSV::create(int svId, int sisai, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetGalileoSisaE1E5aIndexForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetGalileoSisaE1E5aIndexForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Sisai", "DataSetName"}; 
+      return names; 
+    }
 
 
     int SetGalileoSisaE1E5aIndexForSV::executePermission() const

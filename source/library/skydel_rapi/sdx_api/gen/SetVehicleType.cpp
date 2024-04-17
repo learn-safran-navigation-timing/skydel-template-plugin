@@ -1,33 +1,39 @@
+
+#include "SetVehicleType.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetVehicleType
 ///
-#include "gen/SetVehicleType.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetVehicleType::CmdName = "SetVehicleType";
-    const char* const SetVehicleType::Documentation = "Set vehicle type for Route Trajectory";
+    const char* const SetVehicleType::Documentation = "Set vehicle type for Route Trajectory\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ----------------------------------------------------------\n"
+      "Type string Vehicle type (\"Ground / Water\" or \"Airborne / Spaceborne\")";
+    const char* const SetVehicleType::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetVehicleType);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetVehicleType);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetVehicleType);
 
 
     SetVehicleType::SetVehicleType()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetVehicleType::SetVehicleType(const std::string& type)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setType(type);
     }
-
 
     SetVehicleTypePtr SetVehicleType::create(const std::string& type)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetVehicleType::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetVehicleType::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Type"}; 
+      return names; 
+    }
 
 
     int SetVehicleType::executePermission() const

@@ -1,11 +1,12 @@
+
+#include "GetVehicleTrajectoryFix.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetVehicleTrajectoryFix
 ///
-#include "gen/GetVehicleTrajectoryFix.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetVehicleTrajectoryFix::CmdName = "GetVehicleTrajectoryFix";
     const char* const GetVehicleTrajectoryFix::Documentation = "Get vehicle static position and orientation";
+    const char* const GetVehicleTrajectoryFix::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetVehicleTrajectoryFix);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetVehicleTrajectoryFix);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetVehicleTrajectoryFix);
 
 
     GetVehicleTrajectoryFix::GetVehicleTrajectoryFix()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetVehicleTrajectoryFixPtr GetVehicleTrajectoryFix::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetVehicleTrajectoryFix::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetVehicleTrajectoryFix::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetVehicleTrajectoryFix::executePermission() const

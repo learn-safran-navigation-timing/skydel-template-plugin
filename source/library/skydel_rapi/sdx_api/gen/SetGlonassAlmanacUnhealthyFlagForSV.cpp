@@ -1,34 +1,41 @@
+
+#include "SetGlonassAlmanacUnhealthyFlagForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetGlonassAlmanacUnhealthyFlagForSV
 ///
-#include "gen/SetGlonassAlmanacUnhealthyFlagForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetGlonassAlmanacUnhealthyFlagForSV::CmdName = "SetGlonassAlmanacUnhealthyFlagForSV";
-    const char* const SetGlonassAlmanacUnhealthyFlagForSV::Documentation = "Set GLONASS satellite Almanac Unhealthy Flag Cn";
+    const char* const SetGlonassAlmanacUnhealthyFlagForSV::Documentation = "Set GLONASS satellite Almanac Unhealthy Flag Cn\n"
+      "\n"
+      "Name   Type Description\n"
+      "------ ---- ----------------------------------------------------------\n"
+      "SvId   int  The satellite's SV ID 1..24\n"
+      "Health bool Status, false = Non-operability, true = Operability (Good)";
+    const char* const SetGlonassAlmanacUnhealthyFlagForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetGlonassAlmanacUnhealthyFlagForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetGlonassAlmanacUnhealthyFlagForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetGlonassAlmanacUnhealthyFlagForSV);
 
 
     SetGlonassAlmanacUnhealthyFlagForSV::SetGlonassAlmanacUnhealthyFlagForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetGlonassAlmanacUnhealthyFlagForSV::SetGlonassAlmanacUnhealthyFlagForSV(int svId, bool health)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setHealth(health);
     }
-
 
     SetGlonassAlmanacUnhealthyFlagForSVPtr SetGlonassAlmanacUnhealthyFlagForSV::create(int svId, bool health)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetGlonassAlmanacUnhealthyFlagForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetGlonassAlmanacUnhealthyFlagForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health"}; 
+      return names; 
+    }
 
 
     int SetGlonassAlmanacUnhealthyFlagForSV::executePermission() const

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "sdx_optional.h"
 #include <string>
 
@@ -11,6 +12,8 @@ namespace Sdx
   {
     ///
     /// Please note the command GetQzssEphemerisBoolParam is deprecated since 21.3. You may use GetQzssEphBoolParamForSV.
+    /// 
+    /// Please note the command GetQzssEphBoolParamForSV is deprecated since 23.11. You may use GetConstellationParameterForSV.
     /// 
     /// Get various boolean parameters in the QZSS ephemeris
     /// 
@@ -38,16 +41,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
+
+      static const char* const Deprecated;
 
 
       GetQzssEphemerisBoolParam();
 
       GetQzssEphemerisBoolParam(int svId, const std::string& paramName, const Sdx::optional<std::string>& dataSetName = {});
-  
+
       static GetQzssEphemerisBoolParamPtr create(int svId, const std::string& paramName, const Sdx::optional<std::string>& dataSetName = {});
       static GetQzssEphemerisBoolParamPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
+
+      virtual Sdx::optional<std::string> deprecated() const override;
 
       virtual int executePermission() const override;
 
@@ -66,6 +75,7 @@ namespace Sdx
       Sdx::optional<std::string> dataSetName() const;
       void setDataSetName(const Sdx::optional<std::string>& dataSetName);
     };
+    
   }
 }
 

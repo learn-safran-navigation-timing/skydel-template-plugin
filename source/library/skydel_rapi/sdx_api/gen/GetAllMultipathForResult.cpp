@@ -1,33 +1,51 @@
+
+#include "GetAllMultipathForResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAllMultipathForResult
 ///
-#include "gen/GetAllMultipathForResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetAllMultipathForResult::CmdName = "GetAllMultipathForResult";
-    const char* const GetAllMultipathForResult::Documentation = "Result of GetAllMultipathFor(Signal|SV|System) commands.";
+    const char* const GetAllMultipathForResult::Documentation = "Result of GetAllMultipathFor(Signal|SV|System) commands.\n"
+      "\n"
+      "Name Type         Description\n"
+      "---- ------------ ------------------------------------------------------\n"
+      "Ids  array string IDs of multipaths for the specified argument in getter";
+    const char* const GetAllMultipathForResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetAllMultipathForResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAllMultipathForResult);
 
 
     GetAllMultipathForResult::GetAllMultipathForResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetAllMultipathForResult::GetAllMultipathForResult(CommandBasePtr relatedCommand, const std::vector<std::string>& ids)
-      : CommandResult(CmdName, relatedCommand)
+    GetAllMultipathForResult::GetAllMultipathForResult(const std::vector<std::string>& ids)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIds(ids);
     }
 
+    GetAllMultipathForResult::GetAllMultipathForResult(CommandBasePtr relatedCommand, const std::vector<std::string>& ids)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIds(ids);
+    }
+
+
+    GetAllMultipathForResultPtr GetAllMultipathForResult::create(const std::vector<std::string>& ids)
+    {
+      return std::make_shared<GetAllMultipathForResult>(ids);
+    }
 
     GetAllMultipathForResultPtr GetAllMultipathForResult::create(CommandBasePtr relatedCommand, const std::vector<std::string>& ids)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetAllMultipathForResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAllMultipathForResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ids"}; 
+      return names; 
+    }
 
 
     std::vector<std::string> GetAllMultipathForResult::ids() const

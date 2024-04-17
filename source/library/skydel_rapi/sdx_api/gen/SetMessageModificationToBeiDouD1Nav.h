@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 #include <vector>
 
@@ -32,8 +33,8 @@ namespace Sdx
     /// changed.
     ///
     /// Name             Type         Description
-    /// ---------------- ------------ --------------------------------------------------------------------------------------------
-    /// SignalArray      array string Array of signals to apply the message modification to, accepts "B1" and "B2" (empty for all)
+    /// ---------------- ------------ ---------------------------------------------------------------------------------------------------
+    /// SignalArray      array string Array of signals to apply the message modification to, accepts "B1", "B2" and "B3I" (empty for all)
     /// SvId             int          The satellite's SV ID 1..35 (use 0 to apply modification to all SVs)
     /// StartTime        int          Elapsed time in seconds since start of simulation
     /// StopTime         int          Elapsed time in seconds since start of simulation (use 0 for no stop time)
@@ -54,16 +55,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetMessageModificationToBeiDouD1Nav();
 
       SetMessageModificationToBeiDouD1Nav(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int subframe, int page, int word, bool updateParity, const std::string& wordModification, const std::string& id);
-  
+
       static SetMessageModificationToBeiDouD1NavPtr create(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int subframe, int page, int word, bool updateParity, const std::string& wordModification, const std::string& id);
       static SetMessageModificationToBeiDouD1NavPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -117,6 +120,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    
   }
 }
 

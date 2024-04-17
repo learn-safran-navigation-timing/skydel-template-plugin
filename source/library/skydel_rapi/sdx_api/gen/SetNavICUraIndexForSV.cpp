@@ -1,35 +1,43 @@
+
+#include "SetNavICUraIndexForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetNavICUraIndexForSV
 ///
-#include "gen/SetNavICUraIndexForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetNavICUraIndexForSV::CmdName = "SetNavICUraIndexForSV";
-    const char* const SetNavICUraIndexForSV::Documentation = "Please note the command SetNavICUraIndex is deprecated since 21.3. You may use SetNavICUraIndexForSV.\n\nSet the URA index of a NavIC satellite";
+    const char* const SetNavICUraIndexForSV::Documentation = "Set the URA index of a NavIC satellite\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             The satellite SV ID, or use 0 to apply new value to all satellites.\n"
+      "Urai        int             URA index.\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetNavICUraIndexForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetNavICUraIndexForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetNavICUraIndexForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetNavICUraIndexForSV);
 
 
     SetNavICUraIndexForSV::SetNavICUraIndexForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetNavICUraIndexForSV::SetNavICUraIndexForSV(int svId, int urai, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setUrai(urai);
       setDataSetName(dataSetName);
     }
-
 
     SetNavICUraIndexForSVPtr SetNavICUraIndexForSV::create(int svId, int urai, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetNavICUraIndexForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetNavICUraIndexForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Urai", "DataSetName"}; 
+      return names; 
+    }
 
 
     int SetNavICUraIndexForSV::executePermission() const

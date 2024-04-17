@@ -1,11 +1,12 @@
+
+#include "IsSimStopWhenCommandFailEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSimStopWhenCommandFailEnabled
 ///
-#include "gen/IsSimStopWhenCommandFailEnabled.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const IsSimStopWhenCommandFailEnabled::CmdName = "IsSimStopWhenCommandFailEnabled";
     const char* const IsSimStopWhenCommandFailEnabled::Documentation = "If enabled, simulation stops when a command result fail.";
+    const char* const IsSimStopWhenCommandFailEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsSimStopWhenCommandFailEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsSimStopWhenCommandFailEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSimStopWhenCommandFailEnabled);
 
 
     IsSimStopWhenCommandFailEnabled::IsSimStopWhenCommandFailEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     IsSimStopWhenCommandFailEnabledPtr IsSimStopWhenCommandFailEnabled::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string IsSimStopWhenCommandFailEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSimStopWhenCommandFailEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int IsSimStopWhenCommandFailEnabled::executePermission() const

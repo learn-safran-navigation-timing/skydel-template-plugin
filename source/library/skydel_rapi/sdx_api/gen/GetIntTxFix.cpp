@@ -1,33 +1,39 @@
+
+#include "GetIntTxFix.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxFix
 ///
-#include "gen/GetIntTxFix.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxFix::CmdName = "GetIntTxFix";
-    const char* const GetIntTxFix::Documentation = "Get interference transmitter static position and orientation";
+    const char* const GetIntTxFix::Documentation = "Get interference transmitter static position and orientation\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetIntTxFix::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTxFix);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxFix);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxFix);
 
 
     GetIntTxFix::GetIntTxFix()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTxFix::GetIntTxFix(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetIntTxFixPtr GetIntTxFix::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetIntTxFix::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxFix::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetIntTxFix::executePermission() const

@@ -1,33 +1,51 @@
+
+#include "GetDefaultIntTxPersistenceResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetDefaultIntTxPersistenceResult
 ///
-#include "gen/GetDefaultIntTxPersistenceResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetDefaultIntTxPersistenceResult::CmdName = "GetDefaultIntTxPersistenceResult";
-    const char* const GetDefaultIntTxPersistenceResult::Documentation = "Result of GetDefaultIntTxPersistence.";
+    const char* const GetDefaultIntTxPersistenceResult::Documentation = "Result of GetDefaultIntTxPersistence.\n"
+      "\n"
+      "Name         Type Description\n"
+      "------------ ---- --------------------------------------------------------------------------------\n"
+      "DefaultValue bool True if jammers should keep the modifications done during simulation by default.";
+    const char* const GetDefaultIntTxPersistenceResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetDefaultIntTxPersistenceResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetDefaultIntTxPersistenceResult);
 
 
     GetDefaultIntTxPersistenceResult::GetDefaultIntTxPersistenceResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetDefaultIntTxPersistenceResult::GetDefaultIntTxPersistenceResult(CommandBasePtr relatedCommand, bool defaultValue)
-      : CommandResult(CmdName, relatedCommand)
+    GetDefaultIntTxPersistenceResult::GetDefaultIntTxPersistenceResult(bool defaultValue)
+      : CommandResult(CmdName, TargetId)
     {
 
       setDefaultValue(defaultValue);
     }
 
+    GetDefaultIntTxPersistenceResult::GetDefaultIntTxPersistenceResult(CommandBasePtr relatedCommand, bool defaultValue)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setDefaultValue(defaultValue);
+    }
+
+
+    GetDefaultIntTxPersistenceResultPtr GetDefaultIntTxPersistenceResult::create(bool defaultValue)
+    {
+      return std::make_shared<GetDefaultIntTxPersistenceResult>(defaultValue);
+    }
 
     GetDefaultIntTxPersistenceResultPtr GetDefaultIntTxPersistenceResult::create(CommandBasePtr relatedCommand, bool defaultValue)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetDefaultIntTxPersistenceResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetDefaultIntTxPersistenceResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"DefaultValue"}; 
+      return names; 
+    }
 
 
     bool GetDefaultIntTxPersistenceResult::defaultValue() const

@@ -1,34 +1,54 @@
+
+#include "IsSpoofTxIgnoreRxAntennaGainPatternResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSpoofTxIgnoreRxAntennaGainPatternResult
 ///
-#include "gen/IsSpoofTxIgnoreRxAntennaGainPatternResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSpoofTxIgnoreRxAntennaGainPatternResult::CmdName = "IsSpoofTxIgnoreRxAntennaGainPatternResult";
-    const char* const IsSpoofTxIgnoreRxAntennaGainPatternResult::Documentation = "Result of IsSpoofTxIgnoreRxAntennaGainPattern.";
+    const char* const IsSpoofTxIgnoreRxAntennaGainPatternResult::Documentation = "Result of IsSpoofTxIgnoreRxAntennaGainPattern.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------------\n"
+      "Ignore bool   If true, the receiver's antenna gain pattern will be ignored.\n"
+      "Id     string Transmitter unique identifier.";
+    const char* const IsSpoofTxIgnoreRxAntennaGainPatternResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsSpoofTxIgnoreRxAntennaGainPatternResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSpoofTxIgnoreRxAntennaGainPatternResult);
 
 
     IsSpoofTxIgnoreRxAntennaGainPatternResult::IsSpoofTxIgnoreRxAntennaGainPatternResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsSpoofTxIgnoreRxAntennaGainPatternResult::IsSpoofTxIgnoreRxAntennaGainPatternResult(CommandBasePtr relatedCommand, bool ignore, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    IsSpoofTxIgnoreRxAntennaGainPatternResult::IsSpoofTxIgnoreRxAntennaGainPatternResult(bool ignore, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIgnore(ignore);
       setId(id);
     }
 
+    IsSpoofTxIgnoreRxAntennaGainPatternResult::IsSpoofTxIgnoreRxAntennaGainPatternResult(CommandBasePtr relatedCommand, bool ignore, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIgnore(ignore);
+      setId(id);
+    }
+
+
+    IsSpoofTxIgnoreRxAntennaGainPatternResultPtr IsSpoofTxIgnoreRxAntennaGainPatternResult::create(bool ignore, const std::string& id)
+    {
+      return std::make_shared<IsSpoofTxIgnoreRxAntennaGainPatternResult>(ignore, id);
+    }
 
     IsSpoofTxIgnoreRxAntennaGainPatternResultPtr IsSpoofTxIgnoreRxAntennaGainPatternResult::create(CommandBasePtr relatedCommand, bool ignore, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string IsSpoofTxIgnoreRxAntennaGainPatternResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSpoofTxIgnoreRxAntennaGainPatternResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ignore", "Id"}; 
+      return names; 
+    }
 
 
     bool IsSpoofTxIgnoreRxAntennaGainPatternResult::ignore() const

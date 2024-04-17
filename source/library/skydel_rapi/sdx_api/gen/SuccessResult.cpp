@@ -1,11 +1,12 @@
+
+#include "SuccessResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SuccessResult
 ///
-#include "gen/SuccessResult.h"
 
 namespace Sdx
 {
@@ -13,20 +14,20 @@ namespace Sdx
   {
     const char* const SuccessResult::CmdName = "SuccessResult";
     const char* const SuccessResult::Documentation = "When command succeed.";
+    const char* const SuccessResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(SuccessResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SuccessResult);
 
 
     SuccessResult::SuccessResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
     SuccessResult::SuccessResult(CommandBasePtr relatedCommand)
-      : CommandResult(CmdName, relatedCommand)
+      : CommandResult(CmdName, TargetId, relatedCommand)
     {
 
     }
-
 
     SuccessResultPtr SuccessResult::create(CommandBasePtr relatedCommand)
     {
@@ -47,6 +48,12 @@ namespace Sdx
     }
 
     std::string SuccessResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SuccessResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
   }
 }

@@ -1,11 +1,12 @@
+
+#include "IsAttitudeToZeroForced.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsAttitudeToZeroForced
 ///
-#include "gen/IsAttitudeToZeroForced.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const IsAttitudeToZeroForced::CmdName = "IsAttitudeToZeroForced";
     const char* const IsAttitudeToZeroForced::Documentation = "Get force vehicle yaw, pitch and roll to zero enabled or disabled";
+    const char* const IsAttitudeToZeroForced::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsAttitudeToZeroForced);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsAttitudeToZeroForced);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsAttitudeToZeroForced);
 
 
     IsAttitudeToZeroForced::IsAttitudeToZeroForced()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     IsAttitudeToZeroForcedPtr IsAttitudeToZeroForced::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string IsAttitudeToZeroForced::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsAttitudeToZeroForced::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int IsAttitudeToZeroForced::executePermission() const

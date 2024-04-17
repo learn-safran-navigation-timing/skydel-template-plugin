@@ -1,11 +1,12 @@
+
+#include "GetStartTimeMode.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetStartTimeMode
 ///
-#include "gen/GetStartTimeMode.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetStartTimeMode::CmdName = "GetStartTimeMode";
     const char* const GetStartTimeMode::Documentation = "Get the simulation start time mode.";
+    const char* const GetStartTimeMode::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetStartTimeMode);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetStartTimeMode);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetStartTimeMode);
 
 
     GetStartTimeMode::GetStartTimeMode()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetStartTimeModePtr GetStartTimeMode::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetStartTimeMode::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetStartTimeMode::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetStartTimeMode::executePermission() const

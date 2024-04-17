@@ -24,26 +24,30 @@ class CommandResult : public CommandBase
 public:
   static const std::string RelatedCommand;
 
-  CommandResult(const std::string &cmdName);
-  CommandResult(const std::string &cmdName, CommandBasePtr relatedCommand);
+  CommandResult(const std::string& cmdName, const std::string& targetId);
+  CommandResult(const std::string& cmdName, const std::string& targetId, CommandBasePtr relatedCommand);
   virtual bool isValid() const;
   static CommandResultPtr dynamicCast(CommandBasePtr ptr);
 
   virtual double timestamp() const;
+  virtual Sdx::DateTime gpsTimestamp() const;
   virtual void setTimestamp(double);
+  virtual void setGpsTimestamp(const Sdx::DateTime& gpsTimestamp);
 
   inline CommandBasePtr relatedCommand() const { return m_relatedCommand; }
 
   virtual std::string toReadableCommand(bool includeName = true) const;
 
-  inline virtual std::string errorMsg() const {return "";}
+  inline virtual std::string errorMsg() const { return ""; }
   inline virtual bool isSuccess() const { return true; }
   std::string message() const;
 
+  void setRelatedCommand(CommandBasePtr relatedCommand);
+
 private:
   CommandBasePtr m_relatedCommand;
-  friend class CommandResultFactory;
+  friend class CommandFactory;
 };
-} //namespace Sdx
+} // namespace Sdx
 
 #endif // COMMANDRESULT_H

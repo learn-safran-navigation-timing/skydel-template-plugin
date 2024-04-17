@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 #include <vector>
 
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetIonoGridMaskAllResult();
 
+      GetIonoGridMaskAllResult(const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid);
+
       GetIonoGridMaskAllResult(CommandBasePtr relatedCommand, const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid);
-  
+
+      static GetIonoGridMaskAllResultPtr create(const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid);
+
       static GetIonoGridMaskAllResultPtr create(CommandBasePtr relatedCommand, const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid);
       static GetIonoGridMaskAllResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** serviceProvider ****
@@ -48,6 +55,7 @@ namespace Sdx
       std::vector<std::vector<bool>> grid() const;
       void setGrid(const std::vector<std::vector<bool>>& grid);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIonoGridMaskAllResult);
   }
 }
 

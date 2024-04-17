@@ -1,11 +1,12 @@
+
+#include "GetSbasMonitoredSystems.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSbasMonitoredSystems
 ///
-#include "gen/GetSbasMonitoredSystems.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetSbasMonitoredSystems::CmdName = "GetSbasMonitoredSystems";
     const char* const GetSbasMonitoredSystems::Documentation = "Get the systems monitored by SBAS.";
+    const char* const GetSbasMonitoredSystems::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSbasMonitoredSystems);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSbasMonitoredSystems);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSbasMonitoredSystems);
 
 
     GetSbasMonitoredSystems::GetSbasMonitoredSystems()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetSbasMonitoredSystemsPtr GetSbasMonitoredSystems::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetSbasMonitoredSystems::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSbasMonitoredSystems::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetSbasMonitoredSystems::executePermission() const

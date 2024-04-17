@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -12,9 +13,9 @@ namespace Sdx
     /// Export a space vehicle antenna model in a XML file.
     ///
     /// Name        Type   Description
-    /// ----------- ------ ----------------------------------------------------------------
+    /// ----------- ------ --------------------------------------------------------------------------
     /// AntennaName string SV antenna model name
-    /// System      string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System      string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// FilePath    string The antenna model will be exported in this file path.
     /// Overwriting bool   Overwrite the old file if true.
     ///
@@ -28,16 +29,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       ExportSVAntennaModel();
 
       ExportSVAntennaModel(const std::string& antennaName, const std::string& system, const std::string& filePath, bool overwriting);
-  
+
       static ExportSVAntennaModelPtr create(const std::string& antennaName, const std::string& system, const std::string& filePath, bool overwriting);
       static ExportSVAntennaModelPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -61,6 +64,7 @@ namespace Sdx
       bool overwriting() const;
       void setOverwriting(bool overwriting);
     };
+    
   }
 }
 

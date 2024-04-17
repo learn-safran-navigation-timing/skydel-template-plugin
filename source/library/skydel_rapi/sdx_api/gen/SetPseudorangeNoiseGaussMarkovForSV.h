@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -12,8 +13,8 @@ namespace Sdx
     /// Set the satellite pseudorange noise Gauss-Markov process attributes.
     ///
     /// Name    Type   Description
-    /// ------- ------ ----------------------------------------------------------------
-    /// System  string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// ------- ------ --------------------------------------------------------------------------
+    /// System  string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// SvId    int    Satellite SV ID.
     /// Process int    Gauss-Markov Process number (0 or 1)
     /// Enabled bool   If true, Gauss-Markov process is enabled
@@ -31,16 +32,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetPseudorangeNoiseGaussMarkovForSV();
 
       SetPseudorangeNoiseGaussMarkovForSV(const std::string& system, int svId, int process, bool enabled, double sigma, double time, int seed);
-  
+
       static SetPseudorangeNoiseGaussMarkovForSVPtr create(const std::string& system, int svId, int process, bool enabled, double sigma, double time, int seed);
       static SetPseudorangeNoiseGaussMarkovForSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -79,6 +82,7 @@ namespace Sdx
       int seed() const;
       void setSeed(int seed);
     };
+    
   }
 }
 

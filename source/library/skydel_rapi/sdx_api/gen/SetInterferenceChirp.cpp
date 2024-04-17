@@ -1,28 +1,42 @@
+
+#include "SetInterferenceChirp.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetInterferenceChirp
 ///
-#include "gen/SetInterferenceChirp.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetInterferenceChirp::CmdName = "SetInterferenceChirp";
-    const char* const SetInterferenceChirp::Documentation = "Add or update chirp signal interference.";
+    const char* const SetInterferenceChirp::Documentation = "Add or update chirp signal interference.\n"
+      "\n"
+      "Name        Type   Description\n"
+      "----------- ------ -------------------------------------------------\n"
+      "StartTime   int    Elapsed time in seconds since start of simulation\n"
+      "StopTime    int    Elapsed time in seconds since start of simulation\n"
+      "CentralFreq double Central frequency (Hz)\n"
+      "Power       double Power (dB) relative to nominal power\n"
+      "Bandwidth   double Bandwidth (Hz)\n"
+      "SweepTime   double Sweep Time (us)\n"
+      "Enabled     bool   Interference enable or not\n"
+      "Id          string Unique identifier automatically set by simulator";
+    const char* const SetInterferenceChirp::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetInterferenceChirp);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetInterferenceChirp);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetInterferenceChirp);
 
 
     SetInterferenceChirp::SetInterferenceChirp()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetInterferenceChirp::SetInterferenceChirp(int startTime, int stopTime, double centralFreq, double power, double bandwidth, double sweepTime, bool enabled, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setStartTime(startTime);
@@ -34,7 +48,6 @@ namespace Sdx
       setEnabled(enabled);
       setId(id);
     }
-
 
     SetInterferenceChirpPtr SetInterferenceChirp::create(int startTime, int stopTime, double centralFreq, double power, double bandwidth, double sweepTime, bool enabled, const std::string& id)
     {
@@ -63,6 +76,12 @@ namespace Sdx
     }
 
     std::string SetInterferenceChirp::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetInterferenceChirp::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"StartTime", "StopTime", "CentralFreq", "Power", "Bandwidth", "SweepTime", "Enabled", "Id"}; 
+      return names; 
+    }
 
 
     int SetInterferenceChirp::executePermission() const

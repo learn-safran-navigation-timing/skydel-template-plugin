@@ -1,33 +1,43 @@
+
+#include "GetIonoAlpha.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIonoAlpha
 ///
-#include "gen/GetIonoAlpha.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIonoAlpha::CmdName = "GetIonoAlpha";
-    const char* const GetIonoAlpha::Documentation = "Get the GPS ionospheric Alpha coefficient\nAlpha 0 is in seconds\nAlpha 1 is in seconds/semicircle\nAlpha 2 is in seconds/semicircle^2\nAlpha 3 is in seconds/semicircle^3";
+    const char* const GetIonoAlpha::Documentation = "Get the GPS ionospheric Alpha coefficient\n"
+      "Alpha 0 is in seconds\n"
+      "Alpha 1 is in seconds/semicircle\n"
+      "Alpha 2 is in seconds/semicircle^2\n"
+      "Alpha 3 is in seconds/semicircle^3\n"
+      "\n"
+      "Name  Type Description\n"
+      "----- ---- ------------------------\n"
+      "Index int  Coefficient index [0..3]";
+    const char* const GetIonoAlpha::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIonoAlpha);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIonoAlpha);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIonoAlpha);
 
 
     GetIonoAlpha::GetIonoAlpha()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIonoAlpha::GetIonoAlpha(int index)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setIndex(index);
     }
-
 
     GetIonoAlphaPtr GetIonoAlpha::create(int index)
     {
@@ -49,6 +59,12 @@ namespace Sdx
     }
 
     std::string GetIonoAlpha::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIonoAlpha::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Index"}; 
+      return names; 
+    }
 
 
     int GetIonoAlpha::executePermission() const

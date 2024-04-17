@@ -1,11 +1,12 @@
+
+#include "GetGpsStartTime.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGpsStartTime
 ///
-#include "gen/GetGpsStartTime.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetGpsStartTime::CmdName = "GetGpsStartTime";
     const char* const GetGpsStartTime::Documentation = "Get the simulation GPS start date and time and leap second to convert into UTC time";
+    const char* const GetGpsStartTime::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetGpsStartTime);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGpsStartTime);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGpsStartTime);
 
 
     GetGpsStartTime::GetGpsStartTime()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetGpsStartTimePtr GetGpsStartTime::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetGpsStartTime::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGpsStartTime::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetGpsStartTime::executePermission() const

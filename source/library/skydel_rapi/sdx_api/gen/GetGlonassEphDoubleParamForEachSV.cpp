@@ -1,33 +1,39 @@
+
+#include "GetGlonassEphDoubleParamForEachSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGlonassEphDoubleParamForEachSV
 ///
-#include "gen/GetGlonassEphDoubleParamForEachSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGlonassEphDoubleParamForEachSV::CmdName = "GetGlonassEphDoubleParamForEachSV";
-    const char* const GetGlonassEphDoubleParamForEachSV::Documentation = "Please note the command GetGlonassDoubleParams is deprecated since 21.3. You may use GetGlonassEphDoubleParamForEachSV.\n\nGet GLONASS parameter value for all satellites";
+    const char* const GetGlonassEphDoubleParamForEachSV::Documentation = "Get GLONASS parameter value for all satellites\n"
+      "\n"
+      "Name      Type   Description\n"
+      "--------- ------ ---------------------------------------------------------\n"
+      "ParamName string Refer to SetGlonassEphDoubleParamForSV for accepted names";
+    const char* const GetGlonassEphDoubleParamForEachSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetGlonassEphDoubleParamForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGlonassEphDoubleParamForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGlonassEphDoubleParamForEachSV);
 
 
     GetGlonassEphDoubleParamForEachSV::GetGlonassEphDoubleParamForEachSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetGlonassEphDoubleParamForEachSV::GetGlonassEphDoubleParamForEachSV(const std::string& paramName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setParamName(paramName);
     }
-
 
     GetGlonassEphDoubleParamForEachSVPtr GetGlonassEphDoubleParamForEachSV::create(const std::string& paramName)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetGlonassEphDoubleParamForEachSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGlonassEphDoubleParamForEachSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ParamName"}; 
+      return names; 
+    }
 
 
     int GetGlonassEphDoubleParamForEachSV::executePermission() const

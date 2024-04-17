@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 #include <vector>
 
@@ -26,22 +27,29 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetAllVehicleAntennaNamesResult();
 
+      GetAllVehicleAntennaNamesResult(const std::vector<std::string>& antennaNames);
+
       GetAllVehicleAntennaNamesResult(CommandBasePtr relatedCommand, const std::vector<std::string>& antennaNames);
-  
+
+      static GetAllVehicleAntennaNamesResultPtr create(const std::vector<std::string>& antennaNames);
+
       static GetAllVehicleAntennaNamesResultPtr create(CommandBasePtr relatedCommand, const std::vector<std::string>& antennaNames);
       static GetAllVehicleAntennaNamesResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** antennaNames ****
       std::vector<std::string> antennaNames() const;
       void setAntennaNames(const std::vector<std::string>& antennaNames);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAllVehicleAntennaNamesResult);
   }
 }
 

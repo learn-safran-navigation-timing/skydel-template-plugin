@@ -1,35 +1,43 @@
+
+#include "GetPseudorangeNoiseGaussMarkovForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetPseudorangeNoiseGaussMarkovForSV
 ///
-#include "gen/GetPseudorangeNoiseGaussMarkovForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetPseudorangeNoiseGaussMarkovForSV::CmdName = "GetPseudorangeNoiseGaussMarkovForSV";
-    const char* const GetPseudorangeNoiseGaussMarkovForSV::Documentation = "Get the satellite pseudorange noise Gauss-Markov process attributes.";
+    const char* const GetPseudorangeNoiseGaussMarkovForSV::Documentation = "Get the satellite pseudorange noise Gauss-Markov process attributes.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ --------------------------------------------------------------------------\n"
+      "System  string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId    int    Satellite SV ID.\n"
+      "Process int    Gauss-Markov Process number (0 or 1)";
+    const char* const GetPseudorangeNoiseGaussMarkovForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetPseudorangeNoiseGaussMarkovForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetPseudorangeNoiseGaussMarkovForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetPseudorangeNoiseGaussMarkovForSV);
 
 
     GetPseudorangeNoiseGaussMarkovForSV::GetPseudorangeNoiseGaussMarkovForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetPseudorangeNoiseGaussMarkovForSV::GetPseudorangeNoiseGaussMarkovForSV(const std::string& system, int svId, int process)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
       setProcess(process);
     }
-
 
     GetPseudorangeNoiseGaussMarkovForSVPtr GetPseudorangeNoiseGaussMarkovForSV::create(const std::string& system, int svId, int process)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string GetPseudorangeNoiseGaussMarkovForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetPseudorangeNoiseGaussMarkovForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Process"}; 
+      return names; 
+    }
 
 
     int GetPseudorangeNoiseGaussMarkovForSV::executePermission() const

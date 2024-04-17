@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -12,8 +13,8 @@ namespace Sdx
     /// Set Direct Line Of Sight signal from satellite enabled or disabled. Generally used when only multipaths signal is visible.
     ///
     /// Name    Type   Description
-    /// ------- ------ ----------------------------------------------------------------
-    /// System  string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// ------- ------ --------------------------------------------------------------------------
+    /// System  string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// SvId    int    The satellite's SV ID
     /// Enabled bool   Direct Line of Sight enabled or not
     ///
@@ -27,16 +28,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       EnableLosForSV();
 
       EnableLosForSV(const std::string& system, int svId, bool enabled);
-  
+
       static EnableLosForSVPtr create(const std::string& system, int svId, bool enabled);
       static EnableLosForSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -55,6 +58,7 @@ namespace Sdx
       bool enabled() const;
       void setEnabled(bool enabled);
     };
+    
   }
 }
 

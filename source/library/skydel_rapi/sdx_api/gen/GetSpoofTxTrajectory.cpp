@@ -1,33 +1,39 @@
+
+#include "GetSpoofTxTrajectory.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxTrajectory
 ///
-#include "gen/GetSpoofTxTrajectory.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxTrajectory::CmdName = "GetSpoofTxTrajectory";
-    const char* const GetSpoofTxTrajectory::Documentation = "Get spoofer transmitter trajectory";
+    const char* const GetSpoofTxTrajectory::Documentation = "Get spoofer transmitter trajectory\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetSpoofTxTrajectory::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSpoofTxTrajectory);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSpoofTxTrajectory);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxTrajectory);
 
 
     GetSpoofTxTrajectory::GetSpoofTxTrajectory()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetSpoofTxTrajectory::GetSpoofTxTrajectory(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetSpoofTxTrajectoryPtr GetSpoofTxTrajectory::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxTrajectory::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxTrajectory::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetSpoofTxTrajectory::executePermission() const

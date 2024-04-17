@@ -1,11 +1,12 @@
+
+#include "IsLogRinexEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsLogRinexEnabled
 ///
-#include "gen/IsLogRinexEnabled.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const IsLogRinexEnabled::CmdName = "IsLogRinexEnabled";
     const char* const IsLogRinexEnabled::Documentation = "Tells if ephemeris data Logging is enabled";
+    const char* const IsLogRinexEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsLogRinexEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsLogRinexEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsLogRinexEnabled);
 
 
     IsLogRinexEnabled::IsLogRinexEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     IsLogRinexEnabledPtr IsLogRinexEnabled::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string IsLogRinexEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsLogRinexEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int IsLogRinexEnabled::executePermission() const

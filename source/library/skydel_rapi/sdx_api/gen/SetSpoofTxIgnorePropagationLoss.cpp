@@ -1,34 +1,41 @@
+
+#include "SetSpoofTxIgnorePropagationLoss.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSpoofTxIgnorePropagationLoss
 ///
-#include "gen/SetSpoofTxIgnorePropagationLoss.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSpoofTxIgnorePropagationLoss::CmdName = "SetSpoofTxIgnorePropagationLoss";
-    const char* const SetSpoofTxIgnorePropagationLoss::Documentation = "Set whether a spoofer should ignore propagation loss or not.";
+    const char* const SetSpoofTxIgnorePropagationLoss::Documentation = "Set whether a spoofer should ignore propagation loss or not.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ ------------------------------------------\n"
+      "Ignore bool   If true, propagation loss will be ignored.\n"
+      "Id     string Transmitter unique identifier.";
+    const char* const SetSpoofTxIgnorePropagationLoss::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSpoofTxIgnorePropagationLoss);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSpoofTxIgnorePropagationLoss);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSpoofTxIgnorePropagationLoss);
 
 
     SetSpoofTxIgnorePropagationLoss::SetSpoofTxIgnorePropagationLoss()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSpoofTxIgnorePropagationLoss::SetSpoofTxIgnorePropagationLoss(bool ignore, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setIgnore(ignore);
       setId(id);
     }
-
 
     SetSpoofTxIgnorePropagationLossPtr SetSpoofTxIgnorePropagationLoss::create(bool ignore, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSpoofTxIgnorePropagationLoss::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSpoofTxIgnorePropagationLoss::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ignore", "Id"}; 
+      return names; 
+    }
 
 
     int SetSpoofTxIgnorePropagationLoss::executePermission() const

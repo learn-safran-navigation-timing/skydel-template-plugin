@@ -1,33 +1,39 @@
+
+#include "GetPseudorangeNoiseOffsetForEachSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetPseudorangeNoiseOffsetForEachSV
 ///
-#include "gen/GetPseudorangeNoiseOffsetForEachSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetPseudorangeNoiseOffsetForEachSV::CmdName = "GetPseudorangeNoiseOffsetForEachSV";
-    const char* const GetPseudorangeNoiseOffsetForEachSV::Documentation = "Please note the command GetAllSatellitesPseudorangeNoiseOffset is deprecated since 21.3. You may use GetPseudorangeNoiseOffsetForEachSV.\n\nGet the satellite pseudorange noise constant offset for all satellites.";
+    const char* const GetPseudorangeNoiseOffsetForEachSV::Documentation = "Get the satellite pseudorange noise constant offset for all satellites.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const GetPseudorangeNoiseOffsetForEachSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetPseudorangeNoiseOffsetForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetPseudorangeNoiseOffsetForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetPseudorangeNoiseOffsetForEachSV);
 
 
     GetPseudorangeNoiseOffsetForEachSV::GetPseudorangeNoiseOffsetForEachSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetPseudorangeNoiseOffsetForEachSV::GetPseudorangeNoiseOffsetForEachSV(const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
     }
-
 
     GetPseudorangeNoiseOffsetForEachSVPtr GetPseudorangeNoiseOffsetForEachSV::create(const std::string& system)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetPseudorangeNoiseOffsetForEachSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetPseudorangeNoiseOffsetForEachSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System"}; 
+      return names; 
+    }
 
 
     int GetPseudorangeNoiseOffsetForEachSV::executePermission() const

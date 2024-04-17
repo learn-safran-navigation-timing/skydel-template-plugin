@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "sdx_optional.h"
 #include <string>
 
@@ -34,16 +35,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetIntTxBPSKResult();
 
+      GetIntTxBPSKResult(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group = {}, const Sdx::optional<int>& prn = {});
+
       GetIntTxBPSKResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group = {}, const Sdx::optional<int>& prn = {});
-  
+
+      static GetIntTxBPSKResultPtr create(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group = {}, const Sdx::optional<int>& prn = {});
+
       static GetIntTxBPSKResultPtr create(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group = {}, const Sdx::optional<int>& prn = {});
       static GetIntTxBPSKResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** enabled ****
@@ -90,6 +97,7 @@ namespace Sdx
       Sdx::optional<int> prn() const;
       void setPrn(const Sdx::optional<int>& prn);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxBPSKResult);
   }
 }
 

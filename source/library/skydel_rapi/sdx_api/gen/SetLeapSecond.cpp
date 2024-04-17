@@ -1,33 +1,39 @@
+
+#include "SetLeapSecond.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetLeapSecond
 ///
-#include "gen/SetLeapSecond.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetLeapSecond::CmdName = "SetLeapSecond";
-    const char* const SetLeapSecond::Documentation = "Set the UTC leap seconds added since GPS epoch.";
+    const char* const SetLeapSecond::Documentation = "Set the UTC leap seconds added since GPS epoch.\n"
+      "\n"
+      "Name       Type Description\n"
+      "---------- ---- ----------------------------------------------------------------\n"
+      "LeapSecond int  The number of leap seconds to convert GPS date and time into UTC";
+    const char* const SetLeapSecond::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetLeapSecond);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetLeapSecond);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetLeapSecond);
 
 
     SetLeapSecond::SetLeapSecond()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetLeapSecond::SetLeapSecond(int leapSecond)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setLeapSecond(leapSecond);
     }
-
 
     SetLeapSecondPtr SetLeapSecond::create(int leapSecond)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetLeapSecond::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetLeapSecond::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"LeapSecond"}; 
+      return names; 
+    }
 
 
     int SetLeapSecond::executePermission() const

@@ -1,34 +1,41 @@
+
+#include "GetEphemerisErrorForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetEphemerisErrorForSV
 ///
-#include "gen/GetEphemerisErrorForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetEphemerisErrorForSV::CmdName = "GetEphemerisErrorForSV";
-    const char* const GetEphemerisErrorForSV::Documentation = "Get the satellite ephemeris error.";
+    const char* const GetEphemerisErrorForSV::Documentation = "Get the satellite ephemeris error.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ ------------------------------------------------------------------\n"
+      "System string \"GPS\", \"Galileo\", \"GLONASS\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId   int    Satellite SV ID.";
+    const char* const GetEphemerisErrorForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetEphemerisErrorForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetEphemerisErrorForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetEphemerisErrorForSV);
 
 
     GetEphemerisErrorForSV::GetEphemerisErrorForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetEphemerisErrorForSV::GetEphemerisErrorForSV(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     GetEphemerisErrorForSVPtr GetEphemerisErrorForSV::create(const std::string& system, int svId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetEphemerisErrorForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetEphemerisErrorForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int GetEphemerisErrorForSV::executePermission() const

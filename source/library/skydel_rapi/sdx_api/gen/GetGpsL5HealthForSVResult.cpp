@@ -1,28 +1,36 @@
+
+#include "GetGpsL5HealthForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGpsL5HealthForSVResult
 ///
-#include "gen/GetGpsL5HealthForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGpsL5HealthForSVResult::CmdName = "GetGpsL5HealthForSVResult";
-    const char* const GetGpsL5HealthForSVResult::Documentation = "Result of GetGpsL5HealthForSV.";
+    const char* const GetGpsL5HealthForSVResult::Documentation = "Result of GetGpsL5HealthForSV.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite's SV ID 1..32, or use 0 to apply new value to all satellites.\n"
+      "Health      bool            L5 health, false = signal OK, true = signal bad or unavailable\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetGpsL5HealthForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetGpsL5HealthForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGpsL5HealthForSVResult);
 
 
     GetGpsL5HealthForSVResult::GetGpsL5HealthForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetGpsL5HealthForSVResult::GetGpsL5HealthForSVResult(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetGpsL5HealthForSVResult::GetGpsL5HealthForSVResult(int svId, bool health, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSvId(svId);
@@ -30,6 +38,20 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetGpsL5HealthForSVResult::GetGpsL5HealthForSVResult(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSvId(svId);
+      setHealth(health);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetGpsL5HealthForSVResultPtr GetGpsL5HealthForSVResult::create(int svId, bool health, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetGpsL5HealthForSVResult>(svId, health, dataSetName);
+    }
 
     GetGpsL5HealthForSVResultPtr GetGpsL5HealthForSVResult::create(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetGpsL5HealthForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGpsL5HealthForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health", "DataSetName"}; 
+      return names; 
+    }
 
 
     int GetGpsL5HealthForSVResult::svId() const

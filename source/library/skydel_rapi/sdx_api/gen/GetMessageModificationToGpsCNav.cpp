@@ -1,33 +1,39 @@
+
+#include "GetMessageModificationToGpsCNav.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageModificationToGpsCNav
 ///
-#include "gen/GetMessageModificationToGpsCNav.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageModificationToGpsCNav::CmdName = "GetMessageModificationToGpsCNav";
-    const char* const GetMessageModificationToGpsCNav::Documentation = "Get infos about the GPS CNAV message modification with this ID.";
+    const char* const GetMessageModificationToGpsCNav::Documentation = "Get infos about the GPS CNAV message modification with this ID.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Unique identifier of the event";
+    const char* const GetMessageModificationToGpsCNav::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetMessageModificationToGpsCNav);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetMessageModificationToGpsCNav);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageModificationToGpsCNav);
 
 
     GetMessageModificationToGpsCNav::GetMessageModificationToGpsCNav()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetMessageModificationToGpsCNav::GetMessageModificationToGpsCNav(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetMessageModificationToGpsCNavPtr GetMessageModificationToGpsCNav::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetMessageModificationToGpsCNav::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageModificationToGpsCNav::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetMessageModificationToGpsCNav::executePermission() const

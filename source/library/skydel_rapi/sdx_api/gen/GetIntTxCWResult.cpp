@@ -1,28 +1,40 @@
+
+#include "GetIntTxCWResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxCWResult
 ///
-#include "gen/GetIntTxCWResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxCWResult::CmdName = "GetIntTxCWResult";
-    const char* const GetIntTxCWResult::Documentation = "Result of GetIntTxCW.";
+    const char* const GetIntTxCWResult::Documentation = "Result of GetIntTxCW.\n"
+      "\n"
+      "Name               Type            Description\n"
+      "------------------ --------------- ---------------------------------------------------\n"
+      "Enabled            bool            Enable (true) or disable (false) the signal\n"
+      "CentralFreq        double          Central frequency (Hz)\n"
+      "Power              double          Power (dB), relative to transmitter reference power\n"
+      "TransmitterId      string          Transmitter unique identifier.\n"
+      "SignalId           string          CW unique identifier.\n"
+      "InitialPhaseOffset optional double Initial phase offset, in radians. Defaults to 0.\n"
+      "Group              optional int    Group, if not using default group.";
+    const char* const GetIntTxCWResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxCWResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxCWResult);
 
 
     GetIntTxCWResult::GetIntTxCWResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxCWResult::GetIntTxCWResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<double>& initialPhaseOffset, const Sdx::optional<int>& group)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxCWResult::GetIntTxCWResult(bool enabled, double centralFreq, double power, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<double>& initialPhaseOffset, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
@@ -34,6 +46,24 @@ namespace Sdx
       setGroup(group);
     }
 
+    GetIntTxCWResult::GetIntTxCWResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<double>& initialPhaseOffset, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+      setCentralFreq(centralFreq);
+      setPower(power);
+      setTransmitterId(transmitterId);
+      setSignalId(signalId);
+      setInitialPhaseOffset(initialPhaseOffset);
+      setGroup(group);
+    }
+
+
+    GetIntTxCWResultPtr GetIntTxCWResult::create(bool enabled, double centralFreq, double power, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<double>& initialPhaseOffset, const Sdx::optional<int>& group)
+    {
+      return std::make_shared<GetIntTxCWResult>(enabled, centralFreq, power, transmitterId, signalId, initialPhaseOffset, group);
+    }
 
     GetIntTxCWResultPtr GetIntTxCWResult::create(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<double>& initialPhaseOffset, const Sdx::optional<int>& group)
     {
@@ -61,6 +91,12 @@ namespace Sdx
     }
 
     std::string GetIntTxCWResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxCWResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "CentralFreq", "Power", "TransmitterId", "SignalId", "InitialPhaseOffset", "Group"}; 
+      return names; 
+    }
 
 
     bool GetIntTxCWResult::enabled() const

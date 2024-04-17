@@ -1,33 +1,39 @@
+
+#include "EnableSignalStrengthModel.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of EnableSignalStrengthModel
 ///
-#include "gen/EnableSignalStrengthModel.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const EnableSignalStrengthModel::CmdName = "EnableSignalStrengthModel";
-    const char* const EnableSignalStrengthModel::Documentation = "Set signal strength model Enable/Disable which affect satellite transmission strength based on their elevation angle";
+    const char* const EnableSignalStrengthModel::Documentation = "Set signal strength model Enable/Disable which affect satellite transmission strength based on their elevation angle\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- -----------------------------------------------------------\n"
+      "Enabled bool If true, signal strengh model is enabled for all satellites";
+    const char* const EnableSignalStrengthModel::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(EnableSignalStrengthModel);
+    REGISTER_COMMAND_TO_FACTORY_DECL(EnableSignalStrengthModel);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(EnableSignalStrengthModel);
 
 
     EnableSignalStrengthModel::EnableSignalStrengthModel()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     EnableSignalStrengthModel::EnableSignalStrengthModel(bool enabled)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
-
 
     EnableSignalStrengthModelPtr EnableSignalStrengthModel::create(bool enabled)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string EnableSignalStrengthModel::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& EnableSignalStrengthModel::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     int EnableSignalStrengthModel::executePermission() const

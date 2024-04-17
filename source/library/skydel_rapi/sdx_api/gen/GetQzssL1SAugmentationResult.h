@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -30,16 +31,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetQzssL1SAugmentationResult();
 
+      GetQzssL1SAugmentationResult(const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id);
+
       GetQzssL1SAugmentationResult(CommandBasePtr relatedCommand, const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id);
-  
+
+      static GetQzssL1SAugmentationResultPtr create(const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id);
+
       static GetQzssL1SAugmentationResultPtr create(CommandBasePtr relatedCommand, const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id);
       static GetQzssL1SAugmentationResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** system ****
@@ -71,6 +78,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetQzssL1SAugmentationResult);
   }
 }
 

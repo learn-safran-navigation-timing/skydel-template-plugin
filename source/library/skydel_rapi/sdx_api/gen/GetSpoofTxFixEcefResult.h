@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -31,16 +32,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetSpoofTxFixEcefResult();
 
+      GetSpoofTxFixEcefResult(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id);
+
       GetSpoofTxFixEcefResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id);
-  
+
+      static GetSpoofTxFixEcefResultPtr create(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id);
+
       static GetSpoofTxFixEcefResultPtr create(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id);
       static GetSpoofTxFixEcefResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** x ****
@@ -77,6 +84,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSpoofTxFixEcefResult);
   }
 }
 

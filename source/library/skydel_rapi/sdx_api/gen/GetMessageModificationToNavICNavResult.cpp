@@ -1,28 +1,43 @@
+
+#include "GetMessageModificationToNavICNavResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageModificationToNavICNavResult
 ///
-#include "gen/GetMessageModificationToNavICNavResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageModificationToNavICNavResult::CmdName = "GetMessageModificationToNavICNavResult";
-    const char* const GetMessageModificationToNavICNavResult::Documentation = "Result of GetMessageModificationToNavICNav.";
+    const char* const GetMessageModificationToNavICNavResult::Documentation = "Result of GetMessageModificationToNavICNav.\n"
+      "\n"
+      "Name             Type         Description\n"
+      "---------------- ------------ ----------------------------------------------------------------------------------------\n"
+      "SignalArray      array string Array of signals to apply the message modification to, accepts \"NAVICL5\" (empty for all)\n"
+      "SvId             int          The satellite's SV ID 1..14 (use 0 to apply modification to all SVs)\n"
+      "StartTime        int          Elapsed time in seconds since start of simulation\n"
+      "StopTime         int          Elapsed time in seconds since start of simulation (use 0 for no stop time)\n"
+      "Subframe         int          Subframe 1..4 (use 0 to apply modification to all subframes)\n"
+      "MessageType      int          NAV Message type (use -1 to apply modification to all message types)\n"
+      "Condition        string       Optional condition to match message content, ex: \"EQUAL(45, 10, 0x3f)\"\n"
+      "UpdateCRC        bool         Recalculate CRC after making modification\n"
+      "BitModifications string       Comma separated bit modifications\n"
+      "Id               string       Unique identifier of the event";
+    const char* const GetMessageModificationToNavICNavResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetMessageModificationToNavICNavResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageModificationToNavICNavResult);
 
 
     GetMessageModificationToNavICNavResult::GetMessageModificationToNavICNavResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetMessageModificationToNavICNavResult::GetMessageModificationToNavICNavResult(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int subframe, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetMessageModificationToNavICNavResult::GetMessageModificationToNavICNavResult(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int subframe, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSignalArray(signalArray);
@@ -37,6 +52,27 @@ namespace Sdx
       setId(id);
     }
 
+    GetMessageModificationToNavICNavResult::GetMessageModificationToNavICNavResult(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int subframe, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSignalArray(signalArray);
+      setSvId(svId);
+      setStartTime(startTime);
+      setStopTime(stopTime);
+      setSubframe(subframe);
+      setMessageType(messageType);
+      setCondition(condition);
+      setUpdateCRC(updateCRC);
+      setBitModifications(bitModifications);
+      setId(id);
+    }
+
+
+    GetMessageModificationToNavICNavResultPtr GetMessageModificationToNavICNavResult::create(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int subframe, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
+    {
+      return std::make_shared<GetMessageModificationToNavICNavResult>(signalArray, svId, startTime, stopTime, subframe, messageType, condition, updateCRC, bitModifications, id);
+    }
 
     GetMessageModificationToNavICNavResultPtr GetMessageModificationToNavICNavResult::create(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int subframe, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
     {
@@ -67,6 +103,12 @@ namespace Sdx
     }
 
     std::string GetMessageModificationToNavICNavResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageModificationToNavICNavResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SignalArray", "SvId", "StartTime", "StopTime", "Subframe", "MessageType", "Condition", "UpdateCRC", "BitModifications", "Id"}; 
+      return names; 
+    }
 
 
     std::vector<std::string> GetMessageModificationToNavICNavResult::signalArray() const

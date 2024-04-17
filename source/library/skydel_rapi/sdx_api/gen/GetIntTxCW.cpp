@@ -1,34 +1,41 @@
+
+#include "GetIntTxCW.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxCW
 ///
-#include "gen/GetIntTxCW.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxCW::CmdName = "GetIntTxCW";
-    const char* const GetIntTxCW::Documentation = "Get informations about the CW signal of the transmitter.";
+    const char* const GetIntTxCW::Documentation = "Get informations about the CW signal of the transmitter.\n"
+      "\n"
+      "Name          Type   Description\n"
+      "------------- ------ ------------------------------\n"
+      "TransmitterId string Transmitter unique identifier.\n"
+      "SignalId      string CW unique identifier.";
+    const char* const GetIntTxCW::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTxCW);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxCW);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxCW);
 
 
     GetIntTxCW::GetIntTxCW()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTxCW::GetIntTxCW(const std::string& transmitterId, const std::string& signalId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTransmitterId(transmitterId);
       setSignalId(signalId);
     }
-
 
     GetIntTxCWPtr GetIntTxCW::create(const std::string& transmitterId, const std::string& signalId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetIntTxCW::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxCW::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"TransmitterId", "SignalId"}; 
+      return names; 
+    }
 
 
     int GetIntTxCW::executePermission() const

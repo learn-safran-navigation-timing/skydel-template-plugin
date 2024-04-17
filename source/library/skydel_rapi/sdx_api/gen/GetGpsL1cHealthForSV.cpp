@@ -1,34 +1,41 @@
+
+#include "GetGpsL1cHealthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGpsL1cHealthForSV
 ///
-#include "gen/GetGpsL1cHealthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGpsL1cHealthForSV::CmdName = "GetGpsL1cHealthForSV";
-    const char* const GetGpsL1cHealthForSV::Documentation = "Get GPS L1C health (used in CNAV2 only)";
+    const char* const GetGpsL1cHealthForSV::Documentation = "Get GPS L1C health (used in CNAV2 only)\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite's SV ID 1..32, or use 0 to apply new value to all satellites.\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetGpsL1cHealthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetGpsL1cHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGpsL1cHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGpsL1cHealthForSV);
 
 
     GetGpsL1cHealthForSV::GetGpsL1cHealthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetGpsL1cHealthForSV::GetGpsL1cHealthForSV(int svId, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setDataSetName(dataSetName);
     }
-
 
     GetGpsL1cHealthForSVPtr GetGpsL1cHealthForSV::create(int svId, const Sdx::optional<std::string>& dataSetName)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetGpsL1cHealthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGpsL1cHealthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "DataSetName"}; 
+      return names; 
+    }
 
 
     int GetGpsL1cHealthForSV::executePermission() const

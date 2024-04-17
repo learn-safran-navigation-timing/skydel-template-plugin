@@ -1,28 +1,36 @@
+
+#include "GetDataSetAssignationResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetDataSetAssignationResult
 ///
-#include "gen/GetDataSetAssignationResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetDataSetAssignationResult::CmdName = "GetDataSetAssignationResult";
-    const char* const GetDataSetAssignationResult::Documentation = "Result of GetDataSetAssignation.";
+    const char* const GetDataSetAssignationResult::Documentation = "Result of GetDataSetAssignation.\n"
+      "\n"
+      "Name        Type   Description\n"
+      "----------- ------ -------------------------------------------------------\n"
+      "System      string \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "DataSetType string \"Almanac\", \"Ephemeris\" or \"Orbit\"\n"
+      "DataSetName string The name of the assigned data set.";
+    const char* const GetDataSetAssignationResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetDataSetAssignationResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetDataSetAssignationResult);
 
 
     GetDataSetAssignationResult::GetDataSetAssignationResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetDataSetAssignationResult::GetDataSetAssignationResult(CommandBasePtr relatedCommand, const std::string& system, const std::string& dataSetType, const std::string& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetDataSetAssignationResult::GetDataSetAssignationResult(const std::string& system, const std::string& dataSetType, const std::string& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -30,6 +38,20 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetDataSetAssignationResult::GetDataSetAssignationResult(CommandBasePtr relatedCommand, const std::string& system, const std::string& dataSetType, const std::string& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setDataSetType(dataSetType);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetDataSetAssignationResultPtr GetDataSetAssignationResult::create(const std::string& system, const std::string& dataSetType, const std::string& dataSetName)
+    {
+      return std::make_shared<GetDataSetAssignationResult>(system, dataSetType, dataSetName);
+    }
 
     GetDataSetAssignationResultPtr GetDataSetAssignationResult::create(CommandBasePtr relatedCommand, const std::string& system, const std::string& dataSetType, const std::string& dataSetName)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetDataSetAssignationResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetDataSetAssignationResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "DataSetType", "DataSetName"}; 
+      return names; 
+    }
 
 
     std::string GetDataSetAssignationResult::system() const

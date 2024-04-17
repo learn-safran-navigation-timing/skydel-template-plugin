@@ -1,33 +1,51 @@
+
+#include "FailureResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of FailureResult
 ///
-#include "gen/FailureResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const FailureResult::CmdName = "FailureResult";
-    const char* const FailureResult::Documentation = "When command failed";
+    const char* const FailureResult::Documentation = "When command failed\n"
+      "\n"
+      "Name     Type   Description\n"
+      "-------- ------ -------------\n"
+      "ErrorMsg string Error message";
+    const char* const FailureResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(FailureResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(FailureResult);
 
 
     FailureResult::FailureResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    FailureResult::FailureResult(CommandBasePtr relatedCommand, const std::string& errorMsg)
-      : CommandResult(CmdName, relatedCommand)
+    FailureResult::FailureResult(const std::string& errorMsg)
+      : CommandResult(CmdName, TargetId)
     {
 
       setErrorMsg(errorMsg);
     }
 
+    FailureResult::FailureResult(CommandBasePtr relatedCommand, const std::string& errorMsg)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setErrorMsg(errorMsg);
+    }
+
+
+    FailureResultPtr FailureResult::create(const std::string& errorMsg)
+    {
+      return std::make_shared<FailureResult>(errorMsg);
+    }
 
     FailureResultPtr FailureResult::create(CommandBasePtr relatedCommand, const std::string& errorMsg)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string FailureResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& FailureResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ErrorMsg"}; 
+      return names; 
+    }
 
 
     std::string FailureResult::errorMsg() const

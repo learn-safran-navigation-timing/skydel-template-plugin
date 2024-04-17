@@ -1,34 +1,54 @@
+
+#include "GetIntTxColorResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxColorResult
 ///
-#include "gen/GetIntTxColorResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxColorResult::CmdName = "GetIntTxColorResult";
-    const char* const GetIntTxColorResult::Documentation = "Result of GetIntTxColor.";
+    const char* const GetIntTxColorResult::Documentation = "Result of GetIntTxColor.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ -------------------------------------------------------------------------------\n"
+      "Color string Color 'name'. Either a common color (red, white, ...) or an hex code (#FFFFFF).\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const GetIntTxColorResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxColorResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxColorResult);
 
 
     GetIntTxColorResult::GetIntTxColorResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxColorResult::GetIntTxColorResult(CommandBasePtr relatedCommand, const std::string& color, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxColorResult::GetIntTxColorResult(const std::string& color, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setColor(color);
       setId(id);
     }
 
+    GetIntTxColorResult::GetIntTxColorResult(CommandBasePtr relatedCommand, const std::string& color, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setColor(color);
+      setId(id);
+    }
+
+
+    GetIntTxColorResultPtr GetIntTxColorResult::create(const std::string& color, const std::string& id)
+    {
+      return std::make_shared<GetIntTxColorResult>(color, id);
+    }
 
     GetIntTxColorResultPtr GetIntTxColorResult::create(CommandBasePtr relatedCommand, const std::string& color, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetIntTxColorResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxColorResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Color", "Id"}; 
+      return names; 
+    }
 
 
     std::string GetIntTxColorResult::color() const

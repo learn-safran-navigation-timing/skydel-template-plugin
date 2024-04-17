@@ -1,33 +1,39 @@
+
+#include "GetIntTxColor.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxColor
 ///
-#include "gen/GetIntTxColor.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxColor::CmdName = "GetIntTxColor";
-    const char* const GetIntTxColor::Documentation = "Get a transmitter color in spectrums";
+    const char* const GetIntTxColor::Documentation = "Get a transmitter color in spectrums\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetIntTxColor::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTxColor);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxColor);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxColor);
 
 
     GetIntTxColor::GetIntTxColor()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTxColor::GetIntTxColor(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetIntTxColorPtr GetIntTxColor::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetIntTxColor::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxColor::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetIntTxColor::executePermission() const

@@ -1,33 +1,39 @@
+
+#include "EnableElevationMaskAbove.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of EnableElevationMaskAbove
 ///
-#include "gen/EnableElevationMaskAbove.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const EnableElevationMaskAbove::CmdName = "EnableElevationMaskAbove";
-    const char* const EnableElevationMaskAbove::Documentation = "Set GNSS satellite mask based on elevation enabled or disabled (See SetElevationMaskAbove).";
+    const char* const EnableElevationMaskAbove::Documentation = "Set GNSS satellite mask based on elevation enabled or disabled (See SetElevationMaskAbove).\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ------------------------------------------------------------------\n"
+      "Enabled bool If true, mask satellites with elevation angle above masking angle.";
+    const char* const EnableElevationMaskAbove::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(EnableElevationMaskAbove);
+    REGISTER_COMMAND_TO_FACTORY_DECL(EnableElevationMaskAbove);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(EnableElevationMaskAbove);
 
 
     EnableElevationMaskAbove::EnableElevationMaskAbove()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     EnableElevationMaskAbove::EnableElevationMaskAbove(bool enabled)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
-
 
     EnableElevationMaskAbovePtr EnableElevationMaskAbove::create(bool enabled)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string EnableElevationMaskAbove::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& EnableElevationMaskAbove::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     int EnableElevationMaskAbove::executePermission() const

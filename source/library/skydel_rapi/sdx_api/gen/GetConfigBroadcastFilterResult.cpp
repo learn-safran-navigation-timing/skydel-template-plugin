@@ -1,33 +1,51 @@
+
+#include "GetConfigBroadcastFilterResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetConfigBroadcastFilterResult
 ///
-#include "gen/GetConfigBroadcastFilterResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetConfigBroadcastFilterResult::CmdName = "GetConfigBroadcastFilterResult";
-    const char* const GetConfigBroadcastFilterResult::Documentation = "Result of GetConfigBroadcastFilter.";
+    const char* const GetConfigBroadcastFilterResult::Documentation = "Result of GetConfigBroadcastFilter.\n"
+      "\n"
+      "Name   Type               Description\n"
+      "------ ------------------ ------------------------------------------------------------------------------\n"
+      "Filter array ConfigFilter Every configuration section set in this array will be excluded from broadcast.";
+    const char* const GetConfigBroadcastFilterResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetConfigBroadcastFilterResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetConfigBroadcastFilterResult);
 
 
     GetConfigBroadcastFilterResult::GetConfigBroadcastFilterResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetConfigBroadcastFilterResult::GetConfigBroadcastFilterResult(CommandBasePtr relatedCommand, const std::vector<Sdx::ConfigFilter>& filter)
-      : CommandResult(CmdName, relatedCommand)
+    GetConfigBroadcastFilterResult::GetConfigBroadcastFilterResult(const std::vector<Sdx::ConfigFilter>& filter)
+      : CommandResult(CmdName, TargetId)
     {
 
       setFilter(filter);
     }
 
+    GetConfigBroadcastFilterResult::GetConfigBroadcastFilterResult(CommandBasePtr relatedCommand, const std::vector<Sdx::ConfigFilter>& filter)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setFilter(filter);
+    }
+
+
+    GetConfigBroadcastFilterResultPtr GetConfigBroadcastFilterResult::create(const std::vector<Sdx::ConfigFilter>& filter)
+    {
+      return std::make_shared<GetConfigBroadcastFilterResult>(filter);
+    }
 
     GetConfigBroadcastFilterResultPtr GetConfigBroadcastFilterResult::create(CommandBasePtr relatedCommand, const std::vector<Sdx::ConfigFilter>& filter)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetConfigBroadcastFilterResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetConfigBroadcastFilterResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Filter"}; 
+      return names; 
+    }
 
 
     std::vector<Sdx::ConfigFilter> GetConfigBroadcastFilterResult::filter() const

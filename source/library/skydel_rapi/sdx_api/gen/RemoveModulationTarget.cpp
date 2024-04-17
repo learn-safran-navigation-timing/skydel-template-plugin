@@ -1,33 +1,39 @@
+
+#include "RemoveModulationTarget.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RemoveModulationTarget
 ///
-#include "gen/RemoveModulationTarget.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RemoveModulationTarget::CmdName = "RemoveModulationTarget";
-    const char* const RemoveModulationTarget::Documentation = "Remove a modulation target.";
+    const char* const RemoveModulationTarget::Documentation = "Remove a modulation target.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ -----------------\n"
+      "Id   string Target identifier";
+    const char* const RemoveModulationTarget::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RemoveModulationTarget);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RemoveModulationTarget);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RemoveModulationTarget);
 
 
     RemoveModulationTarget::RemoveModulationTarget()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RemoveModulationTarget::RemoveModulationTarget(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     RemoveModulationTargetPtr RemoveModulationTarget::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string RemoveModulationTarget::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RemoveModulationTarget::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int RemoveModulationTarget::executePermission() const

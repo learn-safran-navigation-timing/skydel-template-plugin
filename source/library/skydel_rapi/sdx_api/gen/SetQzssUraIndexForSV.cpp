@@ -1,35 +1,43 @@
+
+#include "SetQzssUraIndexForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetQzssUraIndexForSV
 ///
-#include "gen/SetQzssUraIndexForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetQzssUraIndexForSV::CmdName = "SetQzssUraIndexForSV";
-    const char* const SetQzssUraIndexForSV::Documentation = "Please note the command SetQzssUraIndex is deprecated since 21.3. You may use SetQzssUraIndexForSV.\n\nSet the URA index of a QZSS satellite";
+    const char* const SetQzssUraIndexForSV::Documentation = "Set the URA index of a QZSS satellite\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             The satellite SV ID, or use 0 to apply new value to all satellites.\n"
+      "Urai        int             URA index.\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetQzssUraIndexForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetQzssUraIndexForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetQzssUraIndexForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetQzssUraIndexForSV);
 
 
     SetQzssUraIndexForSV::SetQzssUraIndexForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetQzssUraIndexForSV::SetQzssUraIndexForSV(int svId, int urai, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setUrai(urai);
       setDataSetName(dataSetName);
     }
-
 
     SetQzssUraIndexForSVPtr SetQzssUraIndexForSV::create(int svId, int urai, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetQzssUraIndexForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetQzssUraIndexForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Urai", "DataSetName"}; 
+      return names; 
+    }
 
 
     int SetQzssUraIndexForSV::executePermission() const

@@ -1,28 +1,40 @@
+
+#include "GetSpoofTxFixEcefResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxFixEcefResult
 ///
-#include "gen/GetSpoofTxFixEcefResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxFixEcefResult::CmdName = "GetSpoofTxFixEcefResult";
-    const char* const GetSpoofTxFixEcefResult::Documentation = "Result of GetSpoofTxFixEcef.";
+    const char* const GetSpoofTxFixEcefResult::Documentation = "Result of GetSpoofTxFixEcef.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ------------------------------\n"
+      "X     double ECEF X (m)\n"
+      "Y     double ECEF Y (m)\n"
+      "Z     double ECEF Z (m)\n"
+      "Yaw   double Yaw (rad)\n"
+      "Pitch double Pitch (rad)\n"
+      "Roll  double Roll (rad)\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const GetSpoofTxFixEcefResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetSpoofTxFixEcefResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxFixEcefResult);
 
 
     GetSpoofTxFixEcefResult::GetSpoofTxFixEcefResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetSpoofTxFixEcefResult::GetSpoofTxFixEcefResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetSpoofTxFixEcefResult::GetSpoofTxFixEcefResult(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setX(x);
@@ -34,6 +46,24 @@ namespace Sdx
       setId(id);
     }
 
+    GetSpoofTxFixEcefResult::GetSpoofTxFixEcefResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setX(x);
+      setY(y);
+      setZ(z);
+      setYaw(yaw);
+      setPitch(pitch);
+      setRoll(roll);
+      setId(id);
+    }
+
+
+    GetSpoofTxFixEcefResultPtr GetSpoofTxFixEcefResult::create(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
+    {
+      return std::make_shared<GetSpoofTxFixEcefResult>(x, y, z, yaw, pitch, roll, id);
+    }
 
     GetSpoofTxFixEcefResultPtr GetSpoofTxFixEcefResult::create(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
     {
@@ -61,6 +91,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxFixEcefResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxFixEcefResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"X", "Y", "Z", "Yaw", "Pitch", "Roll", "Id"}; 
+      return names; 
+    }
 
 
     double GetSpoofTxFixEcefResult::x() const

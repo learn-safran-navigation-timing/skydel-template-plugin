@@ -1,34 +1,41 @@
+
+#include "GetGpu.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGpu
 ///
-#include "gen/GetGpu.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGpu::CmdName = "GetGpu";
-    const char* const GetGpu::Documentation = "Get the GPU associated with a RF output of a modulation target.";
+    const char* const GetGpu::Documentation = "Get the GPU associated with a RF output of a modulation target.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------\n"
+      "Output int    Output index (zero based)\n"
+      "Id     string Target identifier";
+    const char* const GetGpu::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetGpu);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGpu);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGpu);
 
 
     GetGpu::GetGpu()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetGpu::GetGpu(int output, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setOutput(output);
       setId(id);
     }
-
 
     GetGpuPtr GetGpu::create(int output, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetGpu::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGpu::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Output", "Id"}; 
+      return names; 
+    }
 
 
     int GetGpu::executePermission() const

@@ -1,34 +1,41 @@
+
+#include "New.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of New
 ///
-#include "gen/New.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const New::CmdName = "New";
-    const char* const New::Documentation = "Create a new configuration.";
+    const char* const New::Documentation = "Create a new configuration.\n"
+      "\n"
+      "Name                 Type          Description\n"
+      "-------------------- ------------- ----------------------------------------------\n"
+      "DiscardCurrentConfig bool          Discard current config even if it is not saved\n"
+      "LoadDefaultConfig    optional bool Apply the default configuration";
+    const char* const New::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(New);
+    REGISTER_COMMAND_TO_FACTORY_DECL(New);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(New);
 
 
     New::New()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     New::New(bool discardCurrentConfig, const Sdx::optional<bool>& loadDefaultConfig)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setDiscardCurrentConfig(discardCurrentConfig);
       setLoadDefaultConfig(loadDefaultConfig);
     }
-
 
     NewPtr New::create(bool discardCurrentConfig, const Sdx::optional<bool>& loadDefaultConfig)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string New::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& New::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"DiscardCurrentConfig", "LoadDefaultConfig"}; 
+      return names; 
+    }
 
 
     int New::executePermission() const

@@ -1,33 +1,39 @@
+
+#include "EnableTrajectorySmoothing.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of EnableTrajectorySmoothing
 ///
-#include "gen/EnableTrajectorySmoothing.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const EnableTrajectorySmoothing::CmdName = "EnableTrajectorySmoothing";
-    const char* const EnableTrajectorySmoothing::Documentation = "Set trajectory smoothing for Track or Route enabled or disabled";
+    const char* const EnableTrajectorySmoothing::Documentation = "Set trajectory smoothing for Track or Route enabled or disabled\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ------------------------------------------------------\n"
+      "Enabled bool If true, trajectory will be smoothed during simulation";
+    const char* const EnableTrajectorySmoothing::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(EnableTrajectorySmoothing);
+    REGISTER_COMMAND_TO_FACTORY_DECL(EnableTrajectorySmoothing);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(EnableTrajectorySmoothing);
 
 
     EnableTrajectorySmoothing::EnableTrajectorySmoothing()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     EnableTrajectorySmoothing::EnableTrajectorySmoothing(bool enabled)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
-
 
     EnableTrajectorySmoothingPtr EnableTrajectorySmoothing::create(bool enabled)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string EnableTrajectorySmoothing::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& EnableTrajectorySmoothing::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     int EnableTrajectorySmoothing::executePermission() const

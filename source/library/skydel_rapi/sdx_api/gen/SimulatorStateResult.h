@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "gen/SimulatorState.h"
 #include "gen/SimulatorSubState.h"
 #include <string>
@@ -19,9 +20,9 @@ namespace Sdx
     /// -Initializing
     /// -Armed
     /// -Streaming RF
-    /// -Sync Slave
-    /// -WF Init (Slave)
-    /// -WF Init (Master)
+    /// -Sync Worker
+    /// -WF Init (Worker)
+    /// -WF Init (Main)
     /// -HIL Sync
     /// -Sync Init
     /// -Sync PPS Reset
@@ -46,16 +47,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SimulatorStateResult();
 
+      SimulatorStateResult(const std::string& state, const std::string& error, const Sdx::SimulatorState& stateId, const Sdx::SimulatorSubState& subStateId);
+
       SimulatorStateResult(CommandBasePtr relatedCommand, const std::string& state, const std::string& error, const Sdx::SimulatorState& stateId, const Sdx::SimulatorSubState& subStateId);
-  
+
+      static SimulatorStateResultPtr create(const std::string& state, const std::string& error, const Sdx::SimulatorState& stateId, const Sdx::SimulatorSubState& subStateId);
+
       static SimulatorStateResultPtr create(CommandBasePtr relatedCommand, const std::string& state, const std::string& error, const Sdx::SimulatorState& stateId, const Sdx::SimulatorSubState& subStateId);
       static SimulatorStateResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** state ****
@@ -77,6 +84,7 @@ namespace Sdx
       Sdx::SimulatorSubState subStateId() const;
       void setSubStateId(const Sdx::SimulatorSubState& subStateId);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(SimulatorStateResult);
   }
 }
 

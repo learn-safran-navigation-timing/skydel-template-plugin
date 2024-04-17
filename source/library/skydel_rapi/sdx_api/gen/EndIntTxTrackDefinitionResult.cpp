@@ -1,34 +1,54 @@
+
+#include "EndIntTxTrackDefinitionResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of EndIntTxTrackDefinitionResult
 ///
-#include "gen/EndIntTxTrackDefinitionResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const EndIntTxTrackDefinitionResult::CmdName = "EndIntTxTrackDefinitionResult";
-    const char* const EndIntTxTrackDefinitionResult::Documentation = "EndIntTxTrackDefinition Result with created track informations.";
+    const char* const EndIntTxTrackDefinitionResult::Documentation = "EndIntTxTrackDefinition Result with created track informations.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ----------------------------------------------------------------------------------------------------\n"
+      "Count int    Number of nodes in the track. The client can compare this value with the number of positions pushed.\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const EndIntTxTrackDefinitionResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(EndIntTxTrackDefinitionResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(EndIntTxTrackDefinitionResult);
 
 
     EndIntTxTrackDefinitionResult::EndIntTxTrackDefinitionResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    EndIntTxTrackDefinitionResult::EndIntTxTrackDefinitionResult(CommandBasePtr relatedCommand, int count, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    EndIntTxTrackDefinitionResult::EndIntTxTrackDefinitionResult(int count, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setCount(count);
       setId(id);
     }
 
+    EndIntTxTrackDefinitionResult::EndIntTxTrackDefinitionResult(CommandBasePtr relatedCommand, int count, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setCount(count);
+      setId(id);
+    }
+
+
+    EndIntTxTrackDefinitionResultPtr EndIntTxTrackDefinitionResult::create(int count, const std::string& id)
+    {
+      return std::make_shared<EndIntTxTrackDefinitionResult>(count, id);
+    }
 
     EndIntTxTrackDefinitionResultPtr EndIntTxTrackDefinitionResult::create(CommandBasePtr relatedCommand, int count, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string EndIntTxTrackDefinitionResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& EndIntTxTrackDefinitionResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Count", "Id"}; 
+      return names; 
+    }
 
 
     int EndIntTxTrackDefinitionResult::count() const

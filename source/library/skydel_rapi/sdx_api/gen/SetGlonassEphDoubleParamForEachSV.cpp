@@ -1,34 +1,41 @@
+
+#include "SetGlonassEphDoubleParamForEachSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetGlonassEphDoubleParamForEachSV
 ///
-#include "gen/SetGlonassEphDoubleParamForEachSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetGlonassEphDoubleParamForEachSV::CmdName = "SetGlonassEphDoubleParamForEachSV";
-    const char* const SetGlonassEphDoubleParamForEachSV::Documentation = "Please note the command SetGlonassDoubleParams is deprecated since 21.3. You may use SetGlonassEphDoubleParamForEachSV.\n\nSet GLONASS parameter value for all satellites";
+    const char* const SetGlonassEphDoubleParamForEachSV::Documentation = "Set GLONASS parameter value for all satellites\n"
+      "\n"
+      "Name      Type         Description\n"
+      "--------- ------------ --------------------------------------------------------------------------------------------------\n"
+      "ParamName string       Refer to SetGlonassEphDoubleParamForSV for accepted names\n"
+      "Val       array double Parameter value for each satellite. Zero based index (index 0 => SV ID 1, index 1 => SV ID 2, etc)";
+    const char* const SetGlonassEphDoubleParamForEachSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetGlonassEphDoubleParamForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetGlonassEphDoubleParamForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetGlonassEphDoubleParamForEachSV);
 
 
     SetGlonassEphDoubleParamForEachSV::SetGlonassEphDoubleParamForEachSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetGlonassEphDoubleParamForEachSV::SetGlonassEphDoubleParamForEachSV(const std::string& paramName, const std::vector<double>& val)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setParamName(paramName);
       setVal(val);
     }
-
 
     SetGlonassEphDoubleParamForEachSVPtr SetGlonassEphDoubleParamForEachSV::create(const std::string& paramName, const std::vector<double>& val)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetGlonassEphDoubleParamForEachSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetGlonassEphDoubleParamForEachSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ParamName", "Val"}; 
+      return names; 
+    }
 
 
     int SetGlonassEphDoubleParamForEachSV::executePermission() const

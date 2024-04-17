@@ -1,33 +1,39 @@
+
+#include "GetMessageModificationToSbasNav.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageModificationToSbasNav
 ///
-#include "gen/GetMessageModificationToSbasNav.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageModificationToSbasNav::CmdName = "GetMessageModificationToSbasNav";
-    const char* const GetMessageModificationToSbasNav::Documentation = "Get infos about the SBAS NAV message modification with this ID.";
+    const char* const GetMessageModificationToSbasNav::Documentation = "Get infos about the SBAS NAV message modification with this ID.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Unique identifier of the event";
+    const char* const GetMessageModificationToSbasNav::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetMessageModificationToSbasNav);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetMessageModificationToSbasNav);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageModificationToSbasNav);
 
 
     GetMessageModificationToSbasNav::GetMessageModificationToSbasNav()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetMessageModificationToSbasNav::GetMessageModificationToSbasNav(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetMessageModificationToSbasNavPtr GetMessageModificationToSbasNav::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetMessageModificationToSbasNav::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageModificationToSbasNav::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetMessageModificationToSbasNav::executePermission() const

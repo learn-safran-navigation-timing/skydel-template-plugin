@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 #include <vector>
 
@@ -13,8 +14,8 @@ namespace Sdx
     /// Result of GetPseudorangeNoiseGaussMarkovForEachSV.
     ///
     /// Name    Type         Description
-    /// ------- ------------ ----------------------------------------------------------------
-    /// System  string       "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// ------- ------------ --------------------------------------------------------------------------
+    /// System  string       "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// Process int          Gauss-Markov Process number (0 or 1)
     /// Enabled array bool   If true, Gauss-Markov process is enabled
     /// Sigma   array double Standard devition
@@ -32,16 +33,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetPseudorangeNoiseGaussMarkovForEachSVResult();
 
+      GetPseudorangeNoiseGaussMarkovForEachSVResult(const std::string& system, int process, const std::vector<bool>& enabled, const std::vector<double>& sigma, const std::vector<double>& time, const std::vector<int>& seed);
+
       GetPseudorangeNoiseGaussMarkovForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, int process, const std::vector<bool>& enabled, const std::vector<double>& sigma, const std::vector<double>& time, const std::vector<int>& seed);
-  
+
+      static GetPseudorangeNoiseGaussMarkovForEachSVResultPtr create(const std::string& system, int process, const std::vector<bool>& enabled, const std::vector<double>& sigma, const std::vector<double>& time, const std::vector<int>& seed);
+
       static GetPseudorangeNoiseGaussMarkovForEachSVResultPtr create(CommandBasePtr relatedCommand, const std::string& system, int process, const std::vector<bool>& enabled, const std::vector<double>& sigma, const std::vector<double>& time, const std::vector<int>& seed);
       static GetPseudorangeNoiseGaussMarkovForEachSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** system ****
@@ -73,6 +80,7 @@ namespace Sdx
       std::vector<int> seed() const;
       void setSeed(const std::vector<int>& seed);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetPseudorangeNoiseGaussMarkovForEachSVResult);
   }
 }
 

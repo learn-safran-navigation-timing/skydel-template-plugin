@@ -1,28 +1,39 @@
+
+#include "SetVehicleAntennaPhaseOffsetCSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetVehicleAntennaPhaseOffsetCSV
 ///
-#include "gen/SetVehicleAntennaPhaseOffsetCSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetVehicleAntennaPhaseOffsetCSV::CmdName = "SetVehicleAntennaPhaseOffsetCSV";
-    const char* const SetVehicleAntennaPhaseOffsetCSV::Documentation = "Set vehicle phase offset antenna pattern from a CSV file. If no name is specified, the command is aplied to Basic vehicle Antenna.";
+    const char* const SetVehicleAntennaPhaseOffsetCSV::Documentation = "Set vehicle phase offset antenna pattern from a CSV file. If no name is specified, the command is aplied to Basic vehicle Antenna.\n"
+      "\n"
+      "Name       Type                   Description\n"
+      "---------- ---------------------- ------------------------------------------------------------------------------------------------------------------\n"
+      "FilePath   string                 File path of the CSV. For Default and None type, lets it empty. See formats in user manual part 8.7.9.2.1. Models.\n"
+      "FileFormat AntennaPatternFileType Values' unit of the CSV File: \"Degrees\", \"Radians\" or \"NoneFile\" in case of None-pattern type.\n"
+      "Type       AntennaPatternType     Pattern type\n"
+      "Band       GNSSBand               Frequency band\n"
+      "Name       optional string        Vehicle antenna name";
+    const char* const SetVehicleAntennaPhaseOffsetCSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetVehicleAntennaPhaseOffsetCSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetVehicleAntennaPhaseOffsetCSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetVehicleAntennaPhaseOffsetCSV);
 
 
     SetVehicleAntennaPhaseOffsetCSV::SetVehicleAntennaPhaseOffsetCSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetVehicleAntennaPhaseOffsetCSV::SetVehicleAntennaPhaseOffsetCSV(const std::string& filePath, const Sdx::AntennaPatternFileType& fileFormat, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setFilePath(filePath);
@@ -31,7 +42,6 @@ namespace Sdx
       setBand(band);
       setName(name);
     }
-
 
     SetVehicleAntennaPhaseOffsetCSVPtr SetVehicleAntennaPhaseOffsetCSV::create(const std::string& filePath, const Sdx::AntennaPatternFileType& fileFormat, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name)
     {
@@ -57,6 +67,12 @@ namespace Sdx
     }
 
     std::string SetVehicleAntennaPhaseOffsetCSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetVehicleAntennaPhaseOffsetCSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"FilePath", "FileFormat", "Type", "Band", "Name"}; 
+      return names; 
+    }
 
 
     int SetVehicleAntennaPhaseOffsetCSV::executePermission() const

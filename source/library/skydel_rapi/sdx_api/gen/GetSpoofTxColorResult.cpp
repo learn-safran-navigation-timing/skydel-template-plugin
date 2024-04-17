@@ -1,34 +1,54 @@
+
+#include "GetSpoofTxColorResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxColorResult
 ///
-#include "gen/GetSpoofTxColorResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxColorResult::CmdName = "GetSpoofTxColorResult";
-    const char* const GetSpoofTxColorResult::Documentation = "Result of GetSpoofTxColor.";
+    const char* const GetSpoofTxColorResult::Documentation = "Result of GetSpoofTxColor.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ -------------------------------------------------------------------------------\n"
+      "Color string Color 'name'. Either a common color (red, white, ...) or an hex code (#FFFFFF).\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const GetSpoofTxColorResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetSpoofTxColorResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxColorResult);
 
 
     GetSpoofTxColorResult::GetSpoofTxColorResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetSpoofTxColorResult::GetSpoofTxColorResult(CommandBasePtr relatedCommand, const std::string& color, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetSpoofTxColorResult::GetSpoofTxColorResult(const std::string& color, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setColor(color);
       setId(id);
     }
 
+    GetSpoofTxColorResult::GetSpoofTxColorResult(CommandBasePtr relatedCommand, const std::string& color, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setColor(color);
+      setId(id);
+    }
+
+
+    GetSpoofTxColorResultPtr GetSpoofTxColorResult::create(const std::string& color, const std::string& id)
+    {
+      return std::make_shared<GetSpoofTxColorResult>(color, id);
+    }
 
     GetSpoofTxColorResultPtr GetSpoofTxColorResult::create(CommandBasePtr relatedCommand, const std::string& color, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxColorResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxColorResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Color", "Id"}; 
+      return names; 
+    }
 
 
     std::string GetSpoofTxColorResult::color() const

@@ -1,28 +1,36 @@
+
+#include "GetAgeOfDataBeiDouResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAgeOfDataBeiDouResult
 ///
-#include "gen/GetAgeOfDataBeiDouResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetAgeOfDataBeiDouResult::CmdName = "GetAgeOfDataBeiDouResult";
-    const char* const GetAgeOfDataBeiDouResult::Documentation = "Result of GetAgeOfDataBeiDou.";
+    const char* const GetAgeOfDataBeiDouResult::Documentation = "Result of GetAgeOfDataBeiDou.\n"
+      "\n"
+      "Name          Type          Description\n"
+      "------------- ------------- ---------------------------------------------------\n"
+      "Clock         int           Age of data, clock\n"
+      "Ephemeris     int           Age of data, ephemeris\n"
+      "OverrideRinex optional bool If the AOD overrides the RINEX AOD, default is True";
+    const char* const GetAgeOfDataBeiDouResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetAgeOfDataBeiDouResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAgeOfDataBeiDouResult);
 
 
     GetAgeOfDataBeiDouResult::GetAgeOfDataBeiDouResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetAgeOfDataBeiDouResult::GetAgeOfDataBeiDouResult(CommandBasePtr relatedCommand, int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
-      : CommandResult(CmdName, relatedCommand)
+    GetAgeOfDataBeiDouResult::GetAgeOfDataBeiDouResult(int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
+      : CommandResult(CmdName, TargetId)
     {
 
       setClock(clock);
@@ -30,6 +38,20 @@ namespace Sdx
       setOverrideRinex(overrideRinex);
     }
 
+    GetAgeOfDataBeiDouResult::GetAgeOfDataBeiDouResult(CommandBasePtr relatedCommand, int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setClock(clock);
+      setEphemeris(ephemeris);
+      setOverrideRinex(overrideRinex);
+    }
+
+
+    GetAgeOfDataBeiDouResultPtr GetAgeOfDataBeiDouResult::create(int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
+    {
+      return std::make_shared<GetAgeOfDataBeiDouResult>(clock, ephemeris, overrideRinex);
+    }
 
     GetAgeOfDataBeiDouResultPtr GetAgeOfDataBeiDouResult::create(CommandBasePtr relatedCommand, int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetAgeOfDataBeiDouResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAgeOfDataBeiDouResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Clock", "Ephemeris", "OverrideRinex"}; 
+      return names; 
+    }
 
 
     int GetAgeOfDataBeiDouResult::clock() const

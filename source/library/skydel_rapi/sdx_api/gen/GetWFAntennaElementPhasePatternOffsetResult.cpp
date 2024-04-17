@@ -1,34 +1,54 @@
+
+#include "GetWFAntennaElementPhasePatternOffsetResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetWFAntennaElementPhasePatternOffsetResult
 ///
-#include "gen/GetWFAntennaElementPhasePatternOffsetResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetWFAntennaElementPhasePatternOffsetResult::CmdName = "GetWFAntennaElementPhasePatternOffsetResult";
-    const char* const GetWFAntennaElementPhasePatternOffsetResult::Documentation = "Result of GetWFAntennaElementPhasePatternOffset.";
+    const char* const GetWFAntennaElementPhasePatternOffsetResult::Documentation = "Result of GetWFAntennaElementPhasePatternOffset.\n"
+      "\n"
+      "Name        Type   Description\n"
+      "----------- ------ -------------------------------------------------------------------------\n"
+      "PhaseOffset double Antenna phase pattern offset (in rad) to set for this element. [-Pi ; Pi]\n"
+      "Element     int    One-based index for element in antenna.";
+    const char* const GetWFAntennaElementPhasePatternOffsetResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetWFAntennaElementPhasePatternOffsetResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetWFAntennaElementPhasePatternOffsetResult);
 
 
     GetWFAntennaElementPhasePatternOffsetResult::GetWFAntennaElementPhasePatternOffsetResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetWFAntennaElementPhasePatternOffsetResult::GetWFAntennaElementPhasePatternOffsetResult(CommandBasePtr relatedCommand, double phaseOffset, int element)
-      : CommandResult(CmdName, relatedCommand)
+    GetWFAntennaElementPhasePatternOffsetResult::GetWFAntennaElementPhasePatternOffsetResult(double phaseOffset, int element)
+      : CommandResult(CmdName, TargetId)
     {
 
       setPhaseOffset(phaseOffset);
       setElement(element);
     }
 
+    GetWFAntennaElementPhasePatternOffsetResult::GetWFAntennaElementPhasePatternOffsetResult(CommandBasePtr relatedCommand, double phaseOffset, int element)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setPhaseOffset(phaseOffset);
+      setElement(element);
+    }
+
+
+    GetWFAntennaElementPhasePatternOffsetResultPtr GetWFAntennaElementPhasePatternOffsetResult::create(double phaseOffset, int element)
+    {
+      return std::make_shared<GetWFAntennaElementPhasePatternOffsetResult>(phaseOffset, element);
+    }
 
     GetWFAntennaElementPhasePatternOffsetResultPtr GetWFAntennaElementPhasePatternOffsetResult::create(CommandBasePtr relatedCommand, double phaseOffset, int element)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetWFAntennaElementPhasePatternOffsetResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetWFAntennaElementPhasePatternOffsetResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"PhaseOffset", "Element"}; 
+      return names; 
+    }
 
 
     double GetWFAntennaElementPhasePatternOffsetResult::phaseOffset() const

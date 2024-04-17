@@ -1,33 +1,51 @@
+
+#include "IsTrajectorySmoothingEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsTrajectorySmoothingEnabledResult
 ///
-#include "gen/IsTrajectorySmoothingEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsTrajectorySmoothingEnabledResult::CmdName = "IsTrajectorySmoothingEnabledResult";
-    const char* const IsTrajectorySmoothingEnabledResult::Documentation = "Result of IsTrajectorySmoothingEnabled.";
+    const char* const IsTrajectorySmoothingEnabledResult::Documentation = "Result of IsTrajectorySmoothingEnabled.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ------------------------------------------------------\n"
+      "Enabled bool If true, trajectory will be smoothed during simulation";
+    const char* const IsTrajectorySmoothingEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsTrajectorySmoothingEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsTrajectorySmoothingEnabledResult);
 
 
     IsTrajectorySmoothingEnabledResult::IsTrajectorySmoothingEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsTrajectorySmoothingEnabledResult::IsTrajectorySmoothingEnabledResult(CommandBasePtr relatedCommand, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsTrajectorySmoothingEnabledResult::IsTrajectorySmoothingEnabledResult(bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
 
+    IsTrajectorySmoothingEnabledResult::IsTrajectorySmoothingEnabledResult(CommandBasePtr relatedCommand, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+    }
+
+
+    IsTrajectorySmoothingEnabledResultPtr IsTrajectorySmoothingEnabledResult::create(bool enabled)
+    {
+      return std::make_shared<IsTrajectorySmoothingEnabledResult>(enabled);
+    }
 
     IsTrajectorySmoothingEnabledResultPtr IsTrajectorySmoothingEnabledResult::create(CommandBasePtr relatedCommand, bool enabled)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsTrajectorySmoothingEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsTrajectorySmoothingEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     bool IsTrajectorySmoothingEnabledResult::enabled() const

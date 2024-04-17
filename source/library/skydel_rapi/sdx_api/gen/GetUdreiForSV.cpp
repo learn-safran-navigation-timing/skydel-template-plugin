@@ -1,34 +1,41 @@
+
+#include "GetUdreiForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetUdreiForSV
 ///
-#include "gen/GetUdreiForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetUdreiForSV::CmdName = "GetUdreiForSV";
-    const char* const GetUdreiForSV::Documentation = "Get the UDREI value transmitted by SBAS for the satellite of the specified constellation.";
+    const char* const GetUdreiForSV::Documentation = "Get the UDREI value transmitted by SBAS for the satellite of the specified constellation.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ ---------------------------------------------------------------\n"
+      "System string \"GPS\" or \"SBAS\".\n"
+      "SvId   int    The satellite's SV ID (use 0 to apply modification to all SVs).";
+    const char* const GetUdreiForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetUdreiForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetUdreiForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetUdreiForSV);
 
 
     GetUdreiForSV::GetUdreiForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetUdreiForSV::GetUdreiForSV(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     GetUdreiForSVPtr GetUdreiForSV::create(const std::string& system, int svId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetUdreiForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetUdreiForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int GetUdreiForSV::executePermission() const

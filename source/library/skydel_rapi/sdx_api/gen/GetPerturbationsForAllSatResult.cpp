@@ -1,28 +1,41 @@
+
+#include "GetPerturbationsForAllSatResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetPerturbationsForAllSatResult
 ///
-#include "gen/GetPerturbationsForAllSatResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetPerturbationsForAllSatResult::CmdName = "GetPerturbationsForAllSatResult";
-    const char* const GetPerturbationsForAllSatResult::Documentation = "Result of GetPerturbationsForAllSat.";
+    const char* const GetPerturbationsForAllSatResult::Documentation = "Result of GetPerturbationsForAllSat.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "System      string          \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "Crs         array double    Crs (meter)\n"
+      "Crc         array double    Crc (meter)\n"
+      "Cis         array double    Cis (rad)\n"
+      "Cic         array double    Cic (rad)\n"
+      "Cus         array double    Cus (rad)\n"
+      "Cuc         array double    Cuc (rad)\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetPerturbationsForAllSatResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetPerturbationsForAllSatResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetPerturbationsForAllSatResult);
 
 
     GetPerturbationsForAllSatResult::GetPerturbationsForAllSatResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetPerturbationsForAllSatResult::GetPerturbationsForAllSatResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<double>& crs, const std::vector<double>& crc, const std::vector<double>& cis, const std::vector<double>& cic, const std::vector<double>& cus, const std::vector<double>& cuc, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetPerturbationsForAllSatResult::GetPerturbationsForAllSatResult(const std::string& system, const std::vector<double>& crs, const std::vector<double>& crc, const std::vector<double>& cis, const std::vector<double>& cic, const std::vector<double>& cus, const std::vector<double>& cuc, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -35,6 +48,25 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetPerturbationsForAllSatResult::GetPerturbationsForAllSatResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<double>& crs, const std::vector<double>& crc, const std::vector<double>& cis, const std::vector<double>& cic, const std::vector<double>& cus, const std::vector<double>& cuc, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setCrs(crs);
+      setCrc(crc);
+      setCis(cis);
+      setCic(cic);
+      setCus(cus);
+      setCuc(cuc);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetPerturbationsForAllSatResultPtr GetPerturbationsForAllSatResult::create(const std::string& system, const std::vector<double>& crs, const std::vector<double>& crc, const std::vector<double>& cis, const std::vector<double>& cic, const std::vector<double>& cus, const std::vector<double>& cuc, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetPerturbationsForAllSatResult>(system, crs, crc, cis, cic, cus, cuc, dataSetName);
+    }
 
     GetPerturbationsForAllSatResultPtr GetPerturbationsForAllSatResult::create(CommandBasePtr relatedCommand, const std::string& system, const std::vector<double>& crs, const std::vector<double>& crc, const std::vector<double>& cis, const std::vector<double>& cic, const std::vector<double>& cus, const std::vector<double>& cuc, const Sdx::optional<std::string>& dataSetName)
     {
@@ -63,6 +95,12 @@ namespace Sdx
     }
 
     std::string GetPerturbationsForAllSatResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetPerturbationsForAllSatResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Crs", "Crc", "Cis", "Cic", "Cus", "Cuc", "DataSetName"}; 
+      return names; 
+    }
 
 
     std::string GetPerturbationsForAllSatResult::system() const

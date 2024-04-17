@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 
 
 namespace Sdx
@@ -25,22 +26,29 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SimulationElapsedTimeResult();
 
+      SimulationElapsedTimeResult(int milliseconds);
+
       SimulationElapsedTimeResult(CommandBasePtr relatedCommand, int milliseconds);
-  
+
+      static SimulationElapsedTimeResultPtr create(int milliseconds);
+
       static SimulationElapsedTimeResultPtr create(CommandBasePtr relatedCommand, int milliseconds);
       static SimulationElapsedTimeResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** milliseconds ****
       int milliseconds() const;
       void setMilliseconds(int milliseconds);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(SimulationElapsedTimeResult);
   }
 }
 

@@ -1,35 +1,43 @@
+
+#include "SetPrnOfSVID.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetPrnOfSVID
 ///
-#include "gen/SetPrnOfSVID.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetPrnOfSVID::CmdName = "SetPrnOfSVID";
-    const char* const SetPrnOfSVID::Documentation = "Set the PRN transmitted by the SV ID for this signal.";
+    const char* const SetPrnOfSVID::Documentation = "Set the PRN transmitted by the SV ID for this signal.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+      "Signal string Accepted signal keys: \"L1CA\", \"L1C\", \"L2C\", \"L5\", \"E1\", \"E6BC\", \"B1\", \"B2\", \"B1C\", \"B2a\", \"B3I\", \"SBASL1\", \"SBASL5\", \"QZSSL1CA\", \"QZSSL1CB\", \"QZSSL1C\", \"QZSSL2C\", \"QZSSL5\", \"QZSSL1S\", \"QZSSL5S\", \"NAVICL5\", \"PULSARXL\"\n"
+      "SvId   int    Satellite SV ID.\n"
+      "Prn    int    PRN number.";
+    const char* const SetPrnOfSVID::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetPrnOfSVID);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetPrnOfSVID);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetPrnOfSVID);
 
 
     SetPrnOfSVID::SetPrnOfSVID()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetPrnOfSVID::SetPrnOfSVID(const std::string& signal, int svId, int prn)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSignal(signal);
       setSvId(svId);
       setPrn(prn);
     }
-
 
     SetPrnOfSVIDPtr SetPrnOfSVID::create(const std::string& signal, int svId, int prn)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetPrnOfSVID::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetPrnOfSVID::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Signal", "SvId", "Prn"}; 
+      return names; 
+    }
 
 
     int SetPrnOfSVID::executePermission() const

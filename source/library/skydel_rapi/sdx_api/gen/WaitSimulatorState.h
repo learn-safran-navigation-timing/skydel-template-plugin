@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -17,9 +18,9 @@ namespace Sdx
     /// -Initializing
     /// -Armed
     /// -Streaming RF
-    /// -Sync Slave
-    /// -WF Init (Slave)
-    /// -WF Init (Master)
+    /// -Sync Worker Instance
+    /// -WF Init (Worker)
+    /// -WF Init (Main)
     /// -HIL Sync
     /// -Sync Init
     /// -Sync PPS Reset
@@ -42,16 +43,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       WaitSimulatorState();
 
       WaitSimulatorState(const std::string& state, const std::string& failureState);
-  
+
       static WaitSimulatorStatePtr create(const std::string& state, const std::string& failureState);
       static WaitSimulatorStatePtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -65,6 +68,7 @@ namespace Sdx
       std::string failureState() const;
       void setFailureState(const std::string& failureState);
     };
+    
   }
 }
 

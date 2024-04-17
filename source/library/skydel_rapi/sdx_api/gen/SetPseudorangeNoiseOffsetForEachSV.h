@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 #include <vector>
 
@@ -13,8 +14,8 @@ namespace Sdx
     /// Set the satellite pseudorange noise constant offset for all satellites.
     ///
     /// Name    Type         Description
-    /// ------- ------------ ----------------------------------------------------------------
-    /// System  string       "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// ------- ------------ --------------------------------------------------------------------------
+    /// System  string       "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// Enabled array bool   If true, the offset is enabled (applied)
     /// Offset  array double The constant offset in metters
     ///
@@ -28,16 +29,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetPseudorangeNoiseOffsetForEachSV();
 
       SetPseudorangeNoiseOffsetForEachSV(const std::string& system, const std::vector<bool>& enabled, const std::vector<double>& offset);
-  
+
       static SetPseudorangeNoiseOffsetForEachSVPtr create(const std::string& system, const std::vector<bool>& enabled, const std::vector<double>& offset);
       static SetPseudorangeNoiseOffsetForEachSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -56,6 +59,7 @@ namespace Sdx
       std::vector<double> offset() const;
       void setOffset(const std::vector<double>& offset);
     };
+    
   }
 }
 

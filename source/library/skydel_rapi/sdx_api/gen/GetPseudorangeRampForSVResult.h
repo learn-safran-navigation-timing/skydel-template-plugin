@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -13,7 +14,7 @@ namespace Sdx
     ///
     /// Name          Type   Description
     /// ------------- ------ ----------------------------------------------------------------------------------
-    /// System        string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System        string "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// SvId          int    The satellite's SV ID.
     /// Offset        double Change to satellite pseudorange in meter when ramp is at maximum. Range -1e7..+1e7
     /// StartTime     int    Elapsed time in seconds since start of simulation.
@@ -33,16 +34,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetPseudorangeRampForSVResult();
 
+      GetPseudorangeRampForSVResult(const std::string& system, int svId, double offset, int startTime, int holdStartTime, int holdStopTime, int stopTime, const std::string& id);
+
       GetPseudorangeRampForSVResult(CommandBasePtr relatedCommand, const std::string& system, int svId, double offset, int startTime, int holdStartTime, int holdStopTime, int stopTime, const std::string& id);
-  
+
+      static GetPseudorangeRampForSVResultPtr create(const std::string& system, int svId, double offset, int startTime, int holdStartTime, int holdStopTime, int stopTime, const std::string& id);
+
       static GetPseudorangeRampForSVResultPtr create(CommandBasePtr relatedCommand, const std::string& system, int svId, double offset, int startTime, int holdStartTime, int holdStopTime, int stopTime, const std::string& id);
       static GetPseudorangeRampForSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** system ****
@@ -84,6 +91,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetPseudorangeRampForSVResult);
   }
 }
 

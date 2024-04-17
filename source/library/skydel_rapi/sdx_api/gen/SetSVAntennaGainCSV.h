@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "gen/AntennaPatternType.h"
 #include "gen/GNSSBand.h"
 #include "sdx_optional.h"
@@ -19,7 +20,7 @@ namespace Sdx
     /// FilePath string             File path of the CSV. For Default and None type, lets it empty. See formats in user manual part 8.7.9.2.1. Models.
     /// Type     AntennaPatternType Pattern type
     /// Band     GNSSBand           Frequency band
-    /// System   string             "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System   string             "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// Name     optional string    Vehicle antenna name
     ///
 
@@ -32,16 +33,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetSVAntennaGainCSV();
 
       SetSVAntennaGainCSV(const std::string& filePath, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const std::string& system, const Sdx::optional<std::string>& name = {});
-  
+
       static SetSVAntennaGainCSVPtr create(const std::string& filePath, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const std::string& system, const Sdx::optional<std::string>& name = {});
       static SetSVAntennaGainCSVPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -70,6 +73,7 @@ namespace Sdx
       Sdx::optional<std::string> name() const;
       void setName(const Sdx::optional<std::string>& name);
     };
+    
   }
 }
 

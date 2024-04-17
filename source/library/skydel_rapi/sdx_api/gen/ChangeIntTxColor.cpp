@@ -1,34 +1,41 @@
+
+#include "ChangeIntTxColor.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ChangeIntTxColor
 ///
-#include "gen/ChangeIntTxColor.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ChangeIntTxColor::CmdName = "ChangeIntTxColor";
-    const char* const ChangeIntTxColor::Documentation = "Set a transmitter color in spectrums";
+    const char* const ChangeIntTxColor::Documentation = "Set a transmitter color in spectrums\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ -------------------------------------------------------------------------------\n"
+      "Color string Color 'name'. Either a common color (red, white, ...) or an hex code (#FFFFFF).\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const ChangeIntTxColor::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ChangeIntTxColor);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ChangeIntTxColor);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ChangeIntTxColor);
 
 
     ChangeIntTxColor::ChangeIntTxColor()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ChangeIntTxColor::ChangeIntTxColor(const std::string& color, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setColor(color);
       setId(id);
     }
-
 
     ChangeIntTxColorPtr ChangeIntTxColor::create(const std::string& color, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string ChangeIntTxColor::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ChangeIntTxColor::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Color", "Id"}; 
+      return names; 
+    }
 
 
     int ChangeIntTxColor::executePermission() const

@@ -1,34 +1,41 @@
+
+#include "SetIntTxIgnorePropagationLoss.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIntTxIgnorePropagationLoss
 ///
-#include "gen/SetIntTxIgnorePropagationLoss.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIntTxIgnorePropagationLoss::CmdName = "SetIntTxIgnorePropagationLoss";
-    const char* const SetIntTxIgnorePropagationLoss::Documentation = "Set whether a dynamic transmitter should ignore propagation loss or not.";
+    const char* const SetIntTxIgnorePropagationLoss::Documentation = "Set whether a dynamic transmitter should ignore propagation loss or not.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ ------------------------------------------\n"
+      "Ignore bool   If true, propagation loss will be ignored.\n"
+      "Id     string Transmitter unique identifier.";
+    const char* const SetIntTxIgnorePropagationLoss::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIntTxIgnorePropagationLoss);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIntTxIgnorePropagationLoss);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIntTxIgnorePropagationLoss);
 
 
     SetIntTxIgnorePropagationLoss::SetIntTxIgnorePropagationLoss()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIntTxIgnorePropagationLoss::SetIntTxIgnorePropagationLoss(bool ignore, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setIgnore(ignore);
       setId(id);
     }
-
 
     SetIntTxIgnorePropagationLossPtr SetIntTxIgnorePropagationLoss::create(bool ignore, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetIntTxIgnorePropagationLoss::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIntTxIgnorePropagationLoss::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ignore", "Id"}; 
+      return names; 
+    }
 
 
     int SetIntTxIgnorePropagationLoss::executePermission() const

@@ -1,34 +1,54 @@
+
+#include "GetIonoGridMaskAllResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIonoGridMaskAllResult
 ///
-#include "gen/GetIonoGridMaskAllResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIonoGridMaskAllResult::CmdName = "GetIonoGridMaskAllResult";
-    const char* const GetIonoGridMaskAllResult::Documentation = "Result of GetIonoGridMaskAll.";
+    const char* const GetIonoGridMaskAllResult::Documentation = "Result of GetIonoGridMaskAll.\n"
+      "\n"
+      "Name            Type             Description\n"
+      "--------------- ---------------- ----------------------------------------------------------------------\n"
+      "ServiceProvider string           The service provider\n"
+      "Grid            array array bool Array containing each band, each band is an array containing the flags";
+    const char* const GetIonoGridMaskAllResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIonoGridMaskAllResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIonoGridMaskAllResult);
 
 
     GetIonoGridMaskAllResult::GetIonoGridMaskAllResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIonoGridMaskAllResult::GetIonoGridMaskAllResult(CommandBasePtr relatedCommand, const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid)
-      : CommandResult(CmdName, relatedCommand)
+    GetIonoGridMaskAllResult::GetIonoGridMaskAllResult(const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid)
+      : CommandResult(CmdName, TargetId)
     {
 
       setServiceProvider(serviceProvider);
       setGrid(grid);
     }
 
+    GetIonoGridMaskAllResult::GetIonoGridMaskAllResult(CommandBasePtr relatedCommand, const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setServiceProvider(serviceProvider);
+      setGrid(grid);
+    }
+
+
+    GetIonoGridMaskAllResultPtr GetIonoGridMaskAllResult::create(const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid)
+    {
+      return std::make_shared<GetIonoGridMaskAllResult>(serviceProvider, grid);
+    }
 
     GetIonoGridMaskAllResultPtr GetIonoGridMaskAllResult::create(CommandBasePtr relatedCommand, const std::string& serviceProvider, const std::vector<std::vector<bool>>& grid)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetIonoGridMaskAllResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIonoGridMaskAllResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ServiceProvider", "Grid"}; 
+      return names; 
+    }
 
 
     std::string GetIonoGridMaskAllResult::serviceProvider() const

@@ -1,33 +1,39 @@
+
+#include "SetLogNmeaRate.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetLogNmeaRate
 ///
-#include "gen/SetLogNmeaRate.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetLogNmeaRate::CmdName = "SetLogNmeaRate";
-    const char* const SetLogNmeaRate::Documentation = "Set Rate logging of NMEA data";
+    const char* const SetLogNmeaRate::Documentation = "Set Rate logging of NMEA data\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- ------------------------------\n"
+      "Rate int  Accepted rates are 1 and 10 Hz";
+    const char* const SetLogNmeaRate::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetLogNmeaRate);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetLogNmeaRate);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetLogNmeaRate);
 
 
     SetLogNmeaRate::SetLogNmeaRate()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetLogNmeaRate::SetLogNmeaRate(int rate)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setRate(rate);
     }
-
 
     SetLogNmeaRatePtr SetLogNmeaRate::create(int rate)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetLogNmeaRate::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetLogNmeaRate::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Rate"}; 
+      return names; 
+    }
 
 
     int SetLogNmeaRate::executePermission() const

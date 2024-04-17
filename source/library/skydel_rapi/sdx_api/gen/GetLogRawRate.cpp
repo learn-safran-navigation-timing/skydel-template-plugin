@@ -1,11 +1,12 @@
+
+#include "GetLogRawRate.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetLogRawRate
 ///
-#include "gen/GetLogRawRate.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetLogRawRate::CmdName = "GetLogRawRate";
     const char* const GetLogRawRate::Documentation = "Get Rate logging of raw data";
+    const char* const GetLogRawRate::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetLogRawRate);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetLogRawRate);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetLogRawRate);
 
 
     GetLogRawRate::GetLogRawRate()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetLogRawRatePtr GetLogRawRate::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetLogRawRate::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetLogRawRate::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetLogRawRate::executePermission() const

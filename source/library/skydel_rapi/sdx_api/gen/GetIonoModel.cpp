@@ -1,11 +1,12 @@
+
+#include "GetIonoModel.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIonoModel
 ///
-#include "gen/GetIonoModel.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetIonoModel::CmdName = "GetIonoModel";
     const char* const GetIonoModel::Documentation = "Get ionospheric model";
+    const char* const GetIonoModel::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIonoModel);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIonoModel);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIonoModel);
 
 
     GetIonoModel::GetIonoModel()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetIonoModelPtr GetIonoModel::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetIonoModel::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIonoModel::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetIonoModel::executePermission() const

@@ -1,34 +1,45 @@
+
+#include "GetBeiDouEphDoubleParamForEachSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetBeiDouEphDoubleParamForEachSV
 ///
-#include "gen/GetBeiDouEphDoubleParamForEachSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetBeiDouEphDoubleParamForEachSV::CmdName = "GetBeiDouEphDoubleParamForEachSV";
-    const char* const GetBeiDouEphDoubleParamForEachSV::Documentation = "Please note the command GetBeiDouEphemerisDoubleParams is deprecated since 21.3. You may use GetBeiDouEphDoubleParamForEachSV.\n\nGet BeiDou ephemeris parameter value for all satellites";
+    const char* const GetBeiDouEphDoubleParamForEachSV::Documentation = "Please note the command GetBeiDouEphDoubleParamForEachSV is deprecated since 23.11. You may use GetConstellationParameterForSV.\n"
+      "\n"
+      "Get BeiDou ephemeris parameter value for all satellites\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "ParamName   string          Refer to SetBeiDouEphDoubleParamForSV for accepted names\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetBeiDouEphDoubleParamForEachSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetBeiDouEphDoubleParamForEachSV);
+    const char* const GetBeiDouEphDoubleParamForEachSV::Deprecated = "Please note the command GetBeiDouEphDoubleParamForEachSV is deprecated since 23.11. You may use GetConstellationParameterForSV.";
+
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetBeiDouEphDoubleParamForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetBeiDouEphDoubleParamForEachSV);
 
 
     GetBeiDouEphDoubleParamForEachSV::GetBeiDouEphDoubleParamForEachSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetBeiDouEphDoubleParamForEachSV::GetBeiDouEphDoubleParamForEachSV(const std::string& paramName, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setParamName(paramName);
       setDataSetName(dataSetName);
     }
-
 
     GetBeiDouEphDoubleParamForEachSVPtr GetBeiDouEphDoubleParamForEachSV::create(const std::string& paramName, const Sdx::optional<std::string>& dataSetName)
     {
@@ -51,6 +62,14 @@ namespace Sdx
     }
 
     std::string GetBeiDouEphDoubleParamForEachSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetBeiDouEphDoubleParamForEachSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ParamName", "DataSetName"}; 
+      return names; 
+    }
+
+    Sdx::optional<std::string> GetBeiDouEphDoubleParamForEachSV::deprecated() const { return Sdx::optional<std::string>{Deprecated}; }
 
 
     int GetBeiDouEphDoubleParamForEachSV::executePermission() const

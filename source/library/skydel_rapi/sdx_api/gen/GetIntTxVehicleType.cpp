@@ -1,33 +1,39 @@
+
+#include "GetIntTxVehicleType.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxVehicleType
 ///
-#include "gen/GetIntTxVehicleType.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxVehicleType::CmdName = "GetIntTxVehicleType";
-    const char* const GetIntTxVehicleType::Documentation = "Get Set interference vehicle type for Track Trajectory";
+    const char* const GetIntTxVehicleType::Documentation = "Get interference vehicle type for Track Trajectory.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetIntTxVehicleType::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTxVehicleType);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxVehicleType);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxVehicleType);
 
 
     GetIntTxVehicleType::GetIntTxVehicleType()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTxVehicleType::GetIntTxVehicleType(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetIntTxVehicleTypePtr GetIntTxVehicleType::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetIntTxVehicleType::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxVehicleType::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetIntTxVehicleType::executePermission() const

@@ -1,33 +1,51 @@
+
+#include "IsLogRinexEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsLogRinexEnabledResult
 ///
-#include "gen/IsLogRinexEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsLogRinexEnabledResult::CmdName = "IsLogRinexEnabledResult";
-    const char* const IsLogRinexEnabledResult::Documentation = "Result of IsLogRinexEnabled.";
+    const char* const IsLogRinexEnabledResult::Documentation = "Result of IsLogRinexEnabled.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ------------------------------------------------\n"
+      "Enabled bool If true, files will be created during simulation";
+    const char* const IsLogRinexEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsLogRinexEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsLogRinexEnabledResult);
 
 
     IsLogRinexEnabledResult::IsLogRinexEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsLogRinexEnabledResult::IsLogRinexEnabledResult(CommandBasePtr relatedCommand, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsLogRinexEnabledResult::IsLogRinexEnabledResult(bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
 
+    IsLogRinexEnabledResult::IsLogRinexEnabledResult(CommandBasePtr relatedCommand, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+    }
+
+
+    IsLogRinexEnabledResultPtr IsLogRinexEnabledResult::create(bool enabled)
+    {
+      return std::make_shared<IsLogRinexEnabledResult>(enabled);
+    }
 
     IsLogRinexEnabledResultPtr IsLogRinexEnabledResult::create(CommandBasePtr relatedCommand, bool enabled)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsLogRinexEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsLogRinexEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     bool IsLogRinexEnabledResult::enabled() const

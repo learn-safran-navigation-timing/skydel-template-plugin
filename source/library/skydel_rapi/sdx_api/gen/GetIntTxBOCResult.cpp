@@ -1,28 +1,43 @@
+
+#include "GetIntTxBOCResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxBOCResult
 ///
-#include "gen/GetIntTxBOCResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxBOCResult::CmdName = "GetIntTxBOCResult";
-    const char* const GetIntTxBOCResult::Documentation = "Result of GetIntTxBOC.";
+    const char* const GetIntTxBOCResult::Documentation = "Result of GetIntTxBOC.\n"
+      "\n"
+      "Name           Type         Description\n"
+      "-------------- ------------ -------------------------------------------------------------------------\n"
+      "Enabled        bool         Enable (true) or disable (false) the signal\n"
+      "CentralFreq    double       Central frequency (Hz)\n"
+      "Power          double       Power (dB), relative to transmitter reference power\n"
+      "CodeRate       int          Code rate (Hz). Must be between 1000 and 60000000 and a multiple of 1KHz.\n"
+      "CodeLengthMs   int          Code length (ms). Must be between 1 and 100.\n"
+      "SubCarrierRate int          Code rate (Hz). Must be between 1000 and 60000000 and a multiple of 1KHz.\n"
+      "CosinePhaseBoc bool         Use Cosine-Phase BOC instead of default Sine-Phase BOC.\n"
+      "TransmitterId  string       Transmitter unique identifier.\n"
+      "SignalId       string       BOC unique identifier.\n"
+      "Group          optional int Group, if not using default group.";
+    const char* const GetIntTxBOCResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxBOCResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxBOCResult);
 
 
     GetIntTxBOCResult::GetIntTxBOCResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxBOCResult::GetIntTxBOCResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, int subCarrierRate, bool cosinePhaseBoc, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxBOCResult::GetIntTxBOCResult(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, int subCarrierRate, bool cosinePhaseBoc, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
@@ -37,6 +52,27 @@ namespace Sdx
       setGroup(group);
     }
 
+    GetIntTxBOCResult::GetIntTxBOCResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, int subCarrierRate, bool cosinePhaseBoc, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+      setCentralFreq(centralFreq);
+      setPower(power);
+      setCodeRate(codeRate);
+      setCodeLengthMs(codeLengthMs);
+      setSubCarrierRate(subCarrierRate);
+      setCosinePhaseBoc(cosinePhaseBoc);
+      setTransmitterId(transmitterId);
+      setSignalId(signalId);
+      setGroup(group);
+    }
+
+
+    GetIntTxBOCResultPtr GetIntTxBOCResult::create(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, int subCarrierRate, bool cosinePhaseBoc, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
+    {
+      return std::make_shared<GetIntTxBOCResult>(enabled, centralFreq, power, codeRate, codeLengthMs, subCarrierRate, cosinePhaseBoc, transmitterId, signalId, group);
+    }
 
     GetIntTxBOCResultPtr GetIntTxBOCResult::create(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, int subCarrierRate, bool cosinePhaseBoc, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
     {
@@ -67,6 +103,12 @@ namespace Sdx
     }
 
     std::string GetIntTxBOCResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxBOCResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "CentralFreq", "Power", "CodeRate", "CodeLengthMs", "SubCarrierRate", "CosinePhaseBoc", "TransmitterId", "SignalId", "Group"}; 
+      return names; 
+    }
 
 
     bool GetIntTxBOCResult::enabled() const

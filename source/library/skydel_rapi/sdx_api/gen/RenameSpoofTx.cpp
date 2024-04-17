@@ -1,34 +1,41 @@
+
+#include "RenameSpoofTx.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RenameSpoofTx
 ///
-#include "gen/RenameSpoofTx.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RenameSpoofTx::CmdName = "RenameSpoofTx";
-    const char* const RenameSpoofTx::Documentation = "Rename a spoofer.";
+    const char* const RenameSpoofTx::Documentation = "Rename a spoofer.\n"
+      "\n"
+      "Name      Type   Description\n"
+      "--------- ------ -------------------------------\n"
+      "UsualName string Usual name for the transmitter.\n"
+      "Id        string Transmitter unique identifier.";
+    const char* const RenameSpoofTx::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RenameSpoofTx);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RenameSpoofTx);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RenameSpoofTx);
 
 
     RenameSpoofTx::RenameSpoofTx()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RenameSpoofTx::RenameSpoofTx(const std::string& usualName, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setUsualName(usualName);
       setId(id);
     }
-
 
     RenameSpoofTxPtr RenameSpoofTx::create(const std::string& usualName, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string RenameSpoofTx::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RenameSpoofTx::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"UsualName", "Id"}; 
+      return names; 
+    }
 
 
     int RenameSpoofTx::executePermission() const

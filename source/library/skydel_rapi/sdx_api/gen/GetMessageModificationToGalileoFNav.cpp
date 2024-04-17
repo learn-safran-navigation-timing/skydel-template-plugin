@@ -1,33 +1,39 @@
+
+#include "GetMessageModificationToGalileoFNav.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageModificationToGalileoFNav
 ///
-#include "gen/GetMessageModificationToGalileoFNav.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageModificationToGalileoFNav::CmdName = "GetMessageModificationToGalileoFNav";
-    const char* const GetMessageModificationToGalileoFNav::Documentation = "Get infos about the Galileo F/NAV message modification with this ID.";
+    const char* const GetMessageModificationToGalileoFNav::Documentation = "Get infos about the Galileo F/NAV message modification with this ID.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Unique identifier of the event";
+    const char* const GetMessageModificationToGalileoFNav::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetMessageModificationToGalileoFNav);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetMessageModificationToGalileoFNav);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageModificationToGalileoFNav);
 
 
     GetMessageModificationToGalileoFNav::GetMessageModificationToGalileoFNav()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetMessageModificationToGalileoFNav::GetMessageModificationToGalileoFNav(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetMessageModificationToGalileoFNavPtr GetMessageModificationToGalileoFNav::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetMessageModificationToGalileoFNav::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageModificationToGalileoFNav::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetMessageModificationToGalileoFNav::executePermission() const

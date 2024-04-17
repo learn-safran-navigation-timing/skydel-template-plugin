@@ -1,33 +1,51 @@
+
+#include "GetWFAntennaGainResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetWFAntennaGainResult
 ///
-#include "gen/GetWFAntennaGainResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetWFAntennaGainResult::CmdName = "GetWFAntennaGainResult";
-    const char* const GetWFAntennaGainResult::Documentation = "Result of GetWFAntennaGain.";
+    const char* const GetWFAntennaGainResult::Documentation = "Result of GetWFAntennaGain.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- -----------------\n"
+      "Gain int  The CRPA LNA gain";
+    const char* const GetWFAntennaGainResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetWFAntennaGainResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetWFAntennaGainResult);
 
 
     GetWFAntennaGainResult::GetWFAntennaGainResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetWFAntennaGainResult::GetWFAntennaGainResult(CommandBasePtr relatedCommand, int gain)
-      : CommandResult(CmdName, relatedCommand)
+    GetWFAntennaGainResult::GetWFAntennaGainResult(int gain)
+      : CommandResult(CmdName, TargetId)
     {
 
       setGain(gain);
     }
 
+    GetWFAntennaGainResult::GetWFAntennaGainResult(CommandBasePtr relatedCommand, int gain)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setGain(gain);
+    }
+
+
+    GetWFAntennaGainResultPtr GetWFAntennaGainResult::create(int gain)
+    {
+      return std::make_shared<GetWFAntennaGainResult>(gain);
+    }
 
     GetWFAntennaGainResultPtr GetWFAntennaGainResult::create(CommandBasePtr relatedCommand, int gain)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetWFAntennaGainResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetWFAntennaGainResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Gain"}; 
+      return names; 
+    }
 
 
     int GetWFAntennaGainResult::gain() const

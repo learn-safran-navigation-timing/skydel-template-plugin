@@ -1,35 +1,43 @@
+
+#include "SetIssueOfDataQzss.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIssueOfDataQzss
 ///
-#include "gen/SetIssueOfDataQzss.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIssueOfDataQzss::CmdName = "SetIssueOfDataQzss";
-    const char* const SetIssueOfDataQzss::Documentation = "Set QZSS Issue of data, Ephemeris (IODE) and Issue of data, Clock (IODC)";
+    const char* const SetIssueOfDataQzss::Documentation = "Set QZSS Issue of data, Ephemeris (IODE) and Issue of data, Clock (IODC)\n"
+      "\n"
+      "Name          Type          Description\n"
+      "------------- ------------- ---------------------------------------------------\n"
+      "Clock         int           Issue of data, clock\n"
+      "Ephemeris     int           Issue of data, ephemeris\n"
+      "OverrideRinex optional bool If the IOD overrides the RINEX IOD, default is True";
+    const char* const SetIssueOfDataQzss::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIssueOfDataQzss);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIssueOfDataQzss);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIssueOfDataQzss);
 
 
     SetIssueOfDataQzss::SetIssueOfDataQzss()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIssueOfDataQzss::SetIssueOfDataQzss(int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setClock(clock);
       setEphemeris(ephemeris);
       setOverrideRinex(overrideRinex);
     }
-
 
     SetIssueOfDataQzssPtr SetIssueOfDataQzss::create(int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetIssueOfDataQzss::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIssueOfDataQzss::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Clock", "Ephemeris", "OverrideRinex"}; 
+      return names; 
+    }
 
 
     int SetIssueOfDataQzss::executePermission() const

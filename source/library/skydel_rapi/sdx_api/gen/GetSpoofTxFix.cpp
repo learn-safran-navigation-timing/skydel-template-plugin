@@ -1,33 +1,39 @@
+
+#include "GetSpoofTxFix.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxFix
 ///
-#include "gen/GetSpoofTxFix.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxFix::CmdName = "GetSpoofTxFix";
-    const char* const GetSpoofTxFix::Documentation = "Get spoofer transmitter static position and orientation";
+    const char* const GetSpoofTxFix::Documentation = "Get spoofer transmitter static position and orientation\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetSpoofTxFix::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSpoofTxFix);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSpoofTxFix);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxFix);
 
 
     GetSpoofTxFix::GetSpoofTxFix()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetSpoofTxFix::GetSpoofTxFix(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetSpoofTxFixPtr GetSpoofTxFix::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxFix::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxFix::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetSpoofTxFix::executePermission() const

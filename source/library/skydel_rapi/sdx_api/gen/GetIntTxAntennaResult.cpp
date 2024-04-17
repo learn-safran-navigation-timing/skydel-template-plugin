@@ -1,28 +1,36 @@
+
+#include "GetIntTxAntennaResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxAntennaResult
 ///
-#include "gen/GetIntTxAntennaResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxAntennaResult::CmdName = "GetIntTxAntennaResult";
-    const char* const GetIntTxAntennaResult::Documentation = "Result of GetIntTxAntenna.";
+    const char* const GetIntTxAntennaResult::Documentation = "Result of GetIntTxAntenna.\n"
+      "\n"
+      "Name Type               Description\n"
+      "---- ------------------ -------------------------------------------------------------------------------------------------------------------------\n"
+      "Gain array array double Gain matrix (dB). The first dimension will be mapped to elevation [-90, 90] and the second dimension to azimuth [0, 360[.\n"
+      "Type AntennaPatternType Pattern type\n"
+      "Id   string             Transmitter unique identifier.";
+    const char* const GetIntTxAntennaResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxAntennaResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxAntennaResult);
 
 
     GetIntTxAntennaResult::GetIntTxAntennaResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxAntennaResult::GetIntTxAntennaResult(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxAntennaResult::GetIntTxAntennaResult(const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setGain(gain);
@@ -30,6 +38,20 @@ namespace Sdx
       setId(id);
     }
 
+    GetIntTxAntennaResult::GetIntTxAntennaResult(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setGain(gain);
+      setType(type);
+      setId(id);
+    }
+
+
+    GetIntTxAntennaResultPtr GetIntTxAntennaResult::create(const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
+    {
+      return std::make_shared<GetIntTxAntennaResult>(gain, type, id);
+    }
 
     GetIntTxAntennaResultPtr GetIntTxAntennaResult::create(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetIntTxAntennaResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxAntennaResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Gain", "Type", "Id"}; 
+      return names; 
+    }
 
 
     std::vector<std::vector<double>> GetIntTxAntennaResult::gain() const

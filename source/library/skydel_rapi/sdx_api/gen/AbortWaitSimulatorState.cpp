@@ -1,11 +1,12 @@
+
+#include "AbortWaitSimulatorState.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of AbortWaitSimulatorState
 ///
-#include "gen/AbortWaitSimulatorState.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const AbortWaitSimulatorState::CmdName = "AbortWaitSimulatorState";
     const char* const AbortWaitSimulatorState::Documentation = "Abort the current WaitSimulatorState if any.";
+    const char* const AbortWaitSimulatorState::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(AbortWaitSimulatorState);
+    REGISTER_COMMAND_TO_FACTORY_DECL(AbortWaitSimulatorState);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(AbortWaitSimulatorState);
 
 
     AbortWaitSimulatorState::AbortWaitSimulatorState()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     AbortWaitSimulatorStatePtr AbortWaitSimulatorState::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string AbortWaitSimulatorState::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& AbortWaitSimulatorState::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int AbortWaitSimulatorState::executePermission() const

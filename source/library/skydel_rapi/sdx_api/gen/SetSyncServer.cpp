@@ -1,33 +1,39 @@
+
+#include "SetSyncServer.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSyncServer
 ///
-#include "gen/SetSyncServer.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSyncServer::CmdName = "SetSyncServer";
-    const char* const SetSyncServer::Documentation = "Set listening port for sync time server.";
+    const char* const SetSyncServer::Documentation = "Set listening port for sync time server.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- ---------------------\n"
+      "Port int  Listening port number";
+    const char* const SetSyncServer::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSyncServer);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSyncServer);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSyncServer);
 
 
     SetSyncServer::SetSyncServer()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSyncServer::SetSyncServer(int port)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setPort(port);
     }
-
 
     SetSyncServerPtr SetSyncServer::create(int port)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetSyncServer::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSyncServer::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Port"}; 
+      return names; 
+    }
 
 
     int SetSyncServer::executePermission() const

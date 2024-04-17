@@ -1,33 +1,51 @@
+
+#include "GetAllMessageModificationIdsForSignalResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAllMessageModificationIdsForSignalResult
 ///
-#include "gen/GetAllMessageModificationIdsForSignalResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetAllMessageModificationIdsForSignalResult::CmdName = "GetAllMessageModificationIdsForSignalResult";
-    const char* const GetAllMessageModificationIdsForSignalResult::Documentation = "Result of GetAllMessageModificationIdsForSignal.";
+    const char* const GetAllMessageModificationIdsForSignalResult::Documentation = "Result of GetAllMessageModificationIdsForSignal.\n"
+      "\n"
+      "Name Type         Description\n"
+      "---- ------------ -------------------------------------------------------------------------\n"
+      "Ids  array string List of event IDs which will modify the navigation message for this SV ID";
+    const char* const GetAllMessageModificationIdsForSignalResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetAllMessageModificationIdsForSignalResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAllMessageModificationIdsForSignalResult);
 
 
     GetAllMessageModificationIdsForSignalResult::GetAllMessageModificationIdsForSignalResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetAllMessageModificationIdsForSignalResult::GetAllMessageModificationIdsForSignalResult(CommandBasePtr relatedCommand, const std::vector<std::string>& ids)
-      : CommandResult(CmdName, relatedCommand)
+    GetAllMessageModificationIdsForSignalResult::GetAllMessageModificationIdsForSignalResult(const std::vector<std::string>& ids)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIds(ids);
     }
 
+    GetAllMessageModificationIdsForSignalResult::GetAllMessageModificationIdsForSignalResult(CommandBasePtr relatedCommand, const std::vector<std::string>& ids)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIds(ids);
+    }
+
+
+    GetAllMessageModificationIdsForSignalResultPtr GetAllMessageModificationIdsForSignalResult::create(const std::vector<std::string>& ids)
+    {
+      return std::make_shared<GetAllMessageModificationIdsForSignalResult>(ids);
+    }
 
     GetAllMessageModificationIdsForSignalResultPtr GetAllMessageModificationIdsForSignalResult::create(CommandBasePtr relatedCommand, const std::vector<std::string>& ids)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetAllMessageModificationIdsForSignalResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAllMessageModificationIdsForSignalResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ids"}; 
+      return names; 
+    }
 
 
     std::vector<std::string> GetAllMessageModificationIdsForSignalResult::ids() const

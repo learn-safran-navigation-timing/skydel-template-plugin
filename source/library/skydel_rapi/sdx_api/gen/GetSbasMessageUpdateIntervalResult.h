@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 
 
 namespace Sdx
@@ -26,16 +27,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetSbasMessageUpdateIntervalResult();
 
+      GetSbasMessageUpdateIntervalResult(int message, int updateInterval);
+
       GetSbasMessageUpdateIntervalResult(CommandBasePtr relatedCommand, int message, int updateInterval);
-  
+
+      static GetSbasMessageUpdateIntervalResultPtr create(int message, int updateInterval);
+
       static GetSbasMessageUpdateIntervalResultPtr create(CommandBasePtr relatedCommand, int message, int updateInterval);
       static GetSbasMessageUpdateIntervalResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** message ****
@@ -47,6 +54,7 @@ namespace Sdx
       int updateInterval() const;
       void setUpdateInterval(int updateInterval);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSbasMessageUpdateIntervalResult);
   }
 }
 

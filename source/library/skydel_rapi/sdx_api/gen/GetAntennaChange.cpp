@@ -1,33 +1,39 @@
+
+#include "GetAntennaChange.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAntennaChange
 ///
-#include "gen/GetAntennaChange.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetAntennaChange::CmdName = "GetAntennaChange";
-    const char* const GetAntennaChange::Documentation = "Get an antenna change.";
+    const char* const GetAntennaChange::Documentation = "Get an antenna change.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Unique identifier of the event";
+    const char* const GetAntennaChange::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetAntennaChange);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAntennaChange);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAntennaChange);
 
 
     GetAntennaChange::GetAntennaChange()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetAntennaChange::GetAntennaChange(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetAntennaChangePtr GetAntennaChange::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetAntennaChange::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAntennaChange::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetAntennaChange::executePermission() const

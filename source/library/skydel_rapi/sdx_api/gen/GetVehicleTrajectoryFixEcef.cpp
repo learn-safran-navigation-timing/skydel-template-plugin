@@ -1,11 +1,12 @@
+
+#include "GetVehicleTrajectoryFixEcef.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetVehicleTrajectoryFixEcef
 ///
-#include "gen/GetVehicleTrajectoryFixEcef.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetVehicleTrajectoryFixEcef::CmdName = "GetVehicleTrajectoryFixEcef";
     const char* const GetVehicleTrajectoryFixEcef::Documentation = "Get vehicle static position and orientation";
+    const char* const GetVehicleTrajectoryFixEcef::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetVehicleTrajectoryFixEcef);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetVehicleTrajectoryFixEcef);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetVehicleTrajectoryFixEcef);
 
 
     GetVehicleTrajectoryFixEcef::GetVehicleTrajectoryFixEcef()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetVehicleTrajectoryFixEcefPtr GetVehicleTrajectoryFixEcef::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetVehicleTrajectoryFixEcef::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetVehicleTrajectoryFixEcef::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetVehicleTrajectoryFixEcef::executePermission() const

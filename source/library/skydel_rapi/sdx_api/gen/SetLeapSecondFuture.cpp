@@ -1,35 +1,43 @@
+
+#include "SetLeapSecondFuture.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetLeapSecondFuture
 ///
-#include "gen/SetLeapSecondFuture.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetLeapSecondFuture::CmdName = "SetLeapSecondFuture";
-    const char* const SetLeapSecondFuture::Documentation = "Set the next leap second event";
+    const char* const SetLeapSecondFuture::Documentation = "Set the next leap second event\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ----------------------------------------------------------------------\n"
+      "Enabled bool If true, the future leap second event is set in the navigation message\n"
+      "Seconds int  The future leap seconds value\n"
+      "Date    date The event date";
+    const char* const SetLeapSecondFuture::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetLeapSecondFuture);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetLeapSecondFuture);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetLeapSecondFuture);
 
 
     SetLeapSecondFuture::SetLeapSecondFuture()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetLeapSecondFuture::SetLeapSecondFuture(bool enabled, int seconds, const Sdx::Date& date)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
       setSeconds(seconds);
       setDate(date);
     }
-
 
     SetLeapSecondFuturePtr SetLeapSecondFuture::create(bool enabled, int seconds, const Sdx::Date& date)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetLeapSecondFuture::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetLeapSecondFuture::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "Seconds", "Date"}; 
+      return names; 
+    }
 
 
     int SetLeapSecondFuture::executePermission() const

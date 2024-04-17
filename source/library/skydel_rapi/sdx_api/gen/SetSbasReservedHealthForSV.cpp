@@ -1,34 +1,41 @@
+
+#include "SetSbasReservedHealthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSbasReservedHealthForSV
 ///
-#include "gen/SetSbasReservedHealthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSbasReservedHealthForSV::CmdName = "SetSbasReservedHealthForSV";
-    const char* const SetSbasReservedHealthForSV::Documentation = "Apply reserved flag for a SBAS satellite";
+    const char* const SetSbasReservedHealthForSV::Documentation = "Apply reserved flag for a SBAS satellite\n"
+      "\n"
+      "Name   Type Description\n"
+      "------ ---- ---------------------------\n"
+      "SvId   int  The satellite's SV ID\n"
+      "Health bool The reserved unhealthy flag";
+    const char* const SetSbasReservedHealthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSbasReservedHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSbasReservedHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSbasReservedHealthForSV);
 
 
     SetSbasReservedHealthForSV::SetSbasReservedHealthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSbasReservedHealthForSV::SetSbasReservedHealthForSV(int svId, bool health)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setHealth(health);
     }
-
 
     SetSbasReservedHealthForSVPtr SetSbasReservedHealthForSV::create(int svId, bool health)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSbasReservedHealthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSbasReservedHealthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health"}; 
+      return names; 
+    }
 
 
     int SetSbasReservedHealthForSV::executePermission() const

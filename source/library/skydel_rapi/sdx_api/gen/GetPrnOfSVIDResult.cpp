@@ -1,28 +1,36 @@
+
+#include "GetPrnOfSVIDResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetPrnOfSVIDResult
 ///
-#include "gen/GetPrnOfSVIDResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetPrnOfSVIDResult::CmdName = "GetPrnOfSVIDResult";
-    const char* const GetPrnOfSVIDResult::Documentation = "Result of GetPrnOfSVID.";
+    const char* const GetPrnOfSVIDResult::Documentation = "Result of GetPrnOfSVID.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+      "Signal string Accepted signal keys: \"L1CA\", \"L1C\", \"L2C\", \"L5\", \"E1\", \"E6BC\", \"B1\", \"B2\", \"B1C\", \"B2a\", \"B3I\", \"SBASL1\", \"SBASL5\", \"QZSSL1CA\", \"QZSSL1CB\", \"QZSSL1C\", \"QZSSL2C\", \"QZSSL5\", \"QZSSL1S\", \"QZSSL5S\", \"NAVICL5\", \"PULSARXL\"\n"
+      "SvId   int    Satellite SV ID.\n"
+      "Prn    int    PRN number.";
+    const char* const GetPrnOfSVIDResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetPrnOfSVIDResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetPrnOfSVIDResult);
 
 
     GetPrnOfSVIDResult::GetPrnOfSVIDResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetPrnOfSVIDResult::GetPrnOfSVIDResult(CommandBasePtr relatedCommand, const std::string& signal, int svId, int prn)
-      : CommandResult(CmdName, relatedCommand)
+    GetPrnOfSVIDResult::GetPrnOfSVIDResult(const std::string& signal, int svId, int prn)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSignal(signal);
@@ -30,6 +38,20 @@ namespace Sdx
       setPrn(prn);
     }
 
+    GetPrnOfSVIDResult::GetPrnOfSVIDResult(CommandBasePtr relatedCommand, const std::string& signal, int svId, int prn)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSignal(signal);
+      setSvId(svId);
+      setPrn(prn);
+    }
+
+
+    GetPrnOfSVIDResultPtr GetPrnOfSVIDResult::create(const std::string& signal, int svId, int prn)
+    {
+      return std::make_shared<GetPrnOfSVIDResult>(signal, svId, prn);
+    }
 
     GetPrnOfSVIDResultPtr GetPrnOfSVIDResult::create(CommandBasePtr relatedCommand, const std::string& signal, int svId, int prn)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetPrnOfSVIDResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetPrnOfSVIDResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Signal", "SvId", "Prn"}; 
+      return names; 
+    }
 
 
     std::string GetPrnOfSVIDResult::signal() const

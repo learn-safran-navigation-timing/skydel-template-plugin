@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <map>
 #include <string>
 
@@ -31,16 +32,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetSbasEphParamsForSVResult();
 
+      GetSbasEphParamsForSVResult(int svId, const std::map<std::string, double>& paramValueDict);
+
       GetSbasEphParamsForSVResult(CommandBasePtr relatedCommand, int svId, const std::map<std::string, double>& paramValueDict);
-  
+
+      static GetSbasEphParamsForSVResultPtr create(int svId, const std::map<std::string, double>& paramValueDict);
+
       static GetSbasEphParamsForSVResultPtr create(CommandBasePtr relatedCommand, int svId, const std::map<std::string, double>& paramValueDict);
       static GetSbasEphParamsForSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** svId ****
@@ -52,6 +59,7 @@ namespace Sdx
       std::map<std::string, double> paramValueDict() const;
       void setParamValueDict(const std::map<std::string, double>& paramValueDict);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSbasEphParamsForSVResult);
   }
 }
 

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetSVTypeResult();
 
+      GetSVTypeResult(const std::string& system, int svId, const std::string& svType);
+
       GetSVTypeResult(CommandBasePtr relatedCommand, const std::string& system, int svId, const std::string& svType);
-  
+
+      static GetSVTypeResultPtr create(const std::string& system, int svId, const std::string& svType);
+
       static GetSVTypeResultPtr create(CommandBasePtr relatedCommand, const std::string& system, int svId, const std::string& svType);
       static GetSVTypeResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** system ****
@@ -53,6 +60,7 @@ namespace Sdx
       std::string svType() const;
       void setSvType(const std::string& svType);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSVTypeResult);
   }
 }
 

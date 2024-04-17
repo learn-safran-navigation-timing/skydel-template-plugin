@@ -1,33 +1,51 @@
+
+#include "GetStreamingBufferResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetStreamingBufferResult
 ///
-#include "gen/GetStreamingBufferResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetStreamingBufferResult::CmdName = "GetStreamingBufferResult";
-    const char* const GetStreamingBufferResult::Documentation = "Result of GetStreamingBuffer.";
+    const char* const GetStreamingBufferResult::Documentation = "Result of GetStreamingBuffer.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- -----------------------------\n"
+      "Size int  Streaming buffer size in msec";
+    const char* const GetStreamingBufferResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetStreamingBufferResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetStreamingBufferResult);
 
 
     GetStreamingBufferResult::GetStreamingBufferResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetStreamingBufferResult::GetStreamingBufferResult(CommandBasePtr relatedCommand, int size)
-      : CommandResult(CmdName, relatedCommand)
+    GetStreamingBufferResult::GetStreamingBufferResult(int size)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSize(size);
     }
 
+    GetStreamingBufferResult::GetStreamingBufferResult(CommandBasePtr relatedCommand, int size)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSize(size);
+    }
+
+
+    GetStreamingBufferResultPtr GetStreamingBufferResult::create(int size)
+    {
+      return std::make_shared<GetStreamingBufferResult>(size);
+    }
 
     GetStreamingBufferResultPtr GetStreamingBufferResult::create(CommandBasePtr relatedCommand, int size)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetStreamingBufferResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetStreamingBufferResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Size"}; 
+      return names; 
+    }
 
 
     int GetStreamingBufferResult::size() const

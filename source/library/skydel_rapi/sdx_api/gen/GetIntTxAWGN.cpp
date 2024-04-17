@@ -1,34 +1,41 @@
+
+#include "GetIntTxAWGN.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxAWGN
 ///
-#include "gen/GetIntTxAWGN.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxAWGN::CmdName = "GetIntTxAWGN";
-    const char* const GetIntTxAWGN::Documentation = "Get AWGN signal interference.";
+    const char* const GetIntTxAWGN::Documentation = "Get AWGN signal interference.\n"
+      "\n"
+      "Name          Type   Description\n"
+      "------------- ------ ------------------------------\n"
+      "TransmitterId string Transmitter unique identifier.\n"
+      "SignalId      string AWGN unique identifier.";
+    const char* const GetIntTxAWGN::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTxAWGN);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxAWGN);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxAWGN);
 
 
     GetIntTxAWGN::GetIntTxAWGN()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTxAWGN::GetIntTxAWGN(const std::string& transmitterId, const std::string& signalId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTransmitterId(transmitterId);
       setSignalId(signalId);
     }
-
 
     GetIntTxAWGNPtr GetIntTxAWGN::create(const std::string& transmitterId, const std::string& signalId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetIntTxAWGN::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxAWGN::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"TransmitterId", "SignalId"}; 
+      return names; 
+    }
 
 
     int GetIntTxAWGN::executePermission() const

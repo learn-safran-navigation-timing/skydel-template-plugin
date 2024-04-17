@@ -1,28 +1,41 @@
+
+#include "SetPilotPRN.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetPilotPRN
 ///
-#include "gen/SetPilotPRN.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetPilotPRN::CmdName = "SetPilotPRN";
-    const char* const SetPilotPRN::Documentation = "Set PRN pilot added to signal";
+    const char* const SetPilotPRN::Documentation = "Set PRN pilot added to signal\n"
+      "\n"
+      "Name              Type   Description\n"
+      "----------------- ------ ---------------------------------------------------\n"
+      "Enabled           bool   Enable (true) or disable (false) the signal\n"
+      "OutputIdx         int    RF Output index (zero-based)\n"
+      "CentralFreqOffset double Central frequency offset of the Pilot (Hz)\n"
+      "Power             double Power (dB), relative to transmitter reference power\n"
+      "Prn               int    The PRN to use\n"
+      "Type              string The type of PRN to use (CA or Gold)\n"
+      "PilotId           string CW Pilot unique identifier.";
+    const char* const SetPilotPRN::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetPilotPRN);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetPilotPRN);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetPilotPRN);
 
 
     SetPilotPRN::SetPilotPRN()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetPilotPRN::SetPilotPRN(bool enabled, int outputIdx, double centralFreqOffset, double power, int prn, const std::string& type, const std::string& pilotId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
@@ -33,7 +46,6 @@ namespace Sdx
       setType(type);
       setPilotId(pilotId);
     }
-
 
     SetPilotPRNPtr SetPilotPRN::create(bool enabled, int outputIdx, double centralFreqOffset, double power, int prn, const std::string& type, const std::string& pilotId)
     {
@@ -61,6 +73,12 @@ namespace Sdx
     }
 
     std::string SetPilotPRN::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetPilotPRN::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "OutputIdx", "CentralFreqOffset", "Power", "Prn", "Type", "PilotId"}; 
+      return names; 
+    }
 
 
     int SetPilotPRN::executePermission() const

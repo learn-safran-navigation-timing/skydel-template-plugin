@@ -1,33 +1,51 @@
+
+#include "GetVehicleTypeResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetVehicleTypeResult
 ///
-#include "gen/GetVehicleTypeResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetVehicleTypeResult::CmdName = "GetVehicleTypeResult";
-    const char* const GetVehicleTypeResult::Documentation = "Result of GetVehicleType.";
+    const char* const GetVehicleTypeResult::Documentation = "Result of GetVehicleType.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ----------------------------------------------------------\n"
+      "Type string Vehicle type (\"Ground / Water\" or \"Airborne / Spaceborne\")";
+    const char* const GetVehicleTypeResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetVehicleTypeResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetVehicleTypeResult);
 
 
     GetVehicleTypeResult::GetVehicleTypeResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetVehicleTypeResult::GetVehicleTypeResult(CommandBasePtr relatedCommand, const std::string& type)
-      : CommandResult(CmdName, relatedCommand)
+    GetVehicleTypeResult::GetVehicleTypeResult(const std::string& type)
+      : CommandResult(CmdName, TargetId)
     {
 
       setType(type);
     }
 
+    GetVehicleTypeResult::GetVehicleTypeResult(CommandBasePtr relatedCommand, const std::string& type)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setType(type);
+    }
+
+
+    GetVehicleTypeResultPtr GetVehicleTypeResult::create(const std::string& type)
+    {
+      return std::make_shared<GetVehicleTypeResult>(type);
+    }
 
     GetVehicleTypeResultPtr GetVehicleTypeResult::create(CommandBasePtr relatedCommand, const std::string& type)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetVehicleTypeResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetVehicleTypeResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Type"}; 
+      return names; 
+    }
 
 
     std::string GetVehicleTypeResult::type() const

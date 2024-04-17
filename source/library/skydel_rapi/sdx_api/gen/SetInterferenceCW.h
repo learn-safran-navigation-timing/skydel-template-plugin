@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -30,16 +31,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetInterferenceCW();
 
       SetInterferenceCW(int startTime, int stopTime, double centralFreq, double power, bool enabled, const std::string& id);
-  
+
       static SetInterferenceCWPtr create(int startTime, int stopTime, double centralFreq, double power, bool enabled, const std::string& id);
       static SetInterferenceCWPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -73,6 +76,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    
   }
 }
 

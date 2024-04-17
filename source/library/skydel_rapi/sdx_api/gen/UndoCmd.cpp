@@ -1,11 +1,12 @@
+
+#include "UndoCmd.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of UndoCmd
 ///
-#include "gen/UndoCmd.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const UndoCmd::CmdName = "UndoCmd";
     const char* const UndoCmd::Documentation = "Undo the last command like Ctrl+Z in the UI";
+    const char* const UndoCmd::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(UndoCmd);
+    REGISTER_COMMAND_TO_FACTORY_DECL(UndoCmd);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(UndoCmd);
 
 
     UndoCmd::UndoCmd()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     UndoCmdPtr UndoCmd::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string UndoCmd::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& UndoCmd::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int UndoCmd::executePermission() const

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "sdx_optional.h"
 #include <string>
 
@@ -29,16 +30,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetQzssL1cHealthForSVResult();
 
+      GetQzssL1cHealthForSVResult(int svId, bool health, const Sdx::optional<std::string>& dataSetName = {});
+
       GetQzssL1cHealthForSVResult(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName = {});
-  
+
+      static GetQzssL1cHealthForSVResultPtr create(int svId, bool health, const Sdx::optional<std::string>& dataSetName = {});
+
       static GetQzssL1cHealthForSVResultPtr create(CommandBasePtr relatedCommand, int svId, bool health, const Sdx::optional<std::string>& dataSetName = {});
       static GetQzssL1cHealthForSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** svId ****
@@ -55,6 +62,7 @@ namespace Sdx
       Sdx::optional<std::string> dataSetName() const;
       void setDataSetName(const Sdx::optional<std::string>& dataSetName);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetQzssL1cHealthForSVResult);
   }
 }
 

@@ -1,28 +1,41 @@
+
+#include "GetIntTxPulseResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxPulseResult
 ///
-#include "gen/GetIntTxPulseResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxPulseResult::CmdName = "GetIntTxPulseResult";
-    const char* const GetIntTxPulseResult::Documentation = "Result of GetIntTxPulse.";
+    const char* const GetIntTxPulseResult::Documentation = "Result of GetIntTxPulse.\n"
+      "\n"
+      "Name          Type         Description\n"
+      "------------- ------------ --------------------------------------------------------------\n"
+      "Enabled       bool         Enable (true) or disable (false) the signal\n"
+      "CentralFreq   double       Central frequency (Hz)\n"
+      "Power         double       Power (dB), relative to transmitter reference power\n"
+      "DutyCycle     double       Duty Cycle between 0.01 and 100, as a percentage of Pulse Rate\n"
+      "PulseRate     int          Pulse rate (Hz), between 1 and 100000\n"
+      "TransmitterId string       Transmitter unique identifier.\n"
+      "SignalId      string       Pulse unique identifier.\n"
+      "Group         optional int Group, if not using default group.";
+    const char* const GetIntTxPulseResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxPulseResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxPulseResult);
 
 
     GetIntTxPulseResult::GetIntTxPulseResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxPulseResult::GetIntTxPulseResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, double dutyCycle, int pulseRate, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxPulseResult::GetIntTxPulseResult(bool enabled, double centralFreq, double power, double dutyCycle, int pulseRate, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
@@ -35,6 +48,25 @@ namespace Sdx
       setGroup(group);
     }
 
+    GetIntTxPulseResult::GetIntTxPulseResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, double dutyCycle, int pulseRate, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+      setCentralFreq(centralFreq);
+      setPower(power);
+      setDutyCycle(dutyCycle);
+      setPulseRate(pulseRate);
+      setTransmitterId(transmitterId);
+      setSignalId(signalId);
+      setGroup(group);
+    }
+
+
+    GetIntTxPulseResultPtr GetIntTxPulseResult::create(bool enabled, double centralFreq, double power, double dutyCycle, int pulseRate, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
+    {
+      return std::make_shared<GetIntTxPulseResult>(enabled, centralFreq, power, dutyCycle, pulseRate, transmitterId, signalId, group);
+    }
 
     GetIntTxPulseResultPtr GetIntTxPulseResult::create(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, double dutyCycle, int pulseRate, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
     {
@@ -63,6 +95,12 @@ namespace Sdx
     }
 
     std::string GetIntTxPulseResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxPulseResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "CentralFreq", "Power", "DutyCycle", "PulseRate", "TransmitterId", "SignalId", "Group"}; 
+      return names; 
+    }
 
 
     bool GetIntTxPulseResult::enabled() const

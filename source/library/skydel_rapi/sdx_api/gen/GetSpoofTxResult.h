@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -29,16 +30,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetSpoofTxResult();
 
+      GetSpoofTxResult(const std::string& usualName, bool enabled, const std::string& address, int instanceId, const std::string& id);
+
       GetSpoofTxResult(CommandBasePtr relatedCommand, const std::string& usualName, bool enabled, const std::string& address, int instanceId, const std::string& id);
-  
+
+      static GetSpoofTxResultPtr create(const std::string& usualName, bool enabled, const std::string& address, int instanceId, const std::string& id);
+
       static GetSpoofTxResultPtr create(CommandBasePtr relatedCommand, const std::string& usualName, bool enabled, const std::string& address, int instanceId, const std::string& id);
       static GetSpoofTxResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** usualName ****
@@ -65,6 +72,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSpoofTxResult);
   }
 }
 

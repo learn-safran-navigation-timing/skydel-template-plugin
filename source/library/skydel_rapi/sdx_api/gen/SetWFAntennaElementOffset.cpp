@@ -1,28 +1,45 @@
+
+#include "SetWFAntennaElementOffset.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetWFAntennaElementOffset
 ///
-#include "gen/SetWFAntennaElementOffset.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetWFAntennaElementOffset::CmdName = "SetWFAntennaElementOffset";
-    const char* const SetWFAntennaElementOffset::Documentation = "Set WF antenna offset and orientation relative to CRPA Antenna frame for the specified element index.";
+    const char* const SetWFAntennaElementOffset::Documentation = "Please note the command SetWFAntennaElementOffset is deprecated since 23.11. You may use SetVehicleAntennaOffset.\n"
+      "\n"
+      "Set WF antenna offset and orientation relative to CRPA Antenna frame for the specified element index.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ -------------------------------------------------------\n"
+      "X       double WF Element X offset in the CRPA antenna frame (meter)\n"
+      "Y       double WF Element Y offset in the CRPA antenna frame (meter)\n"
+      "Z       double WF Element Z offset in the CRPA antenna frame (meter)\n"
+      "Yaw     double WF Element Yaw offset in the CRPA antenna frame (rad)\n"
+      "Pitch   double WF Element Pitch offset in the CRPA antenna frame (rad)\n"
+      "Roll    double WF Element Roll offset in the CRPA antenna frame (rad)\n"
+      "Element int    One-based index for element in antenna.";
+    const char* const SetWFAntennaElementOffset::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetWFAntennaElementOffset);
+    const char* const SetWFAntennaElementOffset::Deprecated = "Please note the command SetWFAntennaElementOffset is deprecated since 23.11. You may use SetVehicleAntennaOffset.";
+
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetWFAntennaElementOffset);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetWFAntennaElementOffset);
 
 
     SetWFAntennaElementOffset::SetWFAntennaElementOffset()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetWFAntennaElementOffset::SetWFAntennaElementOffset(double x, double y, double z, double yaw, double pitch, double roll, int element)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setX(x);
@@ -33,7 +50,6 @@ namespace Sdx
       setRoll(roll);
       setElement(element);
     }
-
 
     SetWFAntennaElementOffsetPtr SetWFAntennaElementOffset::create(double x, double y, double z, double yaw, double pitch, double roll, int element)
     {
@@ -61,6 +77,14 @@ namespace Sdx
     }
 
     std::string SetWFAntennaElementOffset::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetWFAntennaElementOffset::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"X", "Y", "Z", "Yaw", "Pitch", "Roll", "Element"}; 
+      return names; 
+    }
+
+    Sdx::optional<std::string> SetWFAntennaElementOffset::deprecated() const { return Sdx::optional<std::string>{Deprecated}; }
 
 
     int SetWFAntennaElementOffset::executePermission() const

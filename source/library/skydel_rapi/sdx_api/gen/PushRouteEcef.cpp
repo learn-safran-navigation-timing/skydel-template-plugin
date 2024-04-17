@@ -1,28 +1,38 @@
+
+#include "PushRouteEcef.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of PushRouteEcef
 ///
-#include "gen/PushRouteEcef.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const PushRouteEcef::CmdName = "PushRouteEcef";
-    const char* const PushRouteEcef::Documentation = "Push a route ecef node with speed. Must be called after BeginRouteDefinition and before EndRouteDefinition.";
+    const char* const PushRouteEcef::Documentation = "Push a route ecef node with speed. Must be called after BeginRouteDefinition and before EndRouteDefinition.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ --------------------------------------\n"
+      "Speed double Node speed in meters per second\n"
+      "X     double X distance from earth-center in meters\n"
+      "Y     double Y distance from earth-center in meters\n"
+      "Z     double Z distance from earth-center in meters";
+    const char* const PushRouteEcef::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(PushRouteEcef);
+    REGISTER_COMMAND_TO_FACTORY_DECL(PushRouteEcef);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(PushRouteEcef);
 
 
     PushRouteEcef::PushRouteEcef()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     PushRouteEcef::PushRouteEcef(double speed, double x, double y, double z)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSpeed(speed);
@@ -30,7 +40,6 @@ namespace Sdx
       setY(y);
       setZ(z);
     }
-
 
     PushRouteEcefPtr PushRouteEcef::create(double speed, double x, double y, double z)
     {
@@ -55,6 +64,12 @@ namespace Sdx
     }
 
     std::string PushRouteEcef::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& PushRouteEcef::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Speed", "X", "Y", "Z"}; 
+      return names; 
+    }
 
 
     int PushRouteEcef::executePermission() const

@@ -1,11 +1,12 @@
+
+#include "GetSimulatorState.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSimulatorState
 ///
-#include "gen/GetSimulatorState.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetSimulatorState::CmdName = "GetSimulatorState";
     const char* const GetSimulatorState::Documentation = "Ask current simulator state. Will return a SimulatorStateResult.";
+    const char* const GetSimulatorState::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSimulatorState);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSimulatorState);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSimulatorState);
 
 
     GetSimulatorState::GetSimulatorState()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetSimulatorStatePtr GetSimulatorState::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetSimulatorState::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSimulatorState::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetSimulatorState::executePermission() const

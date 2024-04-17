@@ -1,11 +1,12 @@
+
+#include "GetIssueOfDataNavIC.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIssueOfDataNavIC
 ///
-#include "gen/GetIssueOfDataNavIC.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetIssueOfDataNavIC::CmdName = "GetIssueOfDataNavIC";
     const char* const GetIssueOfDataNavIC::Documentation = "Get NavIC Issue of data, Ephemeris and Clock (IODEC)";
+    const char* const GetIssueOfDataNavIC::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIssueOfDataNavIC);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIssueOfDataNavIC);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIssueOfDataNavIC);
 
 
     GetIssueOfDataNavIC::GetIssueOfDataNavIC()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetIssueOfDataNavICPtr GetIssueOfDataNavIC::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetIssueOfDataNavIC::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIssueOfDataNavIC::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetIssueOfDataNavIC::executePermission() const

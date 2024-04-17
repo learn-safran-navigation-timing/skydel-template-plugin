@@ -1,11 +1,12 @@
+
+#include "GetVersion.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetVersion
 ///
-#include "gen/GetVersion.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetVersion::CmdName = "GetVersion";
     const char* const GetVersion::Documentation = "Get Skydel version.";
+    const char* const GetVersion::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetVersion);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetVersion);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetVersion);
 
 
     GetVersion::GetVersion()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetVersionPtr GetVersion::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetVersion::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetVersion::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetVersion::executePermission() const

@@ -1,34 +1,41 @@
+
+#include "SetSbasIntegrityHealthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSbasIntegrityHealthForSV
 ///
-#include "gen/SetSbasIntegrityHealthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSbasIntegrityHealthForSV::CmdName = "SetSbasIntegrityHealthForSV";
-    const char* const SetSbasIntegrityHealthForSV::Documentation = "Apply integrity flag for a SBAS satellite";
+    const char* const SetSbasIntegrityHealthForSV::Documentation = "Apply integrity flag for a SBAS satellite\n"
+      "\n"
+      "Name   Type Description\n"
+      "------ ---- ----------------------------\n"
+      "SvId   int  The satellite's SV ID\n"
+      "Health bool The integrity unhealthy flag";
+    const char* const SetSbasIntegrityHealthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSbasIntegrityHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSbasIntegrityHealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSbasIntegrityHealthForSV);
 
 
     SetSbasIntegrityHealthForSV::SetSbasIntegrityHealthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSbasIntegrityHealthForSV::SetSbasIntegrityHealthForSV(int svId, bool health)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setHealth(health);
     }
-
 
     SetSbasIntegrityHealthForSVPtr SetSbasIntegrityHealthForSV::create(int svId, bool health)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSbasIntegrityHealthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSbasIntegrityHealthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health"}; 
+      return names; 
+    }
 
 
     int SetSbasIntegrityHealthForSV::executePermission() const

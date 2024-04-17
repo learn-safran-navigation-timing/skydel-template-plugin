@@ -1,11 +1,12 @@
+
+#include "GetStreamingBuffer.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetStreamingBuffer
 ///
-#include "gen/GetStreamingBuffer.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetStreamingBuffer::CmdName = "GetStreamingBuffer";
     const char* const GetStreamingBuffer::Documentation = "Get streaming buffer size.";
+    const char* const GetStreamingBuffer::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetStreamingBuffer);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetStreamingBuffer);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetStreamingBuffer);
 
 
     GetStreamingBuffer::GetStreamingBuffer()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetStreamingBufferPtr GetStreamingBuffer::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetStreamingBuffer::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetStreamingBuffer::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetStreamingBuffer::executePermission() const

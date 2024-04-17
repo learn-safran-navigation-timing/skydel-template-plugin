@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "sdx_optional.h"
 
 namespace Sdx
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetIssueOfDataGalileoResult();
 
+      GetIssueOfDataGalileoResult(int navigation, int almanac, const Sdx::optional<bool>& overrideRinex = {});
+
       GetIssueOfDataGalileoResult(CommandBasePtr relatedCommand, int navigation, int almanac, const Sdx::optional<bool>& overrideRinex = {});
-  
+
+      static GetIssueOfDataGalileoResultPtr create(int navigation, int almanac, const Sdx::optional<bool>& overrideRinex = {});
+
       static GetIssueOfDataGalileoResultPtr create(CommandBasePtr relatedCommand, int navigation, int almanac, const Sdx::optional<bool>& overrideRinex = {});
       static GetIssueOfDataGalileoResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** navigation ****
@@ -53,6 +60,7 @@ namespace Sdx
       Sdx::optional<bool> overrideRinex() const;
       void setOverrideRinex(const Sdx::optional<bool>& overrideRinex);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIssueOfDataGalileoResult);
   }
 }
 

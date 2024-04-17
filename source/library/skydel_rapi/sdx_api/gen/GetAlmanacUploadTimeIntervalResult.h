@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -26,16 +27,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetAlmanacUploadTimeIntervalResult();
 
+      GetAlmanacUploadTimeIntervalResult(const std::string& system, int interval);
+
       GetAlmanacUploadTimeIntervalResult(CommandBasePtr relatedCommand, const std::string& system, int interval);
-  
+
+      static GetAlmanacUploadTimeIntervalResultPtr create(const std::string& system, int interval);
+
       static GetAlmanacUploadTimeIntervalResultPtr create(CommandBasePtr relatedCommand, const std::string& system, int interval);
       static GetAlmanacUploadTimeIntervalResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** system ****
@@ -47,6 +54,7 @@ namespace Sdx
       int interval() const;
       void setInterval(int interval);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAlmanacUploadTimeIntervalResult);
   }
 }
 

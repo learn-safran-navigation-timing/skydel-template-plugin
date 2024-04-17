@@ -1,33 +1,39 @@
+
+#include "SetWFAntennaGain.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetWFAntennaGain
 ///
-#include "gen/SetWFAntennaGain.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetWFAntennaGain::CmdName = "SetWFAntennaGain";
-    const char* const SetWFAntennaGain::Documentation = "Set The CRPA LNA gain";
+    const char* const SetWFAntennaGain::Documentation = "Set The CRPA LNA gain\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- -----------------\n"
+      "Gain int  The CRPA LNA gain";
+    const char* const SetWFAntennaGain::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetWFAntennaGain);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetWFAntennaGain);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetWFAntennaGain);
 
 
     SetWFAntennaGain::SetWFAntennaGain()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetWFAntennaGain::SetWFAntennaGain(int gain)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setGain(gain);
     }
-
 
     SetWFAntennaGainPtr SetWFAntennaGain::create(int gain)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetWFAntennaGain::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetWFAntennaGain::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Gain"}; 
+      return names; 
+    }
 
 
     int SetWFAntennaGain::executePermission() const

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "date_time.h"
 
 namespace Sdx
@@ -26,16 +27,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetGpsStartTimeResult();
 
+      GetGpsStartTimeResult(const Sdx::DateTime& startTime, int leapSecond);
+
       GetGpsStartTimeResult(CommandBasePtr relatedCommand, const Sdx::DateTime& startTime, int leapSecond);
-  
+
+      static GetGpsStartTimeResultPtr create(const Sdx::DateTime& startTime, int leapSecond);
+
       static GetGpsStartTimeResultPtr create(CommandBasePtr relatedCommand, const Sdx::DateTime& startTime, int leapSecond);
       static GetGpsStartTimeResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** startTime ****
@@ -47,6 +54,7 @@ namespace Sdx
       int leapSecond() const;
       void setLeapSecond(int leapSecond);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGpsStartTimeResult);
   }
 }
 

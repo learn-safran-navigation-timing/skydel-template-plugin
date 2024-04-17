@@ -1,28 +1,41 @@
+
+#include "SetIntTxFixEcef.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIntTxFixEcef
 ///
-#include "gen/SetIntTxFixEcef.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIntTxFixEcef::CmdName = "SetIntTxFixEcef";
-    const char* const SetIntTxFixEcef::Documentation = "Set interference transmitter static position and orientation";
+    const char* const SetIntTxFixEcef::Documentation = "Set interference transmitter static position and orientation\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ------------------------------\n"
+      "X     double ECEF X (m)\n"
+      "Y     double ECEF Y (m)\n"
+      "Z     double ECEF Z (m)\n"
+      "Yaw   double Yaw (rad)\n"
+      "Pitch double Pitch (rad)\n"
+      "Roll  double Roll (rad)\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const SetIntTxFixEcef::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIntTxFixEcef);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIntTxFixEcef);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIntTxFixEcef);
 
 
     SetIntTxFixEcef::SetIntTxFixEcef()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIntTxFixEcef::SetIntTxFixEcef(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setX(x);
@@ -33,7 +46,6 @@ namespace Sdx
       setRoll(roll);
       setId(id);
     }
-
 
     SetIntTxFixEcefPtr SetIntTxFixEcef::create(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
     {
@@ -61,6 +73,12 @@ namespace Sdx
     }
 
     std::string SetIntTxFixEcef::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIntTxFixEcef::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"X", "Y", "Z", "Yaw", "Pitch", "Roll", "Id"}; 
+      return names; 
+    }
 
 
     int SetIntTxFixEcef::executePermission() const

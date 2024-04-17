@@ -1,33 +1,51 @@
+
+#include "GetGlonassFrequencyNumberForEachSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGlonassFrequencyNumberForEachSVResult
 ///
-#include "gen/GetGlonassFrequencyNumberForEachSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGlonassFrequencyNumberForEachSVResult::CmdName = "GetGlonassFrequencyNumberForEachSVResult";
-    const char* const GetGlonassFrequencyNumberForEachSVResult::Documentation = "Result of GetGlonassFrequencyNumberForEachSV";
+    const char* const GetGlonassFrequencyNumberForEachSVResult::Documentation = "Result of GetGlonassFrequencyNumberForEachSV\n"
+      "\n"
+      "Name            Type      Description\n"
+      "--------------- --------- --------------------------------------------------------------------------------------------------\n"
+      "FrequencyNumber array int Frequency number of each satellite. Zero based index (index 0 => SV ID 1, index 1 => SV ID 2, etc)";
+    const char* const GetGlonassFrequencyNumberForEachSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetGlonassFrequencyNumberForEachSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGlonassFrequencyNumberForEachSVResult);
 
 
     GetGlonassFrequencyNumberForEachSVResult::GetGlonassFrequencyNumberForEachSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetGlonassFrequencyNumberForEachSVResult::GetGlonassFrequencyNumberForEachSVResult(CommandBasePtr relatedCommand, const std::vector<int>& frequencyNumber)
-      : CommandResult(CmdName, relatedCommand)
+    GetGlonassFrequencyNumberForEachSVResult::GetGlonassFrequencyNumberForEachSVResult(const std::vector<int>& frequencyNumber)
+      : CommandResult(CmdName, TargetId)
     {
 
       setFrequencyNumber(frequencyNumber);
     }
 
+    GetGlonassFrequencyNumberForEachSVResult::GetGlonassFrequencyNumberForEachSVResult(CommandBasePtr relatedCommand, const std::vector<int>& frequencyNumber)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setFrequencyNumber(frequencyNumber);
+    }
+
+
+    GetGlonassFrequencyNumberForEachSVResultPtr GetGlonassFrequencyNumberForEachSVResult::create(const std::vector<int>& frequencyNumber)
+    {
+      return std::make_shared<GetGlonassFrequencyNumberForEachSVResult>(frequencyNumber);
+    }
 
     GetGlonassFrequencyNumberForEachSVResultPtr GetGlonassFrequencyNumberForEachSVResult::create(CommandBasePtr relatedCommand, const std::vector<int>& frequencyNumber)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetGlonassFrequencyNumberForEachSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGlonassFrequencyNumberForEachSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"FrequencyNumber"}; 
+      return names; 
+    }
 
 
     std::vector<int> GetGlonassFrequencyNumberForEachSVResult::frequencyNumber() const

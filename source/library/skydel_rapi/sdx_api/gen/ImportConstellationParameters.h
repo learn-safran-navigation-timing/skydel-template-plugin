@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "sdx_optional.h"
 #include <string>
 
@@ -14,7 +15,7 @@ namespace Sdx
     ///
     /// Name        Type            Description
     /// ----------- --------------- -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    /// System      string          "GPS", "GLONASS", "Galileo", "SBAS", "BeiDou", "QZSS" or "NavIC"
+    /// System      string          "GPS", "GLONASS", "Galileo", "SBAS", "BeiDou", "QZSS", "NavIC" or "PULSAR"
     /// Path        string          File path
     /// Rollover    optional int    Rollover for file types that does not precise it (YUMA, SEM). Default value is the current rollover.
     /// DataSetName optional string Name of the data set to import. This parameter is optional, the default value will be the name of the imported file. Constellations that support this parameter are  "GPS", "Galileo", "BeiDou", "QZSS" and "NavIC"
@@ -29,16 +30,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       ImportConstellationParameters();
 
       ImportConstellationParameters(const std::string& system, const std::string& path, const Sdx::optional<int>& rollover = {}, const Sdx::optional<std::string>& dataSetName = {});
-  
+
       static ImportConstellationParametersPtr create(const std::string& system, const std::string& path, const Sdx::optional<int>& rollover = {}, const Sdx::optional<std::string>& dataSetName = {});
       static ImportConstellationParametersPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -62,6 +65,7 @@ namespace Sdx
       Sdx::optional<std::string> dataSetName() const;
       void setDataSetName(const Sdx::optional<std::string>& dataSetName);
     };
+    
   }
 }
 

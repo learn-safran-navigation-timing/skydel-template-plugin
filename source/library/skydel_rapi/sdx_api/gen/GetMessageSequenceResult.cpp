@@ -1,34 +1,54 @@
+
+#include "GetMessageSequenceResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageSequenceResult
 ///
-#include "gen/GetMessageSequenceResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageSequenceResult::CmdName = "GetMessageSequenceResult";
-    const char* const GetMessageSequenceResult::Documentation = "Result of GetMessageSequence.";
+    const char* const GetMessageSequenceResult::Documentation = "Result of GetMessageSequence.\n"
+      "\n"
+      "Name     Type      Description\n"
+      "-------- --------- -------------------------------\n"
+      "Signal   string    Signal Name (\"L2C\" for example)\n"
+      "Sequence array int List of message type";
+    const char* const GetMessageSequenceResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetMessageSequenceResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageSequenceResult);
 
 
     GetMessageSequenceResult::GetMessageSequenceResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetMessageSequenceResult::GetMessageSequenceResult(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& sequence)
-      : CommandResult(CmdName, relatedCommand)
+    GetMessageSequenceResult::GetMessageSequenceResult(const std::string& signal, const std::vector<int>& sequence)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSignal(signal);
       setSequence(sequence);
     }
 
+    GetMessageSequenceResult::GetMessageSequenceResult(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& sequence)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSignal(signal);
+      setSequence(sequence);
+    }
+
+
+    GetMessageSequenceResultPtr GetMessageSequenceResult::create(const std::string& signal, const std::vector<int>& sequence)
+    {
+      return std::make_shared<GetMessageSequenceResult>(signal, sequence);
+    }
 
     GetMessageSequenceResultPtr GetMessageSequenceResult::create(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& sequence)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetMessageSequenceResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageSequenceResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Signal", "Sequence"}; 
+      return names; 
+    }
 
 
     std::string GetMessageSequenceResult::signal() const

@@ -1,28 +1,39 @@
+
+#include "SetEphemerisErrorForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetEphemerisErrorForSV
 ///
-#include "gen/SetEphemerisErrorForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetEphemerisErrorForSV::CmdName = "SetEphemerisErrorForSV";
-    const char* const SetEphemerisErrorForSV::Documentation = "Set the satellite ephemeris error.";
+    const char* const SetEphemerisErrorForSV::Documentation = "Set the satellite ephemeris error.\n"
+      "\n"
+      "Name     Type   Description\n"
+      "-------- ------ -----------------------------------------------------------------------------------\n"
+      "System   string \"GPS\", \"Galileo\", \"GLONASS\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId     int    Satellite SV ID.\n"
+      "Orbit    RIC    The orbit error, in relative orbit frame. In-track error not available for GLONASS.\n"
+      "DeltaAf0 double The clock bias error, in second. DeltaTaun for GLONASS.\n"
+      "DeltaAf1 double The clock drift error, in second/second. Not available for GLONASS.";
+    const char* const SetEphemerisErrorForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetEphemerisErrorForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetEphemerisErrorForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetEphemerisErrorForSV);
 
 
     SetEphemerisErrorForSV::SetEphemerisErrorForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetEphemerisErrorForSV::SetEphemerisErrorForSV(const std::string& system, int svId, const Sdx::RIC& orbit, double deltaAf0, double deltaAf1)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -31,7 +42,6 @@ namespace Sdx
       setDeltaAf0(deltaAf0);
       setDeltaAf1(deltaAf1);
     }
-
 
     SetEphemerisErrorForSVPtr SetEphemerisErrorForSV::create(const std::string& system, int svId, const Sdx::RIC& orbit, double deltaAf0, double deltaAf1)
     {
@@ -57,6 +67,12 @@ namespace Sdx
     }
 
     std::string SetEphemerisErrorForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetEphemerisErrorForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Orbit", "DeltaAf0", "DeltaAf1"}; 
+      return names; 
+    }
 
 
     int SetEphemerisErrorForSV::executePermission() const

@@ -1,28 +1,30 @@
+
+#include "BroadcastConfig.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of BroadcastConfig
 ///
-#include "gen/BroadcastConfig.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const BroadcastConfig::CmdName = "BroadcastConfig";
-    const char* const BroadcastConfig::Documentation = "Ask the master to broadcast its configuration to all slaves.";
+    const char* const BroadcastConfig::Documentation = "Ask the main instance to broadcast its configuration to all worker instances.";
+    const char* const BroadcastConfig::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(BroadcastConfig);
+    REGISTER_COMMAND_TO_FACTORY_DECL(BroadcastConfig);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(BroadcastConfig);
 
 
     BroadcastConfig::BroadcastConfig()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     BroadcastConfigPtr BroadcastConfig::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string BroadcastConfig::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& BroadcastConfig::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int BroadcastConfig::executePermission() const

@@ -1,34 +1,41 @@
+
+#include "GetSignalFromIntTx.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSignalFromIntTx
 ///
-#include "gen/GetSignalFromIntTx.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSignalFromIntTx::CmdName = "GetSignalFromIntTx";
-    const char* const GetSignalFromIntTx::Documentation = "Get all signal ID from this interference transmitters and this signal type. If the signal type is invalid, get the IDs of CW type.";
+    const char* const GetSignalFromIntTx::Documentation = "Get all signal ID from this interference transmitters and this signal type. If the signal type is invalid, get the IDs of CW type.\n"
+      "\n"
+      "Name          Type   Description\n"
+      "------------- ------ ------------------------------------------------------------------------------------\n"
+      "IdTransmitter string Transmitter unique identifier.\n"
+      "SignalType    string Type of signal. Accepted signals are : \"CW\", \"Chirp\", \"Pulse\", \"BPSK\", \"BOC\", \"AWGN\"";
+    const char* const GetSignalFromIntTx::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSignalFromIntTx);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSignalFromIntTx);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSignalFromIntTx);
 
 
     GetSignalFromIntTx::GetSignalFromIntTx()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetSignalFromIntTx::GetSignalFromIntTx(const std::string& idTransmitter, const std::string& signalType)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setIdTransmitter(idTransmitter);
       setSignalType(signalType);
     }
-
 
     GetSignalFromIntTxPtr GetSignalFromIntTx::create(const std::string& idTransmitter, const std::string& signalType)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetSignalFromIntTx::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSignalFromIntTx::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"IdTransmitter", "SignalType"}; 
+      return names; 
+    }
 
 
     int GetSignalFromIntTx::executePermission() const

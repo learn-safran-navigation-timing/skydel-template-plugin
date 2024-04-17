@@ -1,35 +1,43 @@
+
+#include "EnableIntTxSignal.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of EnableIntTxSignal
 ///
-#include "gen/EnableIntTxSignal.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const EnableIntTxSignal::CmdName = "EnableIntTxSignal";
-    const char* const EnableIntTxSignal::Documentation = "Change whether a signal is enabled or disabled";
+    const char* const EnableIntTxSignal::Documentation = "Change whether a signal is enabled or disabled\n"
+      "\n"
+      "Name          Type   Description\n"
+      "------------- ------ ------------------------------------\n"
+      "Enabled       bool   Whether the signal is enabled or not\n"
+      "TransmitterId string Transmitter unique identifier.\n"
+      "SignalId      string CW unique identifier.";
+    const char* const EnableIntTxSignal::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(EnableIntTxSignal);
+    REGISTER_COMMAND_TO_FACTORY_DECL(EnableIntTxSignal);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(EnableIntTxSignal);
 
 
     EnableIntTxSignal::EnableIntTxSignal()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     EnableIntTxSignal::EnableIntTxSignal(bool enabled, const std::string& transmitterId, const std::string& signalId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
       setTransmitterId(transmitterId);
       setSignalId(signalId);
     }
-
 
     EnableIntTxSignalPtr EnableIntTxSignal::create(bool enabled, const std::string& transmitterId, const std::string& signalId)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string EnableIntTxSignal::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& EnableIntTxSignal::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "TransmitterId", "SignalId"}; 
+      return names; 
+    }
 
 
     int EnableIntTxSignal::executePermission() const

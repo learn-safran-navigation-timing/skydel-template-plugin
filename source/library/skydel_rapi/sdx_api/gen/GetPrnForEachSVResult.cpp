@@ -1,34 +1,54 @@
+
+#include "GetPrnForEachSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetPrnForEachSVResult
 ///
-#include "gen/GetPrnForEachSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetPrnForEachSVResult::CmdName = "GetPrnForEachSVResult";
-    const char* const GetPrnForEachSVResult::Documentation = "Result of GetPrnForEachSV.";
+    const char* const GetPrnForEachSVResult::Documentation = "Result of GetPrnForEachSV.\n"
+      "\n"
+      "Name   Type      Description\n"
+      "------ --------- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+      "Signal string    Accepted signal keys: \"L1CA\", \"L1C\", \"L2C\", \"L5\", \"E1\", \"E6BC\", \"B1\", \"B2\", \"B1C\", \"B2a\", \"B3I\", \"SBASL1\", \"SBASL5\", \"QZSSL1CA\", \"QZSSL1CB\", \"QZSSL1C\", \"QZSSL2C\", \"QZSSL5\", \"QZSSL1S\", \"QZSSL5S\", \"NAVICL5\", \"PULSARXL\"\n"
+      "Prn    array int PRN value to set for each satellite. Zero based index (index 0 => PRN for SV ID 1, index 1 => PRN for SV ID 2, etc)";
+    const char* const GetPrnForEachSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetPrnForEachSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetPrnForEachSVResult);
 
 
     GetPrnForEachSVResult::GetPrnForEachSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetPrnForEachSVResult::GetPrnForEachSVResult(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& prn)
-      : CommandResult(CmdName, relatedCommand)
+    GetPrnForEachSVResult::GetPrnForEachSVResult(const std::string& signal, const std::vector<int>& prn)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSignal(signal);
       setPrn(prn);
     }
 
+    GetPrnForEachSVResult::GetPrnForEachSVResult(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& prn)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSignal(signal);
+      setPrn(prn);
+    }
+
+
+    GetPrnForEachSVResultPtr GetPrnForEachSVResult::create(const std::string& signal, const std::vector<int>& prn)
+    {
+      return std::make_shared<GetPrnForEachSVResult>(signal, prn);
+    }
 
     GetPrnForEachSVResultPtr GetPrnForEachSVResult::create(CommandBasePtr relatedCommand, const std::string& signal, const std::vector<int>& prn)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetPrnForEachSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetPrnForEachSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Signal", "Prn"}; 
+      return names; 
+    }
 
 
     std::string GetPrnForEachSVResult::signal() const

@@ -1,28 +1,42 @@
+
+#include "PushIntTxTrackEcefNed.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of PushIntTxTrackEcefNed
 ///
-#include "gen/PushIntTxTrackEcefNed.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const PushIntTxTrackEcefNed::CmdName = "PushIntTxTrackEcefNed";
-    const char* const PushIntTxTrackEcefNed::Documentation = "Push an interference track ecef and ned attitude node. Must be called after BeginIntTxTrackDefinition and before EndIntTxTrackDefinition.";
+    const char* const PushIntTxTrackEcefNed::Documentation = "Push an interference track ecef and ned attitude node. Must be called after BeginIntTxTrackDefinition and before EndIntTxTrackDefinition.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ --------------------------------------\n"
+      "Time  int    Node Timestamp in miliseconds\n"
+      "X     double X distance from earth-center in meters\n"
+      "Y     double Y distance from earth-center in meters\n"
+      "Z     double Z distance from earth-center in meters\n"
+      "Yaw   double Yaw in radians\n"
+      "Pitch double Pitch in radians\n"
+      "Roll  double Roll in radians\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const PushIntTxTrackEcefNed::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(PushIntTxTrackEcefNed);
+    REGISTER_COMMAND_TO_FACTORY_DECL(PushIntTxTrackEcefNed);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(PushIntTxTrackEcefNed);
 
 
     PushIntTxTrackEcefNed::PushIntTxTrackEcefNed()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     PushIntTxTrackEcefNed::PushIntTxTrackEcefNed(int time, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTime(time);
@@ -34,7 +48,6 @@ namespace Sdx
       setRoll(roll);
       setId(id);
     }
-
 
     PushIntTxTrackEcefNedPtr PushIntTxTrackEcefNed::create(int time, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
     {
@@ -63,6 +76,12 @@ namespace Sdx
     }
 
     std::string PushIntTxTrackEcefNed::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& PushIntTxTrackEcefNed::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Time", "X", "Y", "Z", "Yaw", "Pitch", "Roll", "Id"}; 
+      return names; 
+    }
 
 
     int PushIntTxTrackEcefNed::executePermission() const

@@ -1,33 +1,51 @@
+
+#include "GetStartTimeModeResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetStartTimeModeResult
 ///
-#include "gen/GetStartTimeModeResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetStartTimeModeResult::CmdName = "GetStartTimeModeResult";
-    const char* const GetStartTimeModeResult::Documentation = "Result of GetStartTimeMode.";
+    const char* const GetStartTimeModeResult::Documentation = "Result of GetStartTimeMode.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ --------------------------------------------\n"
+      "Mode string Accepted Modes (\"Custom\", \"Computer\", \"GPS\")";
+    const char* const GetStartTimeModeResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetStartTimeModeResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetStartTimeModeResult);
 
 
     GetStartTimeModeResult::GetStartTimeModeResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetStartTimeModeResult::GetStartTimeModeResult(CommandBasePtr relatedCommand, const std::string& mode)
-      : CommandResult(CmdName, relatedCommand)
+    GetStartTimeModeResult::GetStartTimeModeResult(const std::string& mode)
+      : CommandResult(CmdName, TargetId)
     {
 
       setMode(mode);
     }
 
+    GetStartTimeModeResult::GetStartTimeModeResult(CommandBasePtr relatedCommand, const std::string& mode)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setMode(mode);
+    }
+
+
+    GetStartTimeModeResultPtr GetStartTimeModeResult::create(const std::string& mode)
+    {
+      return std::make_shared<GetStartTimeModeResult>(mode);
+    }
 
     GetStartTimeModeResultPtr GetStartTimeModeResult::create(CommandBasePtr relatedCommand, const std::string& mode)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetStartTimeModeResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetStartTimeModeResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Mode"}; 
+      return names; 
+    }
 
 
     std::string GetStartTimeModeResult::mode() const

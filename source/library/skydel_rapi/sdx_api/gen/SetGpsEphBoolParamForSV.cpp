@@ -1,28 +1,50 @@
+
+#include "SetGpsEphBoolParamForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetGpsEphBoolParamForSV
 ///
-#include "gen/SetGpsEphBoolParamForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetGpsEphBoolParamForSV::CmdName = "SetGpsEphBoolParamForSV";
-    const char* const SetGpsEphBoolParamForSV::Documentation = "Set various boolean parameters in the GPS ephemeris\n\n  ParamName\n\"IscL1CaAvailable\"\n\"IscL2CAvailable\"\n\"IscL5I5Available\"\n\"IscL5Q5Available\"\n\"IscL1CPAvailable\"\n\"IscL1CDAvailable\"";
+    const char* const SetGpsEphBoolParamForSV::Documentation = "Please note the command SetGpsEphBoolParamForSV is deprecated since 23.11. You may use SetConstellationParameterForSV.\n"
+      "\n"
+      "Set various boolean parameters in the GPS ephemeris\n"
+      "\n"
+      "  ParamName\n"
+      "\"IscL1CaAvailable\"\n"
+      "\"IscL2CAvailable\"\n"
+      "\"IscL5I5Available\"\n"
+      "\"IscL5Q5Available\"\n"
+      "\"IscL1CPAvailable\"\n"
+      "\"IscL1CDAvailable\"\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite SV ID 1..32, or use 0 to apply new value to all satellites\n"
+      "ParamName   string          Parameter name (see table above for accepted names)\n"
+      "Val         bool            Parameter value (see table above for unit)\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetGpsEphBoolParamForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetGpsEphBoolParamForSV);
+    const char* const SetGpsEphBoolParamForSV::Deprecated = "Please note the command SetGpsEphBoolParamForSV is deprecated since 23.11. You may use SetConstellationParameterForSV.";
+
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetGpsEphBoolParamForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetGpsEphBoolParamForSV);
 
 
     SetGpsEphBoolParamForSV::SetGpsEphBoolParamForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetGpsEphBoolParamForSV::SetGpsEphBoolParamForSV(int svId, const std::string& paramName, bool val, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
@@ -30,7 +52,6 @@ namespace Sdx
       setVal(val);
       setDataSetName(dataSetName);
     }
-
 
     SetGpsEphBoolParamForSVPtr SetGpsEphBoolParamForSV::create(int svId, const std::string& paramName, bool val, const Sdx::optional<std::string>& dataSetName)
     {
@@ -55,6 +76,14 @@ namespace Sdx
     }
 
     std::string SetGpsEphBoolParamForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetGpsEphBoolParamForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "ParamName", "Val", "DataSetName"}; 
+      return names; 
+    }
+
+    Sdx::optional<std::string> SetGpsEphBoolParamForSV::deprecated() const { return Sdx::optional<std::string>{Deprecated}; }
 
 
     int SetGpsEphBoolParamForSV::executePermission() const

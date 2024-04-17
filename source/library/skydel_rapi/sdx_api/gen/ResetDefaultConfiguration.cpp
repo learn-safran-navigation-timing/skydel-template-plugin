@@ -1,11 +1,12 @@
+
+#include "ResetDefaultConfiguration.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ResetDefaultConfiguration
 ///
-#include "gen/ResetDefaultConfiguration.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const ResetDefaultConfiguration::CmdName = "ResetDefaultConfiguration";
     const char* const ResetDefaultConfiguration::Documentation = "Reset the default configuration.";
+    const char* const ResetDefaultConfiguration::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ResetDefaultConfiguration);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ResetDefaultConfiguration);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ResetDefaultConfiguration);
 
 
     ResetDefaultConfiguration::ResetDefaultConfiguration()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     ResetDefaultConfigurationPtr ResetDefaultConfiguration::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string ResetDefaultConfiguration::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ResetDefaultConfiguration::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int ResetDefaultConfiguration::executePermission() const

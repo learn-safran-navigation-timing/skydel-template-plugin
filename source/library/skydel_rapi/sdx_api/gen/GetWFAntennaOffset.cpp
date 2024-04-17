@@ -1,11 +1,12 @@
+
+#include "GetWFAntennaOffset.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetWFAntennaOffset
 ///
-#include "gen/GetWFAntennaOffset.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetWFAntennaOffset::CmdName = "GetWFAntennaOffset";
     const char* const GetWFAntennaOffset::Documentation = "Get the WF antenna offset infos.";
+    const char* const GetWFAntennaOffset::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetWFAntennaOffset);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetWFAntennaOffset);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetWFAntennaOffset);
 
 
     GetWFAntennaOffset::GetWFAntennaOffset()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetWFAntennaOffsetPtr GetWFAntennaOffset::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetWFAntennaOffset::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetWFAntennaOffset::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetWFAntennaOffset::executePermission() const

@@ -1,33 +1,39 @@
+
+#include "GetAllSignalsFromIntTx.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAllSignalsFromIntTx
 ///
-#include "gen/GetAllSignalsFromIntTx.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetAllSignalsFromIntTx::CmdName = "GetAllSignalsFromIntTx";
-    const char* const GetAllSignalsFromIntTx::Documentation = "Get all signal ID for this interference transmitters.";
+    const char* const GetAllSignalsFromIntTx::Documentation = "Get all signal ID for this interference transmitters.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetAllSignalsFromIntTx::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetAllSignalsFromIntTx);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAllSignalsFromIntTx);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAllSignalsFromIntTx);
 
 
     GetAllSignalsFromIntTx::GetAllSignalsFromIntTx()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetAllSignalsFromIntTx::GetAllSignalsFromIntTx(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetAllSignalsFromIntTxPtr GetAllSignalsFromIntTx::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetAllSignalsFromIntTx::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAllSignalsFromIntTx::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetAllSignalsFromIntTx::executePermission() const

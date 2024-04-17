@@ -1,34 +1,41 @@
+
+#include "DeleteDataSet.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of DeleteDataSet
 ///
-#include "gen/DeleteDataSet.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const DeleteDataSet::CmdName = "DeleteDataSet";
-    const char* const DeleteDataSet::Documentation = "Delete data set.";
+    const char* const DeleteDataSet::Documentation = "Delete data set.\n"
+      "\n"
+      "Name        Type   Description\n"
+      "----------- ------ -------------------------------------------------------\n"
+      "System      string \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "DataSetName string The name of the data set to delete.";
+    const char* const DeleteDataSet::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(DeleteDataSet);
+    REGISTER_COMMAND_TO_FACTORY_DECL(DeleteDataSet);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(DeleteDataSet);
 
 
     DeleteDataSet::DeleteDataSet()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     DeleteDataSet::DeleteDataSet(const std::string& system, const std::string& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setDataSetName(dataSetName);
     }
-
 
     DeleteDataSetPtr DeleteDataSet::create(const std::string& system, const std::string& dataSetName)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string DeleteDataSet::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& DeleteDataSet::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "DataSetName"}; 
+      return names; 
+    }
 
 
     int DeleteDataSet::executePermission() const

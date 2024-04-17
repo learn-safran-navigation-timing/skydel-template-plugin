@@ -1,34 +1,41 @@
+
+#include "SetSbasDeltaUdreiOutsideOfRegions.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSbasDeltaUdreiOutsideOfRegions
 ///
-#include "gen/SetSbasDeltaUdreiOutsideOfRegions.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSbasDeltaUdreiOutsideOfRegions::CmdName = "SetSbasDeltaUdreiOutsideOfRegions";
-    const char* const SetSbasDeltaUdreiOutsideOfRegions::Documentation = "Set SBAS delta UDREI outside all the defined regions for this service provider.";
+    const char* const SetSbasDeltaUdreiOutsideOfRegions::Documentation = "Set SBAS delta UDREI outside all the defined regions for this service provider.\n"
+      "\n"
+      "Name            Type   Description\n"
+      "--------------- ------ ----------------------------------------------------------------------------------\n"
+      "ServiceProvider string Service providers, accepts \"WAAS\", \"EGNOS\", \"MSAS\", \"GAGAN\" and \"SDCM\".\n"
+      "DeltaUdrei      int    Delta UDREI applicable outside all the defined regions. Accepted range is [0..15].";
+    const char* const SetSbasDeltaUdreiOutsideOfRegions::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSbasDeltaUdreiOutsideOfRegions);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSbasDeltaUdreiOutsideOfRegions);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSbasDeltaUdreiOutsideOfRegions);
 
 
     SetSbasDeltaUdreiOutsideOfRegions::SetSbasDeltaUdreiOutsideOfRegions()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSbasDeltaUdreiOutsideOfRegions::SetSbasDeltaUdreiOutsideOfRegions(const std::string& serviceProvider, int deltaUdrei)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setServiceProvider(serviceProvider);
       setDeltaUdrei(deltaUdrei);
     }
-
 
     SetSbasDeltaUdreiOutsideOfRegionsPtr SetSbasDeltaUdreiOutsideOfRegions::create(const std::string& serviceProvider, int deltaUdrei)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSbasDeltaUdreiOutsideOfRegions::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSbasDeltaUdreiOutsideOfRegions::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ServiceProvider", "DeltaUdrei"}; 
+      return names; 
+    }
 
 
     int SetSbasDeltaUdreiOutsideOfRegions::executePermission() const

@@ -1,34 +1,54 @@
+
+#include "GetIntTxHiddenOnMapResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxHiddenOnMapResult
 ///
-#include "gen/GetIntTxHiddenOnMapResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxHiddenOnMapResult::CmdName = "GetIntTxHiddenOnMapResult";
-    const char* const GetIntTxHiddenOnMapResult::Documentation = "Result of GetIntTxHiddenOnMap.";
+    const char* const GetIntTxHiddenOnMapResult::Documentation = "Result of GetIntTxHiddenOnMap.\n"
+      "\n"
+      "Name        Type   Description\n"
+      "----------- ------ -----------------------------------------------\n"
+      "HiddenOnMap bool   If true, transmitter will be hidden on the map.\n"
+      "Id          string Transmitter unique identifier.";
+    const char* const GetIntTxHiddenOnMapResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxHiddenOnMapResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxHiddenOnMapResult);
 
 
     GetIntTxHiddenOnMapResult::GetIntTxHiddenOnMapResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxHiddenOnMapResult::GetIntTxHiddenOnMapResult(CommandBasePtr relatedCommand, bool hiddenOnMap, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxHiddenOnMapResult::GetIntTxHiddenOnMapResult(bool hiddenOnMap, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setHiddenOnMap(hiddenOnMap);
       setId(id);
     }
 
+    GetIntTxHiddenOnMapResult::GetIntTxHiddenOnMapResult(CommandBasePtr relatedCommand, bool hiddenOnMap, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setHiddenOnMap(hiddenOnMap);
+      setId(id);
+    }
+
+
+    GetIntTxHiddenOnMapResultPtr GetIntTxHiddenOnMapResult::create(bool hiddenOnMap, const std::string& id)
+    {
+      return std::make_shared<GetIntTxHiddenOnMapResult>(hiddenOnMap, id);
+    }
 
     GetIntTxHiddenOnMapResultPtr GetIntTxHiddenOnMapResult::create(CommandBasePtr relatedCommand, bool hiddenOnMap, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetIntTxHiddenOnMapResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxHiddenOnMapResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"HiddenOnMap", "Id"}; 
+      return names; 
+    }
 
 
     bool GetIntTxHiddenOnMapResult::hiddenOnMap() const

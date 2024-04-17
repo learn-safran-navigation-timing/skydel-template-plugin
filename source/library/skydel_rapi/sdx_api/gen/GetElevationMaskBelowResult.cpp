@@ -1,33 +1,51 @@
+
+#include "GetElevationMaskBelowResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetElevationMaskBelowResult
 ///
-#include "gen/GetElevationMaskBelowResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetElevationMaskBelowResult::CmdName = "GetElevationMaskBelowResult";
-    const char* const GetElevationMaskBelowResult::Documentation = "Result of GetElevationMaskBelow.";
+    const char* const GetElevationMaskBelowResult::Documentation = "Result of GetElevationMaskBelow.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ---------------------------\n"
+      "Angle double Elevation mask angle in rad";
+    const char* const GetElevationMaskBelowResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetElevationMaskBelowResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetElevationMaskBelowResult);
 
 
     GetElevationMaskBelowResult::GetElevationMaskBelowResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetElevationMaskBelowResult::GetElevationMaskBelowResult(CommandBasePtr relatedCommand, double angle)
-      : CommandResult(CmdName, relatedCommand)
+    GetElevationMaskBelowResult::GetElevationMaskBelowResult(double angle)
+      : CommandResult(CmdName, TargetId)
     {
 
       setAngle(angle);
     }
 
+    GetElevationMaskBelowResult::GetElevationMaskBelowResult(CommandBasePtr relatedCommand, double angle)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setAngle(angle);
+    }
+
+
+    GetElevationMaskBelowResultPtr GetElevationMaskBelowResult::create(double angle)
+    {
+      return std::make_shared<GetElevationMaskBelowResult>(angle);
+    }
 
     GetElevationMaskBelowResultPtr GetElevationMaskBelowResult::create(CommandBasePtr relatedCommand, double angle)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string GetElevationMaskBelowResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetElevationMaskBelowResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Angle"}; 
+      return names; 
+    }
 
 
     double GetElevationMaskBelowResult::angle() const

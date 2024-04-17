@@ -1,29 +1,35 @@
+
+#include "GetIonoGridGIVEIAll.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIonoGridGIVEIAll
 ///
-#include "gen/GetIonoGridGIVEIAll.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIonoGridGIVEIAll::CmdName = "GetIonoGridGIVEIAll";
-    const char* const GetIonoGridGIVEIAll::Documentation = "Get GIVEI in the ionospheric grid.  The array is zero based, the index 0 in a band array is for the IGP with an index 1, etc.";
+    const char* const GetIonoGridGIVEIAll::Documentation = "Get GIVEI in the ionospheric grid.  The array is zero based, the index 0 in a band array is for the IGP with an index 1, etc.\n"
+      "\n"
+      "Name            Type            Description\n"
+      "--------------- --------------- -------------------------------\n"
+      "ServiceProvider optional string The service provider (optional)";
+    const char* const GetIonoGridGIVEIAll::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIonoGridGIVEIAll);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIonoGridGIVEIAll);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIonoGridGIVEIAll);
 
 
     GetIonoGridGIVEIAll::GetIonoGridGIVEIAll(const Sdx::optional<std::string>& serviceProvider)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setServiceProvider(serviceProvider);
     }
-
 
     GetIonoGridGIVEIAllPtr GetIonoGridGIVEIAll::create(const Sdx::optional<std::string>& serviceProvider)
     {
@@ -45,6 +51,12 @@ namespace Sdx
     }
 
     std::string GetIonoGridGIVEIAll::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIonoGridGIVEIAll::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"ServiceProvider"}; 
+      return names; 
+    }
 
 
     int GetIonoGridGIVEIAll::executePermission() const

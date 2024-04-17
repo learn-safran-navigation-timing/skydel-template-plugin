@@ -1,33 +1,51 @@
+
+#include "IsLogHILInputEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsLogHILInputEnabledResult
 ///
-#include "gen/IsLogHILInputEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsLogHILInputEnabledResult::CmdName = "IsLogHILInputEnabledResult";
-    const char* const IsLogHILInputEnabledResult::Documentation = "Result of IsLogHILInputEnabled.";
+    const char* const IsLogHILInputEnabledResult::Documentation = "Result of IsLogHILInputEnabled.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ------------------------------------------------\n"
+      "Enabled bool If true, files will be created during simulation";
+    const char* const IsLogHILInputEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsLogHILInputEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsLogHILInputEnabledResult);
 
 
     IsLogHILInputEnabledResult::IsLogHILInputEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsLogHILInputEnabledResult::IsLogHILInputEnabledResult(CommandBasePtr relatedCommand, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsLogHILInputEnabledResult::IsLogHILInputEnabledResult(bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
 
+    IsLogHILInputEnabledResult::IsLogHILInputEnabledResult(CommandBasePtr relatedCommand, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+    }
+
+
+    IsLogHILInputEnabledResultPtr IsLogHILInputEnabledResult::create(bool enabled)
+    {
+      return std::make_shared<IsLogHILInputEnabledResult>(enabled);
+    }
 
     IsLogHILInputEnabledResultPtr IsLogHILInputEnabledResult::create(CommandBasePtr relatedCommand, bool enabled)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsLogHILInputEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsLogHILInputEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     bool IsLogHILInputEnabledResult::enabled() const

@@ -1,33 +1,39 @@
+
+#include "ImportCCIRFilesFromDirectory.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ImportCCIRFilesFromDirectory
 ///
-#include "gen/ImportCCIRFilesFromDirectory.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ImportCCIRFilesFromDirectory::CmdName = "ImportCCIRFilesFromDirectory";
-    const char* const ImportCCIRFilesFromDirectory::Documentation = "Import all the CCIR data files from the specified directory.";
+    const char* const ImportCCIRFilesFromDirectory::Documentation = "Import all the CCIR data files from the specified directory.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ---------------\n"
+      "Path string Directory path.";
+    const char* const ImportCCIRFilesFromDirectory::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ImportCCIRFilesFromDirectory);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ImportCCIRFilesFromDirectory);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ImportCCIRFilesFromDirectory);
 
 
     ImportCCIRFilesFromDirectory::ImportCCIRFilesFromDirectory()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ImportCCIRFilesFromDirectory::ImportCCIRFilesFromDirectory(const std::string& path)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setPath(path);
     }
-
 
     ImportCCIRFilesFromDirectoryPtr ImportCCIRFilesFromDirectory::create(const std::string& path)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string ImportCCIRFilesFromDirectory::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ImportCCIRFilesFromDirectory::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Path"}; 
+      return names; 
+    }
 
 
     int ImportCCIRFilesFromDirectory::executePermission() const

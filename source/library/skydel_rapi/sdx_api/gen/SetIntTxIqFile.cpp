@@ -1,28 +1,41 @@
+
+#include "SetIntTxIqFile.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIntTxIqFile
 ///
-#include "gen/SetIntTxIqFile.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIntTxIqFile::CmdName = "SetIntTxIqFile";
-    const char* const SetIntTxIqFile::Documentation = "Set IQ file signal interference.";
+    const char* const SetIntTxIqFile::Documentation = "Set IQ file signal interference.\n"
+      "\n"
+      "Name          Type         Description\n"
+      "------------- ------------ ---------------------------------------------------\n"
+      "Enabled       bool         Enable (true) or disable (false) the signal\n"
+      "CentralFreq   double       Central frequency (Hz)\n"
+      "Power         double       Power (dB), relative to transmitter reference power\n"
+      "Path          string       Path to the file to play\n"
+      "TransmitterId string       Transmitter unique identifier.\n"
+      "SignalId      string       AWGN unique identifier.\n"
+      "Group         optional int Group, if not using default group.";
+    const char* const SetIntTxIqFile::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIntTxIqFile);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIntTxIqFile);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIntTxIqFile);
 
 
     SetIntTxIqFile::SetIntTxIqFile()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIntTxIqFile::SetIntTxIqFile(bool enabled, double centralFreq, double power, const std::string& path, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
@@ -33,7 +46,6 @@ namespace Sdx
       setSignalId(signalId);
       setGroup(group);
     }
-
 
     SetIntTxIqFilePtr SetIntTxIqFile::create(bool enabled, double centralFreq, double power, const std::string& path, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group)
     {
@@ -61,6 +73,12 @@ namespace Sdx
     }
 
     std::string SetIntTxIqFile::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIntTxIqFile::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "CentralFreq", "Power", "Path", "TransmitterId", "SignalId", "Group"}; 
+      return names; 
+    }
 
 
     int SetIntTxIqFile::executePermission() const

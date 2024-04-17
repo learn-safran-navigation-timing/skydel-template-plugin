@@ -1,11 +1,12 @@
+
+#include "IsSignalStrengthModelEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSignalStrengthModelEnabled
 ///
-#include "gen/IsSignalStrengthModelEnabled.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const IsSignalStrengthModelEnabled::CmdName = "IsSignalStrengthModelEnabled";
     const char* const IsSignalStrengthModelEnabled::Documentation = "Get signal strength model Enable/Disable which affect satellite transmission strength based on their elevation angle";
+    const char* const IsSignalStrengthModelEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsSignalStrengthModelEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsSignalStrengthModelEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSignalStrengthModelEnabled);
 
 
     IsSignalStrengthModelEnabled::IsSignalStrengthModelEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     IsSignalStrengthModelEnabledPtr IsSignalStrengthModelEnabled::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string IsSignalStrengthModelEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSignalStrengthModelEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int IsSignalStrengthModelEnabled::executePermission() const

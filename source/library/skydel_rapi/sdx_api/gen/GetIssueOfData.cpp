@@ -1,11 +1,12 @@
+
+#include "GetIssueOfData.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIssueOfData
 ///
-#include "gen/GetIssueOfData.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetIssueOfData::CmdName = "GetIssueOfData";
     const char* const GetIssueOfData::Documentation = "Get GPS Issue of data, Ephemeris (IODE) and Issue of data, Clock (IODC)";
+    const char* const GetIssueOfData::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIssueOfData);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIssueOfData);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIssueOfData);
 
 
     GetIssueOfData::GetIssueOfData()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetIssueOfDataPtr GetIssueOfData::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetIssueOfData::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIssueOfData::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetIssueOfData::executePermission() const

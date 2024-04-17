@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "sdx_optional.h"
 #include <string>
 
@@ -11,6 +12,8 @@ namespace Sdx
   {
     ///
     /// Please note the command GetQzssEphemerisDoubleParam is deprecated since 21.3. You may use GetQzssEphDoubleParamForSV.
+    /// 
+    /// Please note the command GetQzssEphDoubleParamForSV is deprecated since 23.11. You may use GetConstellationParameterForSV.
     /// 
     /// Get various parameters in the QZSS ephemeris.
     ///
@@ -32,16 +35,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
+
+      static const char* const Deprecated;
 
 
       GetQzssEphemerisDoubleParam();
 
       GetQzssEphemerisDoubleParam(int svId, const std::string& paramName, const Sdx::optional<std::string>& dataSetName = {});
-  
+
       static GetQzssEphemerisDoubleParamPtr create(int svId, const std::string& paramName, const Sdx::optional<std::string>& dataSetName = {});
       static GetQzssEphemerisDoubleParamPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
+
+      virtual Sdx::optional<std::string> deprecated() const override;
 
       virtual int executePermission() const override;
 
@@ -60,6 +69,7 @@ namespace Sdx
       Sdx::optional<std::string> dataSetName() const;
       void setDataSetName(const Sdx::optional<std::string>& dataSetName);
     };
+    
   }
 }
 

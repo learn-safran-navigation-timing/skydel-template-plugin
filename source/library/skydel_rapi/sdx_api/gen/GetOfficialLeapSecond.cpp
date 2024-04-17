@@ -1,33 +1,39 @@
+
+#include "GetOfficialLeapSecond.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetOfficialLeapSecond
 ///
-#include "gen/GetOfficialLeapSecond.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetOfficialLeapSecond::CmdName = "GetOfficialLeapSecond";
-    const char* const GetOfficialLeapSecond::Documentation = "Returns the official leap second for a given date";
+    const char* const GetOfficialLeapSecond::Documentation = "Returns the official leap second for a given date\n"
+      "\n"
+      "Name Type     Description\n"
+      "---- -------- ------------------------------\n"
+      "Date datetime A date expressed in UTC format";
+    const char* const GetOfficialLeapSecond::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetOfficialLeapSecond);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetOfficialLeapSecond);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetOfficialLeapSecond);
 
 
     GetOfficialLeapSecond::GetOfficialLeapSecond()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetOfficialLeapSecond::GetOfficialLeapSecond(const Sdx::DateTime& date)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setDate(date);
     }
-
 
     GetOfficialLeapSecondPtr GetOfficialLeapSecond::create(const Sdx::DateTime& date)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetOfficialLeapSecond::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetOfficialLeapSecond::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Date"}; 
+      return names; 
+    }
 
 
     int GetOfficialLeapSecond::executePermission() const

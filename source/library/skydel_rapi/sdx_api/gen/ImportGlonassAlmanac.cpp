@@ -1,33 +1,39 @@
+
+#include "ImportGlonassAlmanac.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ImportGlonassAlmanac
 ///
-#include "gen/ImportGlonassAlmanac.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ImportGlonassAlmanac::CmdName = "ImportGlonassAlmanac";
-    const char* const ImportGlonassAlmanac::Documentation = "Import GLONASS almanac file";
+    const char* const ImportGlonassAlmanac::Documentation = "Import GLONASS almanac file\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ -----------------\n"
+      "Path string Almanac file path";
+    const char* const ImportGlonassAlmanac::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ImportGlonassAlmanac);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ImportGlonassAlmanac);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ImportGlonassAlmanac);
 
 
     ImportGlonassAlmanac::ImportGlonassAlmanac()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ImportGlonassAlmanac::ImportGlonassAlmanac(const std::string& path)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setPath(path);
     }
-
 
     ImportGlonassAlmanacPtr ImportGlonassAlmanac::create(const std::string& path)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string ImportGlonassAlmanac::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ImportGlonassAlmanac::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Path"}; 
+      return names; 
+    }
 
 
     int ImportGlonassAlmanac::executePermission() const

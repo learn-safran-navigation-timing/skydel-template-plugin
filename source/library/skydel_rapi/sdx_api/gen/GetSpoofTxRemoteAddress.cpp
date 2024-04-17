@@ -1,33 +1,40 @@
+
+#include "GetSpoofTxRemoteAddress.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxRemoteAddress
 ///
-#include "gen/GetSpoofTxRemoteAddress.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxRemoteAddress::CmdName = "GetSpoofTxRemoteAddress";
-    const char* const GetSpoofTxRemoteAddress::Documentation = "Get the address of the spoofer instance that will\ngenerate the signal for this spoofer transmitter.";
+    const char* const GetSpoofTxRemoteAddress::Documentation = "Get the address of the spoofer instance that will\n"
+      "generate the signal for this spoofer transmitter.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetSpoofTxRemoteAddress::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSpoofTxRemoteAddress);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSpoofTxRemoteAddress);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxRemoteAddress);
 
 
     GetSpoofTxRemoteAddress::GetSpoofTxRemoteAddress()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetSpoofTxRemoteAddress::GetSpoofTxRemoteAddress(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetSpoofTxRemoteAddressPtr GetSpoofTxRemoteAddress::create(const std::string& id)
     {
@@ -49,6 +56,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxRemoteAddress::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxRemoteAddress::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetSpoofTxRemoteAddress::executePermission() const

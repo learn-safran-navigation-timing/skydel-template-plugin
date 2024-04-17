@@ -1,33 +1,39 @@
+
+#include "RemoveCustomSignal.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RemoveCustomSignal
 ///
-#include "gen/RemoveCustomSignal.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RemoveCustomSignal::CmdName = "RemoveCustomSignal";
-    const char* const RemoveCustomSignal::Documentation = "Removes the custom signal with the given ID";
+    const char* const RemoveCustomSignal::Documentation = "Removes the custom signal with the given ID\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ----------------\n"
+      "Id   string Custom signal ID";
+    const char* const RemoveCustomSignal::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RemoveCustomSignal);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RemoveCustomSignal);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RemoveCustomSignal);
 
 
     RemoveCustomSignal::RemoveCustomSignal()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RemoveCustomSignal::RemoveCustomSignal(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     RemoveCustomSignalPtr RemoveCustomSignal::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string RemoveCustomSignal::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RemoveCustomSignal::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int RemoveCustomSignal::executePermission() const

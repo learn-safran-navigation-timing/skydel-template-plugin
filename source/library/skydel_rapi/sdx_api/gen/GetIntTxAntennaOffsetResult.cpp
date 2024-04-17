@@ -1,28 +1,40 @@
+
+#include "GetIntTxAntennaOffsetResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxAntennaOffsetResult
 ///
-#include "gen/GetIntTxAntennaOffsetResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxAntennaOffsetResult::CmdName = "GetIntTxAntennaOffsetResult";
-    const char* const GetIntTxAntennaOffsetResult::Documentation = "Result of GetIntTxAntennaOffset.";
+    const char* const GetIntTxAntennaOffsetResult::Documentation = "Result of GetIntTxAntennaOffset.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ --------------------------------------\n"
+      "X     double Antenna X offset in the body frame\n"
+      "Y     double Antenna Y offset in the body frame\n"
+      "Z     double Antenna Z offset in the body frame\n"
+      "Yaw   double Antenna Yaw offset in the body frame\n"
+      "Pitch double Antenna Pitch offset in the body frame\n"
+      "Roll  double Antenna Roll offset in the body frame\n"
+      "Id    string Transmitter unique identifier.";
+    const char* const GetIntTxAntennaOffsetResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxAntennaOffsetResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxAntennaOffsetResult);
 
 
     GetIntTxAntennaOffsetResult::GetIntTxAntennaOffsetResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxAntennaOffsetResult::GetIntTxAntennaOffsetResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxAntennaOffsetResult::GetIntTxAntennaOffsetResult(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setX(x);
@@ -34,6 +46,24 @@ namespace Sdx
       setId(id);
     }
 
+    GetIntTxAntennaOffsetResult::GetIntTxAntennaOffsetResult(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setX(x);
+      setY(y);
+      setZ(z);
+      setYaw(yaw);
+      setPitch(pitch);
+      setRoll(roll);
+      setId(id);
+    }
+
+
+    GetIntTxAntennaOffsetResultPtr GetIntTxAntennaOffsetResult::create(double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
+    {
+      return std::make_shared<GetIntTxAntennaOffsetResult>(x, y, z, yaw, pitch, roll, id);
+    }
 
     GetIntTxAntennaOffsetResultPtr GetIntTxAntennaOffsetResult::create(CommandBasePtr relatedCommand, double x, double y, double z, double yaw, double pitch, double roll, const std::string& id)
     {
@@ -61,6 +91,12 @@ namespace Sdx
     }
 
     std::string GetIntTxAntennaOffsetResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxAntennaOffsetResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"X", "Y", "Z", "Yaw", "Pitch", "Roll", "Id"}; 
+      return names; 
+    }
 
 
     double GetIntTxAntennaOffsetResult::x() const

@@ -1,28 +1,37 @@
+
+#include "GetVehicleAntennaGainResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetVehicleAntennaGainResult
 ///
-#include "gen/GetVehicleAntennaGainResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetVehicleAntennaGainResult::CmdName = "GetVehicleAntennaGainResult";
-    const char* const GetVehicleAntennaGainResult::Documentation = "Result of GetVehicleAntennaGain.";
+    const char* const GetVehicleAntennaGainResult::Documentation = "Result of GetVehicleAntennaGain.\n"
+      "\n"
+      "Name Type               Description\n"
+      "---- ------------------ -------------------------------------------------------------------------------------------------------------------------\n"
+      "Gain array array double Gain matrix (dB). The first dimension will be mapped to elevation [-90, 90] and the second dimension to azimuth [0, 360[.\n"
+      "Type AntennaPatternType Pattern type\n"
+      "Band GNSSBand           Frequency band\n"
+      "Name optional string    Vehicle antenna name";
+    const char* const GetVehicleAntennaGainResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetVehicleAntennaGainResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetVehicleAntennaGainResult);
 
 
     GetVehicleAntennaGainResult::GetVehicleAntennaGainResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetVehicleAntennaGainResult::GetVehicleAntennaGainResult(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name)
-      : CommandResult(CmdName, relatedCommand)
+    GetVehicleAntennaGainResult::GetVehicleAntennaGainResult(const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name)
+      : CommandResult(CmdName, TargetId)
     {
 
       setGain(gain);
@@ -31,6 +40,21 @@ namespace Sdx
       setName(name);
     }
 
+    GetVehicleAntennaGainResult::GetVehicleAntennaGainResult(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setGain(gain);
+      setType(type);
+      setBand(band);
+      setName(name);
+    }
+
+
+    GetVehicleAntennaGainResultPtr GetVehicleAntennaGainResult::create(const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name)
+    {
+      return std::make_shared<GetVehicleAntennaGainResult>(gain, type, band, name);
+    }
 
     GetVehicleAntennaGainResultPtr GetVehicleAntennaGainResult::create(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const Sdx::GNSSBand& band, const Sdx::optional<std::string>& name)
     {
@@ -55,6 +79,12 @@ namespace Sdx
     }
 
     std::string GetVehicleAntennaGainResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetVehicleAntennaGainResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Gain", "Type", "Band", "Name"}; 
+      return names; 
+    }
 
 
     std::vector<std::vector<double>> GetVehicleAntennaGainResult::gain() const

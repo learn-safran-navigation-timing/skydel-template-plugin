@@ -8,7 +8,7 @@ namespace Sdx
   /// The simulator sub-state.
   ///
   
-  enum class SimulatorSubState : int { SubStateNone, Idle_ConfigNotValid, Idle_ConfigValid, Started_InitPlugins, Started_InitHardware, Started_Streaming, Started_SyncInit, Started_SlaveSync, Started_Armed, Started_SyncStartTime, Error, Started_HILSync, Started_SyncPPSReset, Started_SyncStart, Started_WFSlaveInit, Started_WFMasterInit, Started_WFSyncPPSReset, Started_WFSyncStart };
+  enum class SimulatorSubState : int { SubStateNone, Idle_ConfigNotValid, Idle_ConfigValid, Started_InitPlugins, Started_InitHardware, Started_Streaming, Started_SyncInit, Started_WorkerSync, Started_Armed, Started_SyncStartTime, Error, Started_HILSync, Started_SyncPPSReset, Started_SyncStart, Started_WFWorkerInit, Started_WFMainInit, Started_WFSyncPPSReset, Started_WFSyncStart };
 }
 
 template<>
@@ -19,8 +19,8 @@ struct parse_json<Sdx::SimulatorSubState>
   {
     if (!is_valid(value))
       throw std::runtime_error("Unexpected value");
-    return (Sdx::SimulatorSubState)value.GetInt();
+    return static_cast<Sdx::SimulatorSubState>(value.GetInt());
   }
-  static rapidjson::Value format(Sdx::SimulatorSubState value, rapidjson::Value::AllocatorType&) { return rapidjson::Value((int)value); }
+  static rapidjson::Value format(Sdx::SimulatorSubState value, rapidjson::Value::AllocatorType&) { return rapidjson::Value(static_cast<int>(value)); }
 };
 

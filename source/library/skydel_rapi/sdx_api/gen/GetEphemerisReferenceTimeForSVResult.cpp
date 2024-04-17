@@ -1,28 +1,37 @@
+
+#include "GetEphemerisReferenceTimeForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetEphemerisReferenceTimeForSVResult
 ///
-#include "gen/GetEphemerisReferenceTimeForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetEphemerisReferenceTimeForSVResult::CmdName = "GetEphemerisReferenceTimeForSVResult";
-    const char* const GetEphemerisReferenceTimeForSVResult::Documentation = "Result of GetEphemerisReferenceTimeForSV.";
+    const char* const GetEphemerisReferenceTimeForSVResult::Documentation = "Result of GetEphemerisReferenceTimeForSV.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "System      string          \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId        int             The satellite's SV ID.\n"
+      "Time        datetime        GPS date and time (it is the GPS time expressed in UTC format)\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetEphemerisReferenceTimeForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetEphemerisReferenceTimeForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetEphemerisReferenceTimeForSVResult);
 
 
     GetEphemerisReferenceTimeForSVResult::GetEphemerisReferenceTimeForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetEphemerisReferenceTimeForSVResult::GetEphemerisReferenceTimeForSVResult(CommandBasePtr relatedCommand, const std::string& system, int svId, const Sdx::DateTime& time, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetEphemerisReferenceTimeForSVResult::GetEphemerisReferenceTimeForSVResult(const std::string& system, int svId, const Sdx::DateTime& time, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -31,6 +40,21 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetEphemerisReferenceTimeForSVResult::GetEphemerisReferenceTimeForSVResult(CommandBasePtr relatedCommand, const std::string& system, int svId, const Sdx::DateTime& time, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setSvId(svId);
+      setTime(time);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetEphemerisReferenceTimeForSVResultPtr GetEphemerisReferenceTimeForSVResult::create(const std::string& system, int svId, const Sdx::DateTime& time, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetEphemerisReferenceTimeForSVResult>(system, svId, time, dataSetName);
+    }
 
     GetEphemerisReferenceTimeForSVResultPtr GetEphemerisReferenceTimeForSVResult::create(CommandBasePtr relatedCommand, const std::string& system, int svId, const Sdx::DateTime& time, const Sdx::optional<std::string>& dataSetName)
     {
@@ -55,6 +79,12 @@ namespace Sdx
     }
 
     std::string GetEphemerisReferenceTimeForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetEphemerisReferenceTimeForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Time", "DataSetName"}; 
+      return names; 
+    }
 
 
     std::string GetEphemerisReferenceTimeForSVResult::system() const

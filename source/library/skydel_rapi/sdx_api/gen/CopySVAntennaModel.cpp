@@ -1,35 +1,43 @@
+
+#include "CopySVAntennaModel.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of CopySVAntennaModel
 ///
-#include "gen/CopySVAntennaModel.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const CopySVAntennaModel::CmdName = "CopySVAntennaModel";
-    const char* const CopySVAntennaModel::Documentation = "Copy a space vehicle antenna model.";
+    const char* const CopySVAntennaModel::Documentation = "Copy a space vehicle antenna model.\n"
+      "\n"
+      "Name     Type   Description\n"
+      "-------- ------ --------------------------------------------------------------------------\n"
+      "Name     string Reference space vehicle antenna model name\n"
+      "CopyName string Copy space vehicle antenna model name\n"
+      "System   string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const CopySVAntennaModel::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(CopySVAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_DECL(CopySVAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(CopySVAntennaModel);
 
 
     CopySVAntennaModel::CopySVAntennaModel()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     CopySVAntennaModel::CopySVAntennaModel(const std::string& name, const std::string& copyName, const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setName(name);
       setCopyName(copyName);
       setSystem(system);
     }
-
 
     CopySVAntennaModelPtr CopySVAntennaModel::create(const std::string& name, const std::string& copyName, const std::string& system)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string CopySVAntennaModel::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& CopySVAntennaModel::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Name", "CopyName", "System"}; 
+      return names; 
+    }
 
 
     int CopySVAntennaModel::executePermission() const

@@ -1,34 +1,41 @@
+
+#include "SetSyncClient.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSyncClient
 ///
-#include "gen/SetSyncClient.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSyncClient::CmdName = "SetSyncClient";
-    const char* const SetSyncClient::Documentation = "Set host and port to connect to sync time server.";
+    const char* const SetSyncClient::Documentation = "Set host and port to connect to sync time server.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ----------------\n"
+      "Host string Host address\n"
+      "Port int    Host port number";
+    const char* const SetSyncClient::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSyncClient);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSyncClient);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSyncClient);
 
 
     SetSyncClient::SetSyncClient()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSyncClient::SetSyncClient(const std::string& host, int port)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setHost(host);
       setPort(port);
     }
-
 
     SetSyncClientPtr SetSyncClient::create(const std::string& host, int port)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetSyncClient::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSyncClient::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Host", "Port"}; 
+      return names; 
+    }
 
 
     int SetSyncClient::executePermission() const

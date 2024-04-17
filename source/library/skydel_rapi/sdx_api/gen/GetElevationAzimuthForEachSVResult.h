@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "gen/ElevationAzimuth.h"
 #include "sdx_optional.h"
 #include <string>
@@ -15,8 +16,8 @@ namespace Sdx
     /// Result of GetElevationAzimuthForEachSV.
     ///
     /// Name              Type                            Description
-    /// ----------------- ------------------------------- -----------------------------------------------------------------
-    /// System            string                          "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC".
+    /// ----------------- ------------------------------- ---------------------------------------------------------------------------
+    /// System            string                          "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR".
     /// ElevationAzimuths array optional ElevationAzimuth Elevation and Azimuth position angles of the satellites.
     ///
 
@@ -29,16 +30,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetElevationAzimuthForEachSVResult();
 
+      GetElevationAzimuthForEachSVResult(const std::string& system, const std::vector<Sdx::optional<Sdx::ElevationAzimuth>>& elevationAzimuths);
+
       GetElevationAzimuthForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<Sdx::optional<Sdx::ElevationAzimuth>>& elevationAzimuths);
-  
+
+      static GetElevationAzimuthForEachSVResultPtr create(const std::string& system, const std::vector<Sdx::optional<Sdx::ElevationAzimuth>>& elevationAzimuths);
+
       static GetElevationAzimuthForEachSVResultPtr create(CommandBasePtr relatedCommand, const std::string& system, const std::vector<Sdx::optional<Sdx::ElevationAzimuth>>& elevationAzimuths);
       static GetElevationAzimuthForEachSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** system ****
@@ -50,6 +57,7 @@ namespace Sdx
       std::vector<Sdx::optional<Sdx::ElevationAzimuth>> elevationAzimuths() const;
       void setElevationAzimuths(const std::vector<Sdx::optional<Sdx::ElevationAzimuth>>& elevationAzimuths);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetElevationAzimuthForEachSVResult);
   }
 }
 

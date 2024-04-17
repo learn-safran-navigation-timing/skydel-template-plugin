@@ -1,35 +1,43 @@
+
+#include "RenameSVAntennaModel.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RenameSVAntennaModel
 ///
-#include "gen/RenameSVAntennaModel.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RenameSVAntennaModel::CmdName = "RenameSVAntennaModel";
-    const char* const RenameSVAntennaModel::Documentation = "Rename a space vehicle antenna model.";
+    const char* const RenameSVAntennaModel::Documentation = "Rename a space vehicle antenna model.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ --------------------------------------------------------------------------\n"
+      "Name    string Reference space vehicle antenna model name\n"
+      "NewName string New space vehicle antenna model name\n"
+      "System  string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const RenameSVAntennaModel::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RenameSVAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RenameSVAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RenameSVAntennaModel);
 
 
     RenameSVAntennaModel::RenameSVAntennaModel()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RenameSVAntennaModel::RenameSVAntennaModel(const std::string& name, const std::string& newName, const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setName(name);
       setNewName(newName);
       setSystem(system);
     }
-
 
     RenameSVAntennaModelPtr RenameSVAntennaModel::create(const std::string& name, const std::string& newName, const std::string& system)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string RenameSVAntennaModel::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RenameSVAntennaModel::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Name", "NewName", "System"}; 
+      return names; 
+    }
 
 
     int RenameSVAntennaModel::executePermission() const

@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "sdx_optional.h"
 #include <string>
 
@@ -34,16 +35,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetIntTxBPSK();
 
       SetIntTxBPSK(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group = {}, const Sdx::optional<int>& prn = {});
-  
+
       static SetIntTxBPSKPtr create(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group = {}, const Sdx::optional<int>& prn = {});
       static SetIntTxBPSKPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -92,6 +95,7 @@ namespace Sdx
       Sdx::optional<int> prn() const;
       void setPrn(const Sdx::optional<int>& prn);
     };
+    
   }
 }
 

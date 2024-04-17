@@ -1,33 +1,39 @@
+
+#include "ClearAllLOSForSystem.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ClearAllLOSForSystem
 ///
-#include "gen/ClearAllLOSForSystem.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ClearAllLOSForSystem::CmdName = "ClearAllLOSForSystem";
-    const char* const ClearAllLOSForSystem::Documentation = "Enable Direct Line of Sight (LoS) of all satellites for the specified constellation.";
+    const char* const ClearAllLOSForSystem::Documentation = "Enable Direct Line of Sight (LoS) of all satellites for the specified constellation.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const ClearAllLOSForSystem::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ClearAllLOSForSystem);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ClearAllLOSForSystem);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ClearAllLOSForSystem);
 
 
     ClearAllLOSForSystem::ClearAllLOSForSystem()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ClearAllLOSForSystem::ClearAllLOSForSystem(const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
     }
-
 
     ClearAllLOSForSystemPtr ClearAllLOSForSystem::create(const std::string& system)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string ClearAllLOSForSystem::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ClearAllLOSForSystem::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System"}; 
+      return names; 
+    }
 
 
     int ClearAllLOSForSystem::executePermission() const

@@ -1,11 +1,12 @@
+
+#include "IsLogRawEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsLogRawEnabled
 ///
-#include "gen/IsLogRawEnabled.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const IsLogRawEnabled::CmdName = "IsLogRawEnabled";
     const char* const IsLogRawEnabled::Documentation = "Tells if raw data logging is enabled.";
+    const char* const IsLogRawEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsLogRawEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsLogRawEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsLogRawEnabled);
 
 
     IsLogRawEnabled::IsLogRawEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     IsLogRawEnabledPtr IsLogRawEnabled::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string IsLogRawEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsLogRawEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int IsLogRawEnabled::executePermission() const

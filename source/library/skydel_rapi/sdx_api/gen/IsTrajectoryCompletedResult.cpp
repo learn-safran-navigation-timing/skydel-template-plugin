@@ -1,33 +1,51 @@
+
+#include "IsTrajectoryCompletedResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsTrajectoryCompletedResult
 ///
-#include "gen/IsTrajectoryCompletedResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsTrajectoryCompletedResult::CmdName = "IsTrajectoryCompletedResult";
-    const char* const IsTrajectoryCompletedResult::Documentation = "Result of IsTrajectoryCompleted.";
+    const char* const IsTrajectoryCompletedResult::Documentation = "Result of IsTrajectoryCompleted.\n"
+      "\n"
+      "Name        Type Description\n"
+      "----------- ---- ------------------------------------------\n"
+      "IsCompleted bool Whether the trajectory is completed or not";
+    const char* const IsTrajectoryCompletedResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsTrajectoryCompletedResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsTrajectoryCompletedResult);
 
 
     IsTrajectoryCompletedResult::IsTrajectoryCompletedResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsTrajectoryCompletedResult::IsTrajectoryCompletedResult(CommandBasePtr relatedCommand, bool isCompleted)
-      : CommandResult(CmdName, relatedCommand)
+    IsTrajectoryCompletedResult::IsTrajectoryCompletedResult(bool isCompleted)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIsCompleted(isCompleted);
     }
 
+    IsTrajectoryCompletedResult::IsTrajectoryCompletedResult(CommandBasePtr relatedCommand, bool isCompleted)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIsCompleted(isCompleted);
+    }
+
+
+    IsTrajectoryCompletedResultPtr IsTrajectoryCompletedResult::create(bool isCompleted)
+    {
+      return std::make_shared<IsTrajectoryCompletedResult>(isCompleted);
+    }
 
     IsTrajectoryCompletedResultPtr IsTrajectoryCompletedResult::create(CommandBasePtr relatedCommand, bool isCompleted)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsTrajectoryCompletedResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsTrajectoryCompletedResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"IsCompleted"}; 
+      return names; 
+    }
 
 
     bool IsTrajectoryCompletedResult::isCompleted() const

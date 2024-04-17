@@ -1,28 +1,36 @@
+
+#include "GetSpoofTxAntennaResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxAntennaResult
 ///
-#include "gen/GetSpoofTxAntennaResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxAntennaResult::CmdName = "GetSpoofTxAntennaResult";
-    const char* const GetSpoofTxAntennaResult::Documentation = "Result of GetSpoofTxAntenna.";
+    const char* const GetSpoofTxAntennaResult::Documentation = "Result of GetSpoofTxAntenna.\n"
+      "\n"
+      "Name Type               Description\n"
+      "---- ------------------ -------------------------------------------------------------------------------------------------------------------------\n"
+      "Gain array array double Gain matrix (dB). The first dimension will be mapped to elevation [-90, 90] and the second dimension to azimuth [0, 360[.\n"
+      "Type AntennaPatternType Pattern type\n"
+      "Id   string             Transmitter unique identifier.";
+    const char* const GetSpoofTxAntennaResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetSpoofTxAntennaResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxAntennaResult);
 
 
     GetSpoofTxAntennaResult::GetSpoofTxAntennaResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetSpoofTxAntennaResult::GetSpoofTxAntennaResult(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetSpoofTxAntennaResult::GetSpoofTxAntennaResult(const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setGain(gain);
@@ -30,6 +38,20 @@ namespace Sdx
       setId(id);
     }
 
+    GetSpoofTxAntennaResult::GetSpoofTxAntennaResult(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setGain(gain);
+      setType(type);
+      setId(id);
+    }
+
+
+    GetSpoofTxAntennaResultPtr GetSpoofTxAntennaResult::create(const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
+    {
+      return std::make_shared<GetSpoofTxAntennaResult>(gain, type, id);
+    }
 
     GetSpoofTxAntennaResultPtr GetSpoofTxAntennaResult::create(CommandBasePtr relatedCommand, const std::vector<std::vector<double>>& gain, const Sdx::AntennaPatternType& type, const std::string& id)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxAntennaResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxAntennaResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Gain", "Type", "Id"}; 
+      return names; 
+    }
 
 
     std::vector<std::vector<double>> GetSpoofTxAntennaResult::gain() const

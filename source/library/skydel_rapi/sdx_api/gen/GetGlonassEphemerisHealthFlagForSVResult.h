@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 
 
 namespace Sdx
@@ -26,16 +27,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetGlonassEphemerisHealthFlagForSVResult();
 
+      GetGlonassEphemerisHealthFlagForSVResult(int svId, bool health);
+
       GetGlonassEphemerisHealthFlagForSVResult(CommandBasePtr relatedCommand, int svId, bool health);
-  
+
+      static GetGlonassEphemerisHealthFlagForSVResultPtr create(int svId, bool health);
+
       static GetGlonassEphemerisHealthFlagForSVResultPtr create(CommandBasePtr relatedCommand, int svId, bool health);
       static GetGlonassEphemerisHealthFlagForSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** svId ****
@@ -47,6 +54,7 @@ namespace Sdx
       bool health() const;
       void setHealth(bool health);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGlonassEphemerisHealthFlagForSVResult);
   }
 }
 

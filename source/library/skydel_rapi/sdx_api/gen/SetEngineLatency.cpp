@@ -1,33 +1,39 @@
+
+#include "SetEngineLatency.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetEngineLatency
 ///
-#include "gen/SetEngineLatency.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetEngineLatency::CmdName = "SetEngineLatency";
-    const char* const SetEngineLatency::Documentation = "Set engine latency.";
+    const char* const SetEngineLatency::Documentation = "Set engine latency.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ----------------------\n"
+      "Latency int  Engine latency in msec";
+    const char* const SetEngineLatency::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetEngineLatency);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetEngineLatency);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetEngineLatency);
 
 
     SetEngineLatency::SetEngineLatency()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetEngineLatency::SetEngineLatency(int latency)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setLatency(latency);
     }
-
 
     SetEngineLatencyPtr SetEngineLatency::create(int latency)
     {
@@ -50,10 +56,16 @@ namespace Sdx
 
     std::string SetEngineLatency::documentation() const { return Documentation; }
 
+    const std::vector<std::string>& SetEngineLatency::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Latency"}; 
+      return names; 
+    }
+
 
     int SetEngineLatency::executePermission() const
     {
-      return EXECUTE_IF_IDLE;
+      return EXECUTE_IF_NO_CONFIG | EXECUTE_IF_IDLE;
     }
 
 

@@ -1,28 +1,42 @@
+
+#include "GetMessageModificationToSbasNavResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageModificationToSbasNavResult
 ///
-#include "gen/GetMessageModificationToSbasNavResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageModificationToSbasNavResult::CmdName = "GetMessageModificationToSbasNavResult";
-    const char* const GetMessageModificationToSbasNavResult::Documentation = "Result of GetMessageModificationToSbasNav.";
+    const char* const GetMessageModificationToSbasNavResult::Documentation = "Result of GetMessageModificationToSbasNav.\n"
+      "\n"
+      "Name             Type         Description\n"
+      "---------------- ------------ -----------------------------------------------------------------------------------------------------\n"
+      "SignalArray      array string Array of signals to apply the message modification to, accepts \"SBASL1\" and \"SBASL5\" (empty for all).\n"
+      "SvId             int          The satellite's SV ID 1..39 (use 0 to apply modification to all SVs)\n"
+      "StartTime        int          Elapsed time in seconds since start of simulation\n"
+      "StopTime         int          Elapsed time in seconds since start of simulation (use 0 for no stop time)\n"
+      "MessageType      int          Message type (use -1 to apply modification to all message types)\n"
+      "Condition        string       Optional condition to match message content, ex: \"EQUAL(45, 10, 0x3f)\"\n"
+      "UpdateCRC        bool         Recalculate CRC after making modification\n"
+      "BitModifications string       Comma separated bit modifications\n"
+      "Id               string       Unique identifier of the event";
+    const char* const GetMessageModificationToSbasNavResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetMessageModificationToSbasNavResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageModificationToSbasNavResult);
 
 
     GetMessageModificationToSbasNavResult::GetMessageModificationToSbasNavResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetMessageModificationToSbasNavResult::GetMessageModificationToSbasNavResult(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetMessageModificationToSbasNavResult::GetMessageModificationToSbasNavResult(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSignalArray(signalArray);
@@ -36,6 +50,26 @@ namespace Sdx
       setId(id);
     }
 
+    GetMessageModificationToSbasNavResult::GetMessageModificationToSbasNavResult(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSignalArray(signalArray);
+      setSvId(svId);
+      setStartTime(startTime);
+      setStopTime(stopTime);
+      setMessageType(messageType);
+      setCondition(condition);
+      setUpdateCRC(updateCRC);
+      setBitModifications(bitModifications);
+      setId(id);
+    }
+
+
+    GetMessageModificationToSbasNavResultPtr GetMessageModificationToSbasNavResult::create(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
+    {
+      return std::make_shared<GetMessageModificationToSbasNavResult>(signalArray, svId, startTime, stopTime, messageType, condition, updateCRC, bitModifications, id);
+    }
 
     GetMessageModificationToSbasNavResultPtr GetMessageModificationToSbasNavResult::create(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, const std::string& condition, bool updateCRC, const std::string& bitModifications, const std::string& id)
     {
@@ -65,6 +99,12 @@ namespace Sdx
     }
 
     std::string GetMessageModificationToSbasNavResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageModificationToSbasNavResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SignalArray", "SvId", "StartTime", "StopTime", "MessageType", "Condition", "UpdateCRC", "BitModifications", "Id"}; 
+      return names; 
+    }
 
 
     std::vector<std::string> GetMessageModificationToSbasNavResult::signalArray() const

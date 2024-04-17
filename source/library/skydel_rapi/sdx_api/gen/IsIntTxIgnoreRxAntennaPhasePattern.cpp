@@ -1,33 +1,39 @@
+
+#include "IsIntTxIgnoreRxAntennaPhasePattern.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsIntTxIgnoreRxAntennaPhasePattern
 ///
-#include "gen/IsIntTxIgnoreRxAntennaPhasePattern.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsIntTxIgnoreRxAntennaPhasePattern::CmdName = "IsIntTxIgnoreRxAntennaPhasePattern";
-    const char* const IsIntTxIgnoreRxAntennaPhasePattern::Documentation = "Get whether a dynamic transmitter ignore the receiver's antenna phase pattern.";
+    const char* const IsIntTxIgnoreRxAntennaPhasePattern::Documentation = "Get whether a dynamic transmitter ignore the receiver's antenna phase pattern.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const IsIntTxIgnoreRxAntennaPhasePattern::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsIntTxIgnoreRxAntennaPhasePattern);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsIntTxIgnoreRxAntennaPhasePattern);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsIntTxIgnoreRxAntennaPhasePattern);
 
 
     IsIntTxIgnoreRxAntennaPhasePattern::IsIntTxIgnoreRxAntennaPhasePattern()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     IsIntTxIgnoreRxAntennaPhasePattern::IsIntTxIgnoreRxAntennaPhasePattern(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     IsIntTxIgnoreRxAntennaPhasePatternPtr IsIntTxIgnoreRxAntennaPhasePattern::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string IsIntTxIgnoreRxAntennaPhasePattern::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsIntTxIgnoreRxAntennaPhasePattern::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int IsIntTxIgnoreRxAntennaPhasePattern::executePermission() const

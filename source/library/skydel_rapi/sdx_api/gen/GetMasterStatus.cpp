@@ -1,28 +1,34 @@
+
+#include "GetMasterStatus.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMasterStatus
 ///
-#include "gen/GetMasterStatus.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMasterStatus::CmdName = "GetMasterStatus";
-    const char* const GetMasterStatus::Documentation = "Request for the master status, returns a GetMasterStatusResult";
+    const char* const GetMasterStatus::Documentation = "Please note the command GetMasterStatus is deprecated since 23.11. You may use GetMainInstanceStatus.\n"
+      "\n"
+      "Request for the master status, returns a GetMasterStatusResult";
+    const char* const GetMasterStatus::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetMasterStatus);
+    const char* const GetMasterStatus::Deprecated = "Please note the command GetMasterStatus is deprecated since 23.11. You may use GetMainInstanceStatus.";
+
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetMasterStatus);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMasterStatus);
 
 
     GetMasterStatus::GetMasterStatus()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetMasterStatusPtr GetMasterStatus::create()
     {
@@ -43,6 +49,14 @@ namespace Sdx
     }
 
     std::string GetMasterStatus::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMasterStatus::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
+
+    Sdx::optional<std::string> GetMasterStatus::deprecated() const { return Sdx::optional<std::string>{Deprecated}; }
 
 
     int GetMasterStatus::executePermission() const

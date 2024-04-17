@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -27,16 +28,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetAntennaChangeResult();
 
+      GetAntennaChangeResult(double startTime, const std::string& antenna, const std::string& id);
+
       GetAntennaChangeResult(CommandBasePtr relatedCommand, double startTime, const std::string& antenna, const std::string& id);
-  
+
+      static GetAntennaChangeResultPtr create(double startTime, const std::string& antenna, const std::string& id);
+
       static GetAntennaChangeResultPtr create(CommandBasePtr relatedCommand, double startTime, const std::string& antenna, const std::string& id);
       static GetAntennaChangeResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** startTime ****
@@ -53,6 +60,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAntennaChangeResult);
   }
 }
 

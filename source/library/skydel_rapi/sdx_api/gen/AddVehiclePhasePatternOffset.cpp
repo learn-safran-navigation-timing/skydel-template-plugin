@@ -1,35 +1,43 @@
+
+#include "AddVehiclePhasePatternOffset.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of AddVehiclePhasePatternOffset
 ///
-#include "gen/AddVehiclePhasePatternOffset.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const AddVehiclePhasePatternOffset::CmdName = "AddVehiclePhasePatternOffset";
-    const char* const AddVehiclePhasePatternOffset::Documentation = "Add an offset (in rad) for all values of the phase pattern.";
+    const char* const AddVehiclePhasePatternOffset::Documentation = "Add an offset (in rad) for all values of the phase pattern.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- ------------------------------------------------------------------------------------\n"
+      "Band        GNSSBand        Offset will be apply to this band. (\"L1\", \"L2\" or \"L5\")\n"
+      "Offset      double          Phase offset (in rad)\n"
+      "AntennaName optional string Vehicle antenna name. If no name is specified, apply the offset to the Basic Antenna";
+    const char* const AddVehiclePhasePatternOffset::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(AddVehiclePhasePatternOffset);
+    REGISTER_COMMAND_TO_FACTORY_DECL(AddVehiclePhasePatternOffset);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(AddVehiclePhasePatternOffset);
 
 
     AddVehiclePhasePatternOffset::AddVehiclePhasePatternOffset()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     AddVehiclePhasePatternOffset::AddVehiclePhasePatternOffset(const Sdx::GNSSBand& band, double offset, const Sdx::optional<std::string>& antennaName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setBand(band);
       setOffset(offset);
       setAntennaName(antennaName);
     }
-
 
     AddVehiclePhasePatternOffsetPtr AddVehiclePhasePatternOffset::create(const Sdx::GNSSBand& band, double offset, const Sdx::optional<std::string>& antennaName)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string AddVehiclePhasePatternOffset::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& AddVehiclePhasePatternOffset::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Band", "Offset", "AntennaName"}; 
+      return names; 
+    }
 
 
     int AddVehiclePhasePatternOffset::executePermission() const

@@ -1,34 +1,54 @@
+
+#include "IsIntTxIgnoreRxAntennaPhasePatternResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsIntTxIgnoreRxAntennaPhasePatternResult
 ///
-#include "gen/IsIntTxIgnoreRxAntennaPhasePatternResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsIntTxIgnoreRxAntennaPhasePatternResult::CmdName = "IsIntTxIgnoreRxAntennaPhasePatternResult";
-    const char* const IsIntTxIgnoreRxAntennaPhasePatternResult::Documentation = "Result of IsIntTxIgnoreRxAntennaPhasePattern.";
+    const char* const IsIntTxIgnoreRxAntennaPhasePatternResult::Documentation = "Result of IsIntTxIgnoreRxAntennaPhasePattern.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ --------------------------------------------------------------\n"
+      "Ignore bool   If true, the receiver's antenna phase pattern will be ignored.\n"
+      "Id     string Transmitter unique identifier.";
+    const char* const IsIntTxIgnoreRxAntennaPhasePatternResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsIntTxIgnoreRxAntennaPhasePatternResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsIntTxIgnoreRxAntennaPhasePatternResult);
 
 
     IsIntTxIgnoreRxAntennaPhasePatternResult::IsIntTxIgnoreRxAntennaPhasePatternResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsIntTxIgnoreRxAntennaPhasePatternResult::IsIntTxIgnoreRxAntennaPhasePatternResult(CommandBasePtr relatedCommand, bool ignore, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    IsIntTxIgnoreRxAntennaPhasePatternResult::IsIntTxIgnoreRxAntennaPhasePatternResult(bool ignore, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIgnore(ignore);
       setId(id);
     }
 
+    IsIntTxIgnoreRxAntennaPhasePatternResult::IsIntTxIgnoreRxAntennaPhasePatternResult(CommandBasePtr relatedCommand, bool ignore, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIgnore(ignore);
+      setId(id);
+    }
+
+
+    IsIntTxIgnoreRxAntennaPhasePatternResultPtr IsIntTxIgnoreRxAntennaPhasePatternResult::create(bool ignore, const std::string& id)
+    {
+      return std::make_shared<IsIntTxIgnoreRxAntennaPhasePatternResult>(ignore, id);
+    }
 
     IsIntTxIgnoreRxAntennaPhasePatternResultPtr IsIntTxIgnoreRxAntennaPhasePatternResult::create(CommandBasePtr relatedCommand, bool ignore, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string IsIntTxIgnoreRxAntennaPhasePatternResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsIntTxIgnoreRxAntennaPhasePatternResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ignore", "Id"}; 
+      return names; 
+    }
 
 
     bool IsIntTxIgnoreRxAntennaPhasePatternResult::ignore() const

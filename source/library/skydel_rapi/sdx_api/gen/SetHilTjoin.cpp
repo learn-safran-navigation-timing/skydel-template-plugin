@@ -1,33 +1,39 @@
+
+#include "SetHilTjoin.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetHilTjoin
 ///
-#include "gen/SetHilTjoin.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetHilTjoin::CmdName = "SetHilTjoin";
-    const char* const SetHilTjoin::Documentation = "HIL Tjoin. Value is in milliseconds.";
+    const char* const SetHilTjoin::Documentation = "HIL Tjoin. Value is in milliseconds.\n"
+      "\n"
+      "Name     Type Description\n"
+      "-------- ---- -----------\n"
+      "HilTjoin int  HIL Tjoin.";
+    const char* const SetHilTjoin::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetHilTjoin);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetHilTjoin);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetHilTjoin);
 
 
     SetHilTjoin::SetHilTjoin()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetHilTjoin::SetHilTjoin(int hilTjoin)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setHilTjoin(hilTjoin);
     }
-
 
     SetHilTjoinPtr SetHilTjoin::create(int hilTjoin)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetHilTjoin::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetHilTjoin::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"HilTjoin"}; 
+      return names; 
+    }
 
 
     int SetHilTjoin::executePermission() const

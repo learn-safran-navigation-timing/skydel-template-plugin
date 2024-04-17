@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 
 namespace Sdx
@@ -26,16 +27,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       EndIntTxTrackDefinitionResult();
 
+      EndIntTxTrackDefinitionResult(int count, const std::string& id);
+
       EndIntTxTrackDefinitionResult(CommandBasePtr relatedCommand, int count, const std::string& id);
-  
+
+      static EndIntTxTrackDefinitionResultPtr create(int count, const std::string& id);
+
       static EndIntTxTrackDefinitionResultPtr create(CommandBasePtr relatedCommand, int count, const std::string& id);
       static EndIntTxTrackDefinitionResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** count ****
@@ -47,6 +54,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(EndIntTxTrackDefinitionResult);
   }
 }
 

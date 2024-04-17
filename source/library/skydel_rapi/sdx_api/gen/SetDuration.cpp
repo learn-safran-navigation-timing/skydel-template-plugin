@@ -1,33 +1,39 @@
+
+#include "SetDuration.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetDuration
 ///
-#include "gen/SetDuration.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetDuration::CmdName = "SetDuration";
-    const char* const SetDuration::Documentation = "Set the simulation duration. The simulation will stop automatically when this duration is reached";
+    const char* const SetDuration::Documentation = "Set the simulation duration. The simulation will stop automatically when this duration is reached\n"
+      "\n"
+      "Name   Type Description\n"
+      "------ ---- -----------------------\n"
+      "Second int  The duration in seconds";
+    const char* const SetDuration::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetDuration);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetDuration);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetDuration);
 
 
     SetDuration::SetDuration()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetDuration::SetDuration(int second)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSecond(second);
     }
-
 
     SetDurationPtr SetDuration::create(int second)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetDuration::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetDuration::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Second"}; 
+      return names; 
+    }
 
 
     int SetDuration::executePermission() const

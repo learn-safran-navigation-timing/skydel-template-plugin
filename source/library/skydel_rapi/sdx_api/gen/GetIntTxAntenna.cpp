@@ -1,33 +1,39 @@
+
+#include "GetIntTxAntenna.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxAntenna
 ///
-#include "gen/GetIntTxAntenna.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxAntenna::CmdName = "GetIntTxAntenna";
-    const char* const GetIntTxAntenna::Documentation = "Get transmitter antenna pattern.";
+    const char* const GetIntTxAntenna::Documentation = "Get transmitter antenna pattern.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetIntTxAntenna::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTxAntenna);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTxAntenna);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxAntenna);
 
 
     GetIntTxAntenna::GetIntTxAntenna()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTxAntenna::GetIntTxAntenna(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetIntTxAntennaPtr GetIntTxAntenna::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetIntTxAntenna::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxAntenna::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetIntTxAntenna::executePermission() const

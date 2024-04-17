@@ -1,28 +1,41 @@
+
+#include "GetIntTxAWGNResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxAWGNResult
 ///
-#include "gen/GetIntTxAWGNResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxAWGNResult::CmdName = "GetIntTxAWGNResult";
-    const char* const GetIntTxAWGNResult::Documentation = "Result of GetIntTxAWGN.";
+    const char* const GetIntTxAWGNResult::Documentation = "Result of GetIntTxAWGN.\n"
+      "\n"
+      "Name          Type         Description\n"
+      "------------- ------------ ------------------------------------------------------------------------------------------\n"
+      "Enabled       bool         Enable (true) or disable (false) the signal\n"
+      "CentralFreq   double       Central frequency (Hz)\n"
+      "Power         double       Power (dB), relative to transmitter reference power\n"
+      "Bandwidth     double       Bandwidth (Hz)\n"
+      "TransmitterId string       Transmitter unique identifier.\n"
+      "SignalId      string       AWGN unique identifier.\n"
+      "Seed          optional int Seed for the random number generator. Signals with the same seed will have the same shape.\n"
+      "Group         optional int Group, if not using default group.";
+    const char* const GetIntTxAWGNResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxAWGNResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxAWGNResult);
 
 
     GetIntTxAWGNResult::GetIntTxAWGNResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxAWGNResult::GetIntTxAWGNResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, double bandwidth, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& seed, const Sdx::optional<int>& group)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxAWGNResult::GetIntTxAWGNResult(bool enabled, double centralFreq, double power, double bandwidth, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& seed, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
@@ -35,6 +48,25 @@ namespace Sdx
       setGroup(group);
     }
 
+    GetIntTxAWGNResult::GetIntTxAWGNResult(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, double bandwidth, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& seed, const Sdx::optional<int>& group)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+      setCentralFreq(centralFreq);
+      setPower(power);
+      setBandwidth(bandwidth);
+      setTransmitterId(transmitterId);
+      setSignalId(signalId);
+      setSeed(seed);
+      setGroup(group);
+    }
+
+
+    GetIntTxAWGNResultPtr GetIntTxAWGNResult::create(bool enabled, double centralFreq, double power, double bandwidth, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& seed, const Sdx::optional<int>& group)
+    {
+      return std::make_shared<GetIntTxAWGNResult>(enabled, centralFreq, power, bandwidth, transmitterId, signalId, seed, group);
+    }
 
     GetIntTxAWGNResultPtr GetIntTxAWGNResult::create(CommandBasePtr relatedCommand, bool enabled, double centralFreq, double power, double bandwidth, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& seed, const Sdx::optional<int>& group)
     {
@@ -63,6 +95,12 @@ namespace Sdx
     }
 
     std::string GetIntTxAWGNResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxAWGNResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "CentralFreq", "Power", "Bandwidth", "TransmitterId", "SignalId", "Seed", "Group"}; 
+      return names; 
+    }
 
 
     bool GetIntTxAWGNResult::enabled() const

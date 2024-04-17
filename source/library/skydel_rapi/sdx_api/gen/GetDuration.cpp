@@ -1,11 +1,12 @@
+
+#include "GetDuration.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetDuration
 ///
-#include "gen/GetDuration.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetDuration::CmdName = "GetDuration";
     const char* const GetDuration::Documentation = "Get the simulation duration.";
+    const char* const GetDuration::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetDuration);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetDuration);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetDuration);
 
 
     GetDuration::GetDuration()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetDurationPtr GetDuration::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetDuration::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetDuration::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetDuration::executePermission() const

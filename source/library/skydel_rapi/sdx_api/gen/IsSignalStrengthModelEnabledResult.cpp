@@ -1,33 +1,51 @@
+
+#include "IsSignalStrengthModelEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSignalStrengthModelEnabledResult
 ///
-#include "gen/IsSignalStrengthModelEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSignalStrengthModelEnabledResult::CmdName = "IsSignalStrengthModelEnabledResult";
-    const char* const IsSignalStrengthModelEnabledResult::Documentation = "Result of IsSignalStrengthModelEnabled.";
+    const char* const IsSignalStrengthModelEnabledResult::Documentation = "Result of IsSignalStrengthModelEnabled.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- -----------------------------------------------------------\n"
+      "Enabled bool If true, signal strengh model is enabled for all satellites";
+    const char* const IsSignalStrengthModelEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsSignalStrengthModelEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSignalStrengthModelEnabledResult);
 
 
     IsSignalStrengthModelEnabledResult::IsSignalStrengthModelEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsSignalStrengthModelEnabledResult::IsSignalStrengthModelEnabledResult(CommandBasePtr relatedCommand, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsSignalStrengthModelEnabledResult::IsSignalStrengthModelEnabledResult(bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
 
+    IsSignalStrengthModelEnabledResult::IsSignalStrengthModelEnabledResult(CommandBasePtr relatedCommand, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+    }
+
+
+    IsSignalStrengthModelEnabledResultPtr IsSignalStrengthModelEnabledResult::create(bool enabled)
+    {
+      return std::make_shared<IsSignalStrengthModelEnabledResult>(enabled);
+    }
 
     IsSignalStrengthModelEnabledResultPtr IsSignalStrengthModelEnabledResult::create(CommandBasePtr relatedCommand, bool enabled)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsSignalStrengthModelEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSignalStrengthModelEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     bool IsSignalStrengthModelEnabledResult::enabled() const

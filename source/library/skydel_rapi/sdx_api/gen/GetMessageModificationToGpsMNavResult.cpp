@@ -1,28 +1,42 @@
+
+#include "GetMessageModificationToGpsMNavResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageModificationToGpsMNavResult
 ///
-#include "gen/GetMessageModificationToGpsMNavResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageModificationToGpsMNavResult::CmdName = "GetMessageModificationToGpsMNavResult";
-    const char* const GetMessageModificationToGpsMNavResult::Documentation = "Result of GetMessageModificationToGpsMNav.";
+    const char* const GetMessageModificationToGpsMNavResult::Documentation = "Result of GetMessageModificationToGpsMNav.\n"
+      "\n"
+      "Name             Type         Description\n"
+      "---------------- ------------ ------------------------------------------------------------------------------------------------\n"
+      "SignalArray      array string Array of signals to apply the message modification to, accepts \"L1ME\" and \"L2ME\" (empty for all)\n"
+      "SvId             int          The satellite's SV ID 1..32 (use 0 to apply modification to all SVs)\n"
+      "StartTime        int          Elapsed time in seconds since start of simulation\n"
+      "StopTime         int          Elapsed time in seconds since start of simulation (use 0 for no stop time)\n"
+      "MessageType      int          MNAV Message type\n"
+      "Occurrence       int          Occurrence number in message sequence (1 based, or use -1 to match any occurrence)\n"
+      "Condition        string       Optional condition to match message content, ex: \"EQUAL(45, 10, 0x3f)\"\n"
+      "BitModifications string       Comma separated bit modifications\n"
+      "Id               string       Unique identifier automatically set by simulator";
+    const char* const GetMessageModificationToGpsMNavResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetMessageModificationToGpsMNavResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageModificationToGpsMNavResult);
 
 
     GetMessageModificationToGpsMNavResult::GetMessageModificationToGpsMNavResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetMessageModificationToGpsMNavResult::GetMessageModificationToGpsMNavResult(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, int occurrence, const std::string& condition, const std::string& bitModifications, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetMessageModificationToGpsMNavResult::GetMessageModificationToGpsMNavResult(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, int occurrence, const std::string& condition, const std::string& bitModifications, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSignalArray(signalArray);
@@ -36,6 +50,26 @@ namespace Sdx
       setId(id);
     }
 
+    GetMessageModificationToGpsMNavResult::GetMessageModificationToGpsMNavResult(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, int occurrence, const std::string& condition, const std::string& bitModifications, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSignalArray(signalArray);
+      setSvId(svId);
+      setStartTime(startTime);
+      setStopTime(stopTime);
+      setMessageType(messageType);
+      setOccurrence(occurrence);
+      setCondition(condition);
+      setBitModifications(bitModifications);
+      setId(id);
+    }
+
+
+    GetMessageModificationToGpsMNavResultPtr GetMessageModificationToGpsMNavResult::create(const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, int occurrence, const std::string& condition, const std::string& bitModifications, const std::string& id)
+    {
+      return std::make_shared<GetMessageModificationToGpsMNavResult>(signalArray, svId, startTime, stopTime, messageType, occurrence, condition, bitModifications, id);
+    }
 
     GetMessageModificationToGpsMNavResultPtr GetMessageModificationToGpsMNavResult::create(CommandBasePtr relatedCommand, const std::vector<std::string>& signalArray, int svId, int startTime, int stopTime, int messageType, int occurrence, const std::string& condition, const std::string& bitModifications, const std::string& id)
     {
@@ -65,6 +99,12 @@ namespace Sdx
     }
 
     std::string GetMessageModificationToGpsMNavResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageModificationToGpsMNavResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SignalArray", "SvId", "StartTime", "StopTime", "MessageType", "Occurrence", "Condition", "BitModifications", "Id"}; 
+      return names; 
+    }
 
 
     std::vector<std::string> GetMessageModificationToGpsMNavResult::signalArray() const

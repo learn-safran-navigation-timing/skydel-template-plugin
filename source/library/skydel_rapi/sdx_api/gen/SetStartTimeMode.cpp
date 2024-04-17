@@ -1,33 +1,39 @@
+
+#include "SetStartTimeMode.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetStartTimeMode
 ///
-#include "gen/SetStartTimeMode.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetStartTimeMode::CmdName = "SetStartTimeMode";
-    const char* const SetStartTimeMode::Documentation = "Set the simulation start time mode.";
+    const char* const SetStartTimeMode::Documentation = "Set the simulation start time mode.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ --------------------------------------------\n"
+      "Mode string Accepted Modes (\"Custom\", \"Computer\", \"GPS\")";
+    const char* const SetStartTimeMode::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetStartTimeMode);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetStartTimeMode);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetStartTimeMode);
 
 
     SetStartTimeMode::SetStartTimeMode()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetStartTimeMode::SetStartTimeMode(const std::string& mode)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setMode(mode);
     }
-
 
     SetStartTimeModePtr SetStartTimeMode::create(const std::string& mode)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetStartTimeMode::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetStartTimeMode::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Mode"}; 
+      return names; 
+    }
 
 
     int SetStartTimeMode::executePermission() const

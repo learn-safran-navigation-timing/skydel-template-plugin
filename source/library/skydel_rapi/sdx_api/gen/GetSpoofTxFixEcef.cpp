@@ -1,33 +1,39 @@
+
+#include "GetSpoofTxFixEcef.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSpoofTxFixEcef
 ///
-#include "gen/GetSpoofTxFixEcef.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSpoofTxFixEcef::CmdName = "GetSpoofTxFixEcef";
-    const char* const GetSpoofTxFixEcef::Documentation = "Get spoofer transmitter static position and orientation";
+    const char* const GetSpoofTxFixEcef::Documentation = "Get spoofer transmitter static position and orientation\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetSpoofTxFixEcef::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSpoofTxFixEcef);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSpoofTxFixEcef);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSpoofTxFixEcef);
 
 
     GetSpoofTxFixEcef::GetSpoofTxFixEcef()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetSpoofTxFixEcef::GetSpoofTxFixEcef(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetSpoofTxFixEcefPtr GetSpoofTxFixEcef::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetSpoofTxFixEcef::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSpoofTxFixEcef::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetSpoofTxFixEcef::executePermission() const

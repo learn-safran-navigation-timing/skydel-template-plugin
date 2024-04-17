@@ -1,34 +1,43 @@
+
+#include "GetSVType.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetSVType
 ///
-#include "gen/GetSVType.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetSVType::CmdName = "GetSVType";
-    const char* const GetSVType::Documentation = "Get the type of a SV.\nSatellite SV ID accepted values:\nQZSS 1..10";
+    const char* const GetSVType::Documentation = "Get the type of a SV.\n"
+      "Satellite SV ID accepted values:\n"
+      "QZSS 1..10\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------------\n"
+      "System string Only \"QZSS\" supported.\n"
+      "SvId   int    Satellite SV ID, see command description for accepted values.";
+    const char* const GetSVType::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetSVType);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetSVType);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetSVType);
 
 
     GetSVType::GetSVType()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetSVType::GetSVType(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     GetSVTypePtr GetSVType::create(const std::string& system, int svId)
     {
@@ -51,6 +60,12 @@ namespace Sdx
     }
 
     std::string GetSVType::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetSVType::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int GetSVType::executePermission() const

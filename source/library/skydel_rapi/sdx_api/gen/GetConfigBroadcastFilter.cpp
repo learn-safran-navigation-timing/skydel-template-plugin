@@ -1,11 +1,12 @@
+
+#include "GetConfigBroadcastFilter.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetConfigBroadcastFilter
 ///
-#include "gen/GetConfigBroadcastFilter.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetConfigBroadcastFilter::CmdName = "GetConfigBroadcastFilter";
     const char* const GetConfigBroadcastFilter::Documentation = "Get the filter for configuration broadcast.";
+    const char* const GetConfigBroadcastFilter::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetConfigBroadcastFilter);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetConfigBroadcastFilter);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetConfigBroadcastFilter);
 
 
     GetConfigBroadcastFilter::GetConfigBroadcastFilter()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetConfigBroadcastFilterPtr GetConfigBroadcastFilter::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetConfigBroadcastFilter::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetConfigBroadcastFilter::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetConfigBroadcastFilter::executePermission() const

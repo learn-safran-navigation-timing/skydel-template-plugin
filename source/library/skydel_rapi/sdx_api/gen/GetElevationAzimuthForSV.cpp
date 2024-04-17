@@ -1,34 +1,41 @@
+
+#include "GetElevationAzimuthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetElevationAzimuthForSV
 ///
-#include "gen/GetElevationAzimuthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetElevationAzimuthForSV::CmdName = "GetElevationAzimuthForSV";
-    const char* const GetElevationAzimuthForSV::Documentation = "Get elevation and azimuth position angles for satellite.";
+    const char* const GetElevationAzimuthForSV::Documentation = "Get elevation and azimuth position angles for satellite.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ ---------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\".\n"
+      "SvId   int    Satellite's SV ID.";
+    const char* const GetElevationAzimuthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetElevationAzimuthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetElevationAzimuthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetElevationAzimuthForSV);
 
 
     GetElevationAzimuthForSV::GetElevationAzimuthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetElevationAzimuthForSV::GetElevationAzimuthForSV(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     GetElevationAzimuthForSVPtr GetElevationAzimuthForSV::create(const std::string& system, int svId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string GetElevationAzimuthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetElevationAzimuthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int GetElevationAzimuthForSV::executePermission() const

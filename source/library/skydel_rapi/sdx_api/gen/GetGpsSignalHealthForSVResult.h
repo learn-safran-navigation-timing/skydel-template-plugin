@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "sdx_optional.h"
 #include <string>
 
@@ -28,16 +29,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetGpsSignalHealthForSVResult();
 
+      GetGpsSignalHealthForSVResult(int svId, int health, const Sdx::optional<std::string>& dataSetName = {});
+
       GetGpsSignalHealthForSVResult(CommandBasePtr relatedCommand, int svId, int health, const Sdx::optional<std::string>& dataSetName = {});
-  
+
+      static GetGpsSignalHealthForSVResultPtr create(int svId, int health, const Sdx::optional<std::string>& dataSetName = {});
+
       static GetGpsSignalHealthForSVResultPtr create(CommandBasePtr relatedCommand, int svId, int health, const Sdx::optional<std::string>& dataSetName = {});
       static GetGpsSignalHealthForSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** svId ****
@@ -54,6 +61,7 @@ namespace Sdx
       Sdx::optional<std::string> dataSetName() const;
       void setDataSetName(const Sdx::optional<std::string>& dataSetName);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGpsSignalHealthForSVResult);
   }
 }
 

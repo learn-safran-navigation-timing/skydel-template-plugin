@@ -1,28 +1,43 @@
+
+#include "SetIntTxBPSK.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIntTxBPSK
 ///
-#include "gen/SetIntTxBPSK.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIntTxBPSK::CmdName = "SetIntTxBPSK";
-    const char* const SetIntTxBPSK::Documentation = "Set BPSK signal interference.";
+    const char* const SetIntTxBPSK::Documentation = "Set BPSK signal interference.\n"
+      "\n"
+      "Name          Type         Description\n"
+      "------------- ------------ -------------------------------------------------------------------------\n"
+      "Enabled       bool         Enable (true) or disable (false) the signal\n"
+      "CentralFreq   double       Central frequency (Hz).\n"
+      "Power         double       Power (dB), relative to transmitter reference power.\n"
+      "CodeRate      int          Code rate (Hz). Must be between 1000 and 60000000 and a multiple of 1KHz.\n"
+      "CodeLengthMs  int          Code length (ms). Must be between 1 and 100.\n"
+      "TransmitterId string       Transmitter unique identifier.\n"
+      "SignalId      string       BPSK unique identifier.\n"
+      "Group         optional int Group, if not using default group.\n"
+      "Prn           optional int Prn code to use. If not specified, a random gode will be generated.";
+    const char* const SetIntTxBPSK::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIntTxBPSK);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIntTxBPSK);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIntTxBPSK);
 
 
     SetIntTxBPSK::SetIntTxBPSK()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIntTxBPSK::SetIntTxBPSK(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group, const Sdx::optional<int>& prn)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
@@ -35,7 +50,6 @@ namespace Sdx
       setGroup(group);
       setPrn(prn);
     }
-
 
     SetIntTxBPSKPtr SetIntTxBPSK::create(bool enabled, double centralFreq, double power, int codeRate, int codeLengthMs, const std::string& transmitterId, const std::string& signalId, const Sdx::optional<int>& group, const Sdx::optional<int>& prn)
     {
@@ -65,6 +79,12 @@ namespace Sdx
     }
 
     std::string SetIntTxBPSK::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIntTxBPSK::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "CentralFreq", "Power", "CodeRate", "CodeLengthMs", "TransmitterId", "SignalId", "Group", "Prn"}; 
+      return names; 
+    }
 
 
     int SetIntTxBPSK::executePermission() const

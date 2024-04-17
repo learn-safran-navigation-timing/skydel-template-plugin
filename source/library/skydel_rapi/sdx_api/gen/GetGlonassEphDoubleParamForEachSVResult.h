@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include <string>
 #include <vector>
 
@@ -28,16 +29,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetGlonassEphDoubleParamForEachSVResult();
 
+      GetGlonassEphDoubleParamForEachSVResult(const std::string& paramName, const std::vector<double>& val);
+
       GetGlonassEphDoubleParamForEachSVResult(CommandBasePtr relatedCommand, const std::string& paramName, const std::vector<double>& val);
-  
+
+      static GetGlonassEphDoubleParamForEachSVResultPtr create(const std::string& paramName, const std::vector<double>& val);
+
       static GetGlonassEphDoubleParamForEachSVResultPtr create(CommandBasePtr relatedCommand, const std::string& paramName, const std::vector<double>& val);
       static GetGlonassEphDoubleParamForEachSVResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** paramName ****
@@ -49,6 +56,7 @@ namespace Sdx
       std::vector<double> val() const;
       void setVal(const std::vector<double>& val);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetGlonassEphDoubleParamForEachSVResult);
   }
 }
 

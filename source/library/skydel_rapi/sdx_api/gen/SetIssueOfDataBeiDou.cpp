@@ -1,34 +1,41 @@
+
+#include "SetIssueOfDataBeiDou.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIssueOfDataBeiDou
 ///
-#include "gen/SetIssueOfDataBeiDou.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIssueOfDataBeiDou::CmdName = "SetIssueOfDataBeiDou";
-    const char* const SetIssueOfDataBeiDou::Documentation = "Set BeiDou Issue of data, Ephemeris (IODE) and Issue of data, Clock (IODC)";
+    const char* const SetIssueOfDataBeiDou::Documentation = "Set BeiDou Issue of data, Ephemeris (IODE) and Issue of data, Clock (IODC)\n"
+      "\n"
+      "Name      Type Description\n"
+      "--------- ---- ------------------------\n"
+      "Clock     int  Issue of data, clock\n"
+      "Ephemeris int  Issue of data, ephemeris";
+    const char* const SetIssueOfDataBeiDou::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIssueOfDataBeiDou);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIssueOfDataBeiDou);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIssueOfDataBeiDou);
 
 
     SetIssueOfDataBeiDou::SetIssueOfDataBeiDou()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIssueOfDataBeiDou::SetIssueOfDataBeiDou(int clock, int ephemeris)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setClock(clock);
       setEphemeris(ephemeris);
     }
-
 
     SetIssueOfDataBeiDouPtr SetIssueOfDataBeiDou::create(int clock, int ephemeris)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetIssueOfDataBeiDou::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIssueOfDataBeiDou::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Clock", "Ephemeris"}; 
+      return names; 
+    }
 
 
     int SetIssueOfDataBeiDou::executePermission() const

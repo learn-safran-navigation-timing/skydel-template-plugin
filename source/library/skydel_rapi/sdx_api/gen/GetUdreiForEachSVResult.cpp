@@ -1,34 +1,54 @@
+
+#include "GetUdreiForEachSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetUdreiForEachSVResult
 ///
-#include "gen/GetUdreiForEachSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetUdreiForEachSVResult::CmdName = "GetUdreiForEachSVResult";
-    const char* const GetUdreiForEachSVResult::Documentation = "Result of GetUdreiForEachSV.";
+    const char* const GetUdreiForEachSVResult::Documentation = "Result of GetUdreiForEachSV.\n"
+      "\n"
+      "Name   Type      Description\n"
+      "------ --------- --------------------------------------------------------------------------------------------------------------------------\n"
+      "System string    \"GPS\" or \"SBAS\".\n"
+      "Udreis array int UDREI value to set for each satellite. Zero based index (index 0 => UDREI for SV ID 1, index 1 => UDREI for SV ID 2, etc).";
+    const char* const GetUdreiForEachSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetUdreiForEachSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetUdreiForEachSVResult);
 
 
     GetUdreiForEachSVResult::GetUdreiForEachSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetUdreiForEachSVResult::GetUdreiForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<int>& udreis)
-      : CommandResult(CmdName, relatedCommand)
+    GetUdreiForEachSVResult::GetUdreiForEachSVResult(const std::string& system, const std::vector<int>& udreis)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
       setUdreis(udreis);
     }
 
+    GetUdreiForEachSVResult::GetUdreiForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<int>& udreis)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setUdreis(udreis);
+    }
+
+
+    GetUdreiForEachSVResultPtr GetUdreiForEachSVResult::create(const std::string& system, const std::vector<int>& udreis)
+    {
+      return std::make_shared<GetUdreiForEachSVResult>(system, udreis);
+    }
 
     GetUdreiForEachSVResultPtr GetUdreiForEachSVResult::create(CommandBasePtr relatedCommand, const std::string& system, const std::vector<int>& udreis)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetUdreiForEachSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetUdreiForEachSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Udreis"}; 
+      return names; 
+    }
 
 
     std::string GetUdreiForEachSVResult::system() const

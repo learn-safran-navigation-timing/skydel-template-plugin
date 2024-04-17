@@ -1,33 +1,39 @@
+
+#include "RemoveAllSignalsFromIntTx.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RemoveAllSignalsFromIntTx
 ///
-#include "gen/RemoveAllSignalsFromIntTx.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RemoveAllSignalsFromIntTx::CmdName = "RemoveAllSignalsFromIntTx";
-    const char* const RemoveAllSignalsFromIntTx::Documentation = "Removes all signals from the interference transmitter.";
+    const char* const RemoveAllSignalsFromIntTx::Documentation = "Removes all signals from the interference transmitter.\n"
+      "\n"
+      "Name          Type   Description\n"
+      "------------- ------ ------------------------------\n"
+      "TransmitterId string Transmitter unique identifier.";
+    const char* const RemoveAllSignalsFromIntTx::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RemoveAllSignalsFromIntTx);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RemoveAllSignalsFromIntTx);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RemoveAllSignalsFromIntTx);
 
 
     RemoveAllSignalsFromIntTx::RemoveAllSignalsFromIntTx()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RemoveAllSignalsFromIntTx::RemoveAllSignalsFromIntTx(const std::string& transmitterId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTransmitterId(transmitterId);
     }
-
 
     RemoveAllSignalsFromIntTxPtr RemoveAllSignalsFromIntTx::create(const std::string& transmitterId)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string RemoveAllSignalsFromIntTx::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RemoveAllSignalsFromIntTx::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"TransmitterId"}; 
+      return names; 
+    }
 
 
     int RemoveAllSignalsFromIntTx::executePermission() const

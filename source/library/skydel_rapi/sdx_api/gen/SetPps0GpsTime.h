@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "date_time.h"
 
 namespace Sdx
@@ -25,16 +26,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetPps0GpsTime();
 
       SetPps0GpsTime(const Sdx::DateTime& gpsTime);
-  
+
       static SetPps0GpsTimePtr create(const Sdx::DateTime& gpsTime);
       static SetPps0GpsTimePtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -43,6 +46,7 @@ namespace Sdx
       Sdx::DateTime gpsTime() const;
       void setGpsTime(const Sdx::DateTime& gpsTime);
     };
+    
   }
 }
 

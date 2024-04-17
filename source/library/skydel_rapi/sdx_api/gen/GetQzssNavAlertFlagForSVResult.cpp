@@ -1,28 +1,36 @@
+
+#include "GetQzssNavAlertFlagForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetQzssNavAlertFlagForSVResult
 ///
-#include "gen/GetQzssNavAlertFlagForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetQzssNavAlertFlagForSVResult::CmdName = "GetQzssNavAlertFlagForSVResult";
-    const char* const GetQzssNavAlertFlagForSVResult::Documentation = "Result of GetQzssNavAlertFlagForSV.";
+    const char* const GetQzssNavAlertFlagForSVResult::Documentation = "Result of GetQzssNavAlertFlagForSV.\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite SV ID 1..10, or use 0 to apply new value to all satellites.\n"
+      "Alert       bool            QZSS NAV Alert Flag, false = No Alert, true = Alert\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const GetQzssNavAlertFlagForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetQzssNavAlertFlagForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetQzssNavAlertFlagForSVResult);
 
 
     GetQzssNavAlertFlagForSVResult::GetQzssNavAlertFlagForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetQzssNavAlertFlagForSVResult::GetQzssNavAlertFlagForSVResult(CommandBasePtr relatedCommand, int svId, bool alert, const Sdx::optional<std::string>& dataSetName)
-      : CommandResult(CmdName, relatedCommand)
+    GetQzssNavAlertFlagForSVResult::GetQzssNavAlertFlagForSVResult(int svId, bool alert, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSvId(svId);
@@ -30,6 +38,20 @@ namespace Sdx
       setDataSetName(dataSetName);
     }
 
+    GetQzssNavAlertFlagForSVResult::GetQzssNavAlertFlagForSVResult(CommandBasePtr relatedCommand, int svId, bool alert, const Sdx::optional<std::string>& dataSetName)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSvId(svId);
+      setAlert(alert);
+      setDataSetName(dataSetName);
+    }
+
+
+    GetQzssNavAlertFlagForSVResultPtr GetQzssNavAlertFlagForSVResult::create(int svId, bool alert, const Sdx::optional<std::string>& dataSetName)
+    {
+      return std::make_shared<GetQzssNavAlertFlagForSVResult>(svId, alert, dataSetName);
+    }
 
     GetQzssNavAlertFlagForSVResultPtr GetQzssNavAlertFlagForSVResult::create(CommandBasePtr relatedCommand, int svId, bool alert, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetQzssNavAlertFlagForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetQzssNavAlertFlagForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Alert", "DataSetName"}; 
+      return names; 
+    }
 
 
     int GetQzssNavAlertFlagForSVResult::svId() const

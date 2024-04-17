@@ -1,11 +1,12 @@
+
+#include "ClearVehiculeTrajectory.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ClearVehiculeTrajectory
 ///
-#include "gen/ClearVehiculeTrajectory.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const ClearVehiculeTrajectory::CmdName = "ClearVehiculeTrajectory";
     const char* const ClearVehiculeTrajectory::Documentation = "Clear NMEA trajectory file";
+    const char* const ClearVehiculeTrajectory::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ClearVehiculeTrajectory);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ClearVehiculeTrajectory);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ClearVehiculeTrajectory);
 
 
     ClearVehiculeTrajectory::ClearVehiculeTrajectory()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     ClearVehiculeTrajectoryPtr ClearVehiculeTrajectory::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string ClearVehiculeTrajectory::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ClearVehiculeTrajectory::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int ClearVehiculeTrajectory::executePermission() const

@@ -1,28 +1,42 @@
+
+#include "GetMultipathForIDResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMultipathForIDResult
 ///
-#include "gen/GetMultipathForIDResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMultipathForIDResult::CmdName = "GetMultipathForIDResult";
-    const char* const GetMultipathForIDResult::Documentation = "Result of GetMultipathForID.";
+    const char* const GetMultipathForIDResult::Documentation = "Result of GetMultipathForID.\n"
+      "\n"
+      "Name         Type   Description\n"
+      "------------ ------ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+      "Id           string A multipath ID\n"
+      "System       string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "Signal       string Accepted signal keys: \"L1CA\", \"L1C\", \"L1P\", \"L1ME\", \"L1MR\", \"L2C\", \"L2P\", \"L2ME\", \"L2MR\", \"L5\", \"G1\", \"G2\", \"E1\", \"E5a\", \"E5b\", \"B1\", \"B2\", \"B1C\", \"B2a\", \"B3I\", \"SBASL1\", \"QZSSL1CA\", \"QZSSL1CB\", \"QZSSL1C\", \"QZSSL2C\", \"QZSSL5\", \"QZSSL1S\", \"QZSSL5S\", \"NAVICL5\", \"PULSARXL\"\n"
+      "SvId         int    The satellite's SV ID\n"
+      "PowerLoss    double Power loss in dB (value must be positive)\n"
+      "Pseudorange  double Pseudorange offset in meters (value must be positive)\n"
+      "Doppler      double Doppler frequency offset in Hz\n"
+      "CarrierPhase double Carrier phase offset in radians\n"
+      "Echo         int    Echo number [1..3], or use zero to let Skydel assign an echo number.";
+    const char* const GetMultipathForIDResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetMultipathForIDResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMultipathForIDResult);
 
 
     GetMultipathForIDResult::GetMultipathForIDResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetMultipathForIDResult::GetMultipathForIDResult(CommandBasePtr relatedCommand, const std::string& id, const std::string& system, const std::string& signal, int svId, double powerLoss, double pseudorange, double doppler, double carrierPhase, int echo)
-      : CommandResult(CmdName, relatedCommand)
+    GetMultipathForIDResult::GetMultipathForIDResult(const std::string& id, const std::string& system, const std::string& signal, int svId, double powerLoss, double pseudorange, double doppler, double carrierPhase, int echo)
+      : CommandResult(CmdName, TargetId)
     {
 
       setId(id);
@@ -36,6 +50,26 @@ namespace Sdx
       setEcho(echo);
     }
 
+    GetMultipathForIDResult::GetMultipathForIDResult(CommandBasePtr relatedCommand, const std::string& id, const std::string& system, const std::string& signal, int svId, double powerLoss, double pseudorange, double doppler, double carrierPhase, int echo)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setId(id);
+      setSystem(system);
+      setSignal(signal);
+      setSvId(svId);
+      setPowerLoss(powerLoss);
+      setPseudorange(pseudorange);
+      setDoppler(doppler);
+      setCarrierPhase(carrierPhase);
+      setEcho(echo);
+    }
+
+
+    GetMultipathForIDResultPtr GetMultipathForIDResult::create(const std::string& id, const std::string& system, const std::string& signal, int svId, double powerLoss, double pseudorange, double doppler, double carrierPhase, int echo)
+    {
+      return std::make_shared<GetMultipathForIDResult>(id, system, signal, svId, powerLoss, pseudorange, doppler, carrierPhase, echo);
+    }
 
     GetMultipathForIDResultPtr GetMultipathForIDResult::create(CommandBasePtr relatedCommand, const std::string& id, const std::string& system, const std::string& signal, int svId, double powerLoss, double pseudorange, double doppler, double carrierPhase, int echo)
     {
@@ -65,6 +99,12 @@ namespace Sdx
     }
 
     std::string GetMultipathForIDResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMultipathForIDResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id", "System", "Signal", "SvId", "PowerLoss", "Pseudorange", "Doppler", "CarrierPhase", "Echo"}; 
+      return names; 
+    }
 
 
     std::string GetMultipathForIDResult::id() const

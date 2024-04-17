@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -9,7 +10,7 @@ namespace Sdx
   namespace Cmd
   {
     ///
-    /// Get Set interference vehicle type for Track Trajectory
+    /// Get interference vehicle type for Track Trajectory.
     ///
     /// Name Type   Description
     /// ---- ------ ------------------------------
@@ -25,16 +26,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetIntTxVehicleType();
 
       GetIntTxVehicleType(const std::string& id);
-  
+
       static GetIntTxVehicleTypePtr create(const std::string& id);
       static GetIntTxVehicleTypePtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -43,6 +46,7 @@ namespace Sdx
       std::string id() const;
       void setId(const std::string& id);
     };
+    
   }
 }
 

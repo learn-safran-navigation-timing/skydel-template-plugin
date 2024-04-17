@@ -1,34 +1,41 @@
+
+#include "ChangeModulationTargetName.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ChangeModulationTargetName
 ///
-#include "gen/ChangeModulationTargetName.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ChangeModulationTargetName::CmdName = "ChangeModulationTargetName";
-    const char* const ChangeModulationTargetName::Documentation = "Change the modulation target name. The name is only used for display purpose.";
+    const char* const ChangeModulationTargetName::Documentation = "Change the modulation target name. The name is only used for display purpose.\n"
+      "\n"
+      "Name       Type   Description\n"
+      "---------- ------ -----------------\n"
+      "TargetName string New target name\n"
+      "Id         string Target identifier";
+    const char* const ChangeModulationTargetName::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ChangeModulationTargetName);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ChangeModulationTargetName);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ChangeModulationTargetName);
 
 
     ChangeModulationTargetName::ChangeModulationTargetName()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ChangeModulationTargetName::ChangeModulationTargetName(const std::string& targetName, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTargetName(targetName);
       setId(id);
     }
-
 
     ChangeModulationTargetNamePtr ChangeModulationTargetName::create(const std::string& targetName, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string ChangeModulationTargetName::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ChangeModulationTargetName::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"TargetName", "Id"}; 
+      return names; 
+    }
 
 
     int ChangeModulationTargetName::executePermission() const

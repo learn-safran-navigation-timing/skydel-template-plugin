@@ -1,33 +1,39 @@
+
+#include "GetIntTx.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTx
 ///
-#include "gen/GetIntTx.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTx::CmdName = "GetIntTx";
-    const char* const GetIntTx::Documentation = "Get an interference transmitter. For set : the transmitter Id parameter is not set (empty string),\nSkydel will assign a unique Id to the transmitter. If the Id is set and already used by Skydel, the\ncommand will fail.";
+    const char* const GetIntTx::Documentation = "Get an interference transmitter.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ------------------------------\n"
+      "Id   string Transmitter unique identifier.";
+    const char* const GetIntTx::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetIntTx);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetIntTx);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTx);
 
 
     GetIntTx::GetIntTx()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetIntTx::GetIntTx(const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setId(id);
     }
-
 
     GetIntTxPtr GetIntTx::create(const std::string& id)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetIntTx::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTx::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Id"}; 
+      return names; 
+    }
 
 
     int GetIntTx::executePermission() const

@@ -1,35 +1,43 @@
+
+#include "SetQzssNavAlertFlagForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetQzssNavAlertFlagForSV
 ///
-#include "gen/SetQzssNavAlertFlagForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetQzssNavAlertFlagForSV::CmdName = "SetQzssNavAlertFlagForSV";
-    const char* const SetQzssNavAlertFlagForSV::Documentation = "Please note the command SetQzssSatelliteNavAlertFlag is deprecated since 21.3. You may use SetQzssNavAlertFlagForSV.\n\nSet QZSS NAV Alert Flag";
+    const char* const SetQzssNavAlertFlagForSV::Documentation = "Set QZSS NAV Alert Flag\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite SV ID 1..10, or use 0 to apply new value to all satellites.\n"
+      "Alert       bool            QZSS NAV Alert Flag, false = No Alert, true = Alert\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetQzssNavAlertFlagForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetQzssNavAlertFlagForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetQzssNavAlertFlagForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetQzssNavAlertFlagForSV);
 
 
     SetQzssNavAlertFlagForSV::SetQzssNavAlertFlagForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetQzssNavAlertFlagForSV::SetQzssNavAlertFlagForSV(int svId, bool alert, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setAlert(alert);
       setDataSetName(dataSetName);
     }
-
 
     SetQzssNavAlertFlagForSVPtr SetQzssNavAlertFlagForSV::create(int svId, bool alert, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetQzssNavAlertFlagForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetQzssNavAlertFlagForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Alert", "DataSetName"}; 
+      return names; 
+    }
 
 
     int SetQzssNavAlertFlagForSV::executePermission() const

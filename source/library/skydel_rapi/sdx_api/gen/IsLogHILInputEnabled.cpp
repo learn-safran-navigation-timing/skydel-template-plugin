@@ -1,11 +1,12 @@
+
+#include "IsLogHILInputEnabled.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsLogHILInputEnabled
 ///
-#include "gen/IsLogHILInputEnabled.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const IsLogHILInputEnabled::CmdName = "IsLogHILInputEnabled";
     const char* const IsLogHILInputEnabled::Documentation = "Tells if data received on the HIL API logging is enabled";
+    const char* const IsLogHILInputEnabled::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsLogHILInputEnabled);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsLogHILInputEnabled);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsLogHILInputEnabled);
 
 
     IsLogHILInputEnabled::IsLogHILInputEnabled()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     IsLogHILInputEnabledPtr IsLogHILInputEnabled::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string IsLogHILInputEnabled::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsLogHILInputEnabled::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int IsLogHILInputEnabled::executePermission() const

@@ -1,28 +1,40 @@
+
+#include "SetPseudorangeNoiseSineWaveForEachSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetPseudorangeNoiseSineWaveForEachSV
 ///
-#include "gen/SetPseudorangeNoiseSineWaveForEachSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetPseudorangeNoiseSineWaveForEachSV::CmdName = "SetPseudorangeNoiseSineWaveForEachSV";
-    const char* const SetPseudorangeNoiseSineWaveForEachSV::Documentation = "Please note the command SetAllSatellitesPseudorangeNoiseSineWave is deprecated since 21.3. You may use SetPseudorangeNoiseSineWaveForEachSV.\n\nSet the satellite pseudorange noise sine wave attributes for all satellites.";
+    const char* const SetPseudorangeNoiseSineWaveForEachSV::Documentation = "Set the satellite pseudorange noise sine wave attributes for all satellites.\n"
+      "\n"
+      "Name      Type         Description\n"
+      "--------- ------------ --------------------------------------------------------------------------\n"
+      "System    string       \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SineWave  int          Sine wave number (0 or 1)\n"
+      "Enabled   array bool   If true, sine wave is enabled\n"
+      "Amplitude array double Sine wave amplitude in meters\n"
+      "Period    array int    sine wave period in seconds\n"
+      "Offset    array double Phase offset in radians";
+    const char* const SetPseudorangeNoiseSineWaveForEachSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetPseudorangeNoiseSineWaveForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetPseudorangeNoiseSineWaveForEachSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetPseudorangeNoiseSineWaveForEachSV);
 
 
     SetPseudorangeNoiseSineWaveForEachSV::SetPseudorangeNoiseSineWaveForEachSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetPseudorangeNoiseSineWaveForEachSV::SetPseudorangeNoiseSineWaveForEachSV(const std::string& system, int sineWave, const std::vector<bool>& enabled, const std::vector<double>& amplitude, const std::vector<int>& period, const std::vector<double>& offset)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -32,7 +44,6 @@ namespace Sdx
       setPeriod(period);
       setOffset(offset);
     }
-
 
     SetPseudorangeNoiseSineWaveForEachSVPtr SetPseudorangeNoiseSineWaveForEachSV::create(const std::string& system, int sineWave, const std::vector<bool>& enabled, const std::vector<double>& amplitude, const std::vector<int>& period, const std::vector<double>& offset)
     {
@@ -59,6 +70,12 @@ namespace Sdx
     }
 
     std::string SetPseudorangeNoiseSineWaveForEachSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetPseudorangeNoiseSineWaveForEachSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SineWave", "Enabled", "Amplitude", "Period", "Offset"}; 
+      return names; 
+    }
 
 
     int SetPseudorangeNoiseSineWaveForEachSV::executePermission() const

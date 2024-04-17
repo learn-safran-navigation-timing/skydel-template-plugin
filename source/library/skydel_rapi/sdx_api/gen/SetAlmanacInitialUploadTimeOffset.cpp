@@ -1,34 +1,41 @@
+
+#include "SetAlmanacInitialUploadTimeOffset.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetAlmanacInitialUploadTimeOffset
 ///
-#include "gen/SetAlmanacInitialUploadTimeOffset.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetAlmanacInitialUploadTimeOffset::CmdName = "SetAlmanacInitialUploadTimeOffset";
-    const char* const SetAlmanacInitialUploadTimeOffset::Documentation = "Set next almanac upload time relative to simulation start time.";
+    const char* const SetAlmanacInitialUploadTimeOffset::Documentation = "Set next almanac upload time relative to simulation start time.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------------------------------------------\n"
+      "System string Must be \"GPS\"\n"
+      "Offset int    Next upload time in sec (relative to simulation start time). Accepted range is [30..259200]";
+    const char* const SetAlmanacInitialUploadTimeOffset::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetAlmanacInitialUploadTimeOffset);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetAlmanacInitialUploadTimeOffset);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetAlmanacInitialUploadTimeOffset);
 
 
     SetAlmanacInitialUploadTimeOffset::SetAlmanacInitialUploadTimeOffset()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetAlmanacInitialUploadTimeOffset::SetAlmanacInitialUploadTimeOffset(const std::string& system, int offset)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setOffset(offset);
     }
-
 
     SetAlmanacInitialUploadTimeOffsetPtr SetAlmanacInitialUploadTimeOffset::create(const std::string& system, int offset)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetAlmanacInitialUploadTimeOffset::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetAlmanacInitialUploadTimeOffset::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Offset"}; 
+      return names; 
+    }
 
 
     int SetAlmanacInitialUploadTimeOffset::executePermission() const

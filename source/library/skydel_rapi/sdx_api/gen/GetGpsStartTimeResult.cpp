@@ -1,34 +1,54 @@
+
+#include "GetGpsStartTimeResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGpsStartTimeResult
 ///
-#include "gen/GetGpsStartTimeResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGpsStartTimeResult::CmdName = "GetGpsStartTimeResult";
-    const char* const GetGpsStartTimeResult::Documentation = "Result of GetGpsStartTime.";
+    const char* const GetGpsStartTimeResult::Documentation = "Result of GetGpsStartTime.\n"
+      "\n"
+      "Name       Type     Description\n"
+      "---------- -------- ------------------------------------------------------------------------------------------------\n"
+      "StartTime  datetime GPS date and time when the simulation started (it is the GPS time expressed in Gregorian format)\n"
+      "LeapSecond int      The number of leap seconds to convert GPS date and time into UTC";
+    const char* const GetGpsStartTimeResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetGpsStartTimeResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGpsStartTimeResult);
 
 
     GetGpsStartTimeResult::GetGpsStartTimeResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetGpsStartTimeResult::GetGpsStartTimeResult(CommandBasePtr relatedCommand, const Sdx::DateTime& startTime, int leapSecond)
-      : CommandResult(CmdName, relatedCommand)
+    GetGpsStartTimeResult::GetGpsStartTimeResult(const Sdx::DateTime& startTime, int leapSecond)
+      : CommandResult(CmdName, TargetId)
     {
 
       setStartTime(startTime);
       setLeapSecond(leapSecond);
     }
 
+    GetGpsStartTimeResult::GetGpsStartTimeResult(CommandBasePtr relatedCommand, const Sdx::DateTime& startTime, int leapSecond)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setStartTime(startTime);
+      setLeapSecond(leapSecond);
+    }
+
+
+    GetGpsStartTimeResultPtr GetGpsStartTimeResult::create(const Sdx::DateTime& startTime, int leapSecond)
+    {
+      return std::make_shared<GetGpsStartTimeResult>(startTime, leapSecond);
+    }
 
     GetGpsStartTimeResultPtr GetGpsStartTimeResult::create(CommandBasePtr relatedCommand, const Sdx::DateTime& startTime, int leapSecond)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetGpsStartTimeResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGpsStartTimeResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"StartTime", "LeapSecond"}; 
+      return names; 
+    }
 
 
     Sdx::DateTime GetGpsStartTimeResult::startTime() const

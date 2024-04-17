@@ -1,33 +1,39 @@
+
+#include "ImportNmeaTrack.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ImportNmeaTrack
 ///
-#include "gen/ImportNmeaTrack.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ImportNmeaTrack::CmdName = "ImportNmeaTrack";
-    const char* const ImportNmeaTrack::Documentation = "Import NMEA track file";
+    const char* const ImportNmeaTrack::Documentation = "Import NMEA track file\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ --------------\n"
+      "Path string NMEA file path";
+    const char* const ImportNmeaTrack::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ImportNmeaTrack);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ImportNmeaTrack);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ImportNmeaTrack);
 
 
     ImportNmeaTrack::ImportNmeaTrack()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ImportNmeaTrack::ImportNmeaTrack(const std::string& path)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setPath(path);
     }
-
 
     ImportNmeaTrackPtr ImportNmeaTrack::create(const std::string& path)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string ImportNmeaTrack::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ImportNmeaTrack::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Path"}; 
+      return names; 
+    }
 
 
     int ImportNmeaTrack::executePermission() const

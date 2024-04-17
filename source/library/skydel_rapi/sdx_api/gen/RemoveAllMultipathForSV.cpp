@@ -1,35 +1,43 @@
+
+#include "RemoveAllMultipathForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of RemoveAllMultipathForSV
 ///
-#include "gen/RemoveAllMultipathForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const RemoveAllMultipathForSV::CmdName = "RemoveAllMultipathForSV";
-    const char* const RemoveAllMultipathForSV::Documentation = "Disable all multipath for the specified satellite.";
+    const char* const RemoveAllMultipathForSV::Documentation = "Disable all multipath for the specified satellite.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------------------------------------------------\n"
+      "System string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId   int    The satellite's SV ID\n"
+      "Reset  bool   Reset attributes (PSR offset, power loss, Doppler shift and carrier phase offset are set to zero)";
+    const char* const RemoveAllMultipathForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(RemoveAllMultipathForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(RemoveAllMultipathForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(RemoveAllMultipathForSV);
 
 
     RemoveAllMultipathForSV::RemoveAllMultipathForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     RemoveAllMultipathForSV::RemoveAllMultipathForSV(const std::string& system, int svId, bool reset)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
       setReset(reset);
     }
-
 
     RemoveAllMultipathForSVPtr RemoveAllMultipathForSV::create(const std::string& system, int svId, bool reset)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string RemoveAllMultipathForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& RemoveAllMultipathForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Reset"}; 
+      return names; 
+    }
 
 
     int RemoveAllMultipathForSV::executePermission() const

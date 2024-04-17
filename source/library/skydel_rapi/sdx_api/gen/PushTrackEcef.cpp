@@ -1,28 +1,38 @@
+
+#include "PushTrackEcef.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of PushTrackEcef
 ///
-#include "gen/PushTrackEcef.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const PushTrackEcef::CmdName = "PushTrackEcef";
-    const char* const PushTrackEcef::Documentation = "Push a track ecef node. Must be called after BeginTrackDefinition and before EndTrackDefinition.";
+    const char* const PushTrackEcef::Documentation = "Push a track ecef node. Must be called after BeginTrackDefinition and before EndTrackDefinition.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ --------------------------------------\n"
+      "Time int    Node Timestamp in miliseconds\n"
+      "X    double X distance from earth-center in meters\n"
+      "Y    double Y distance from earth-center in meters\n"
+      "Z    double Z distance from earth-center in meters";
+    const char* const PushTrackEcef::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(PushTrackEcef);
+    REGISTER_COMMAND_TO_FACTORY_DECL(PushTrackEcef);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(PushTrackEcef);
 
 
     PushTrackEcef::PushTrackEcef()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     PushTrackEcef::PushTrackEcef(int time, double x, double y, double z)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTime(time);
@@ -30,7 +40,6 @@ namespace Sdx
       setY(y);
       setZ(z);
     }
-
 
     PushTrackEcefPtr PushTrackEcef::create(int time, double x, double y, double z)
     {
@@ -55,6 +64,12 @@ namespace Sdx
     }
 
     std::string PushTrackEcef::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& PushTrackEcef::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Time", "X", "Y", "Z"}; 
+      return names; 
+    }
 
 
     int PushTrackEcef::executePermission() const

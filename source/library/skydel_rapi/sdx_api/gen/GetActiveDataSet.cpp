@@ -1,33 +1,39 @@
+
+#include "GetActiveDataSet.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetActiveDataSet
 ///
-#include "gen/GetActiveDataSet.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetActiveDataSet::CmdName = "GetActiveDataSet";
-    const char* const GetActiveDataSet::Documentation = "Get active data set.";
+    const char* const GetActiveDataSet::Documentation = "Get active data set.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------\n"
+      "System string \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"";
+    const char* const GetActiveDataSet::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetActiveDataSet);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetActiveDataSet);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetActiveDataSet);
 
 
     GetActiveDataSet::GetActiveDataSet()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetActiveDataSet::GetActiveDataSet(const std::string& system)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
     }
-
 
     GetActiveDataSetPtr GetActiveDataSet::create(const std::string& system)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetActiveDataSet::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetActiveDataSet::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System"}; 
+      return names; 
+    }
 
 
     int GetActiveDataSet::executePermission() const

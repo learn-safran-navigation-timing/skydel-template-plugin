@@ -1,34 +1,54 @@
+
+#include "GetEffectiveIonisationLevelCoefficientResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetEffectiveIonisationLevelCoefficientResult
 ///
-#include "gen/GetEffectiveIonisationLevelCoefficientResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetEffectiveIonisationLevelCoefficientResult::CmdName = "GetEffectiveIonisationLevelCoefficientResult";
-    const char* const GetEffectiveIonisationLevelCoefficientResult::Documentation = "Result of GetEffectiveIonisationLevelCoefficient.";
+    const char* const GetEffectiveIonisationLevelCoefficientResult::Documentation = "Result of GetEffectiveIonisationLevelCoefficient.\n"
+      "\n"
+      "Name  Type   Description\n"
+      "----- ------ ---------------------------------------------------------------\n"
+      "Index int    Coefficient index, 0, 1 or 2 for ai0, ai1 and ai2 respectively.\n"
+      "Val   double Coefficient value.";
+    const char* const GetEffectiveIonisationLevelCoefficientResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetEffectiveIonisationLevelCoefficientResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetEffectiveIonisationLevelCoefficientResult);
 
 
     GetEffectiveIonisationLevelCoefficientResult::GetEffectiveIonisationLevelCoefficientResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetEffectiveIonisationLevelCoefficientResult::GetEffectiveIonisationLevelCoefficientResult(CommandBasePtr relatedCommand, int index, double val)
-      : CommandResult(CmdName, relatedCommand)
+    GetEffectiveIonisationLevelCoefficientResult::GetEffectiveIonisationLevelCoefficientResult(int index, double val)
+      : CommandResult(CmdName, TargetId)
     {
 
       setIndex(index);
       setVal(val);
     }
 
+    GetEffectiveIonisationLevelCoefficientResult::GetEffectiveIonisationLevelCoefficientResult(CommandBasePtr relatedCommand, int index, double val)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setIndex(index);
+      setVal(val);
+    }
+
+
+    GetEffectiveIonisationLevelCoefficientResultPtr GetEffectiveIonisationLevelCoefficientResult::create(int index, double val)
+    {
+      return std::make_shared<GetEffectiveIonisationLevelCoefficientResult>(index, val);
+    }
 
     GetEffectiveIonisationLevelCoefficientResultPtr GetEffectiveIonisationLevelCoefficientResult::create(CommandBasePtr relatedCommand, int index, double val)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetEffectiveIonisationLevelCoefficientResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetEffectiveIonisationLevelCoefficientResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Index", "Val"}; 
+      return names; 
+    }
 
 
     int GetEffectiveIonisationLevelCoefficientResult::index() const

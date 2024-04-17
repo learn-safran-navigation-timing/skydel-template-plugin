@@ -1,33 +1,51 @@
+
+#include "IsSpectrumVisibleResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSpectrumVisibleResult
 ///
-#include "gen/IsSpectrumVisibleResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSpectrumVisibleResult::CmdName = "IsSpectrumVisibleResult";
-    const char* const IsSpectrumVisibleResult::Documentation = "Result of IsSpectrumVisible.";
+    const char* const IsSpectrumVisibleResult::Documentation = "Result of IsSpectrumVisible.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ------------------\n"
+      "Visible bool Show spectrum flag";
+    const char* const IsSpectrumVisibleResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsSpectrumVisibleResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSpectrumVisibleResult);
 
 
     IsSpectrumVisibleResult::IsSpectrumVisibleResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsSpectrumVisibleResult::IsSpectrumVisibleResult(CommandBasePtr relatedCommand, bool visible)
-      : CommandResult(CmdName, relatedCommand)
+    IsSpectrumVisibleResult::IsSpectrumVisibleResult(bool visible)
+      : CommandResult(CmdName, TargetId)
     {
 
       setVisible(visible);
     }
 
+    IsSpectrumVisibleResult::IsSpectrumVisibleResult(CommandBasePtr relatedCommand, bool visible)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setVisible(visible);
+    }
+
+
+    IsSpectrumVisibleResultPtr IsSpectrumVisibleResult::create(bool visible)
+    {
+      return std::make_shared<IsSpectrumVisibleResult>(visible);
+    }
 
     IsSpectrumVisibleResultPtr IsSpectrumVisibleResult::create(CommandBasePtr relatedCommand, bool visible)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsSpectrumVisibleResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSpectrumVisibleResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Visible"}; 
+      return names; 
+    }
 
 
     bool IsSpectrumVisibleResult::visible() const

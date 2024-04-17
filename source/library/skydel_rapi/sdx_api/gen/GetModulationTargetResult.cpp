@@ -1,28 +1,38 @@
+
+#include "GetModulationTargetResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetModulationTargetResult
 ///
-#include "gen/GetModulationTargetResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetModulationTargetResult::CmdName = "GetModulationTargetResult";
-    const char* const GetModulationTargetResult::Documentation = "Result of GetModulationTarget.";
+    const char* const GetModulationTargetResult::Documentation = "Result of GetModulationTarget.\n"
+      "\n"
+      "Name            Type   Description\n"
+      "--------------- ------ ------------------------------------------------------------------------------------------------------------------------------------\n"
+      "Type            string Target type can be \"DTA-2115B\", \"File\", \"N310\", \"None\", \"NoneRT\", \"X300\" or \"Wavefront Controller\".\n"
+      "Path            string File path. Optional, use only if type is \"File\".\n"
+      "Address         string Optional. IP Address if type is \"N310\" or \"X300\".\n"
+      "ClockIsExternal bool   Indicate 10 MHz reference clock is external (true) or internal (false). Optional, use only if type is \"DTA-2115B\", \"N310\" or \"X300\".\n"
+      "Id              string Unique identifier automatically set by simulator";
+    const char* const GetModulationTargetResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetModulationTargetResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetModulationTargetResult);
 
 
     GetModulationTargetResult::GetModulationTargetResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetModulationTargetResult::GetModulationTargetResult(CommandBasePtr relatedCommand, const std::string& type, const std::string& path, const std::string& address, bool clockIsExternal, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetModulationTargetResult::GetModulationTargetResult(const std::string& type, const std::string& path, const std::string& address, bool clockIsExternal, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setType(type);
@@ -32,6 +42,22 @@ namespace Sdx
       setId(id);
     }
 
+    GetModulationTargetResult::GetModulationTargetResult(CommandBasePtr relatedCommand, const std::string& type, const std::string& path, const std::string& address, bool clockIsExternal, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setType(type);
+      setPath(path);
+      setAddress(address);
+      setClockIsExternal(clockIsExternal);
+      setId(id);
+    }
+
+
+    GetModulationTargetResultPtr GetModulationTargetResult::create(const std::string& type, const std::string& path, const std::string& address, bool clockIsExternal, const std::string& id)
+    {
+      return std::make_shared<GetModulationTargetResult>(type, path, address, clockIsExternal, id);
+    }
 
     GetModulationTargetResultPtr GetModulationTargetResult::create(CommandBasePtr relatedCommand, const std::string& type, const std::string& path, const std::string& address, bool clockIsExternal, const std::string& id)
     {
@@ -57,6 +83,12 @@ namespace Sdx
     }
 
     std::string GetModulationTargetResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetModulationTargetResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Type", "Path", "Address", "ClockIsExternal", "Id"}; 
+      return names; 
+    }
 
 
     std::string GetModulationTargetResult::type() const

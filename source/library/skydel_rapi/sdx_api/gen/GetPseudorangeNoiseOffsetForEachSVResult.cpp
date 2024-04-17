@@ -1,28 +1,36 @@
+
+#include "GetPseudorangeNoiseOffsetForEachSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetPseudorangeNoiseOffsetForEachSVResult
 ///
-#include "gen/GetPseudorangeNoiseOffsetForEachSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetPseudorangeNoiseOffsetForEachSVResult::CmdName = "GetPseudorangeNoiseOffsetForEachSVResult";
-    const char* const GetPseudorangeNoiseOffsetForEachSVResult::Documentation = "Result of GetPseudorangeNoiseOffsetForEachSV.";
+    const char* const GetPseudorangeNoiseOffsetForEachSVResult::Documentation = "Result of GetPseudorangeNoiseOffsetForEachSV.\n"
+      "\n"
+      "Name    Type         Description\n"
+      "------- ------------ --------------------------------------------------------------------------\n"
+      "System  string       \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "Enabled array bool   If true, the offset is enabled (applied)\n"
+      "Offset  array double The constant offset in metters";
+    const char* const GetPseudorangeNoiseOffsetForEachSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetPseudorangeNoiseOffsetForEachSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetPseudorangeNoiseOffsetForEachSVResult);
 
 
     GetPseudorangeNoiseOffsetForEachSVResult::GetPseudorangeNoiseOffsetForEachSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetPseudorangeNoiseOffsetForEachSVResult::GetPseudorangeNoiseOffsetForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<bool>& enabled, const std::vector<double>& offset)
-      : CommandResult(CmdName, relatedCommand)
+    GetPseudorangeNoiseOffsetForEachSVResult::GetPseudorangeNoiseOffsetForEachSVResult(const std::string& system, const std::vector<bool>& enabled, const std::vector<double>& offset)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -30,6 +38,20 @@ namespace Sdx
       setOffset(offset);
     }
 
+    GetPseudorangeNoiseOffsetForEachSVResult::GetPseudorangeNoiseOffsetForEachSVResult(CommandBasePtr relatedCommand, const std::string& system, const std::vector<bool>& enabled, const std::vector<double>& offset)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setEnabled(enabled);
+      setOffset(offset);
+    }
+
+
+    GetPseudorangeNoiseOffsetForEachSVResultPtr GetPseudorangeNoiseOffsetForEachSVResult::create(const std::string& system, const std::vector<bool>& enabled, const std::vector<double>& offset)
+    {
+      return std::make_shared<GetPseudorangeNoiseOffsetForEachSVResult>(system, enabled, offset);
+    }
 
     GetPseudorangeNoiseOffsetForEachSVResultPtr GetPseudorangeNoiseOffsetForEachSVResult::create(CommandBasePtr relatedCommand, const std::string& system, const std::vector<bool>& enabled, const std::vector<double>& offset)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetPseudorangeNoiseOffsetForEachSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetPseudorangeNoiseOffsetForEachSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Enabled", "Offset"}; 
+      return names; 
+    }
 
 
     std::string GetPseudorangeNoiseOffsetForEachSVResult::system() const

@@ -1,34 +1,41 @@
+
+#include "IsSatMotionFixed.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSatMotionFixed
 ///
-#include "gen/IsSatMotionFixed.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSatMotionFixed::CmdName = "IsSatMotionFixed";
-    const char* const IsSatMotionFixed::Documentation = "Tells if the satellite is fixed (True) or not fixed (false).";
+    const char* const IsSatMotionFixed::Documentation = "Tells if the satellite is fixed (True) or not fixed (false).\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------\n"
+      "System string \"GPS\", \"Galileo\", \"BeiDou\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId   int    The satellite's SV ID.";
+    const char* const IsSatMotionFixed::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(IsSatMotionFixed);
+    REGISTER_COMMAND_TO_FACTORY_DECL(IsSatMotionFixed);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSatMotionFixed);
 
 
     IsSatMotionFixed::IsSatMotionFixed()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     IsSatMotionFixed::IsSatMotionFixed(const std::string& system, int svId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
       setSvId(svId);
     }
-
 
     IsSatMotionFixedPtr IsSatMotionFixed::create(const std::string& system, int svId)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string IsSatMotionFixed::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSatMotionFixed::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId"}; 
+      return names; 
+    }
 
 
     int IsSatMotionFixed::executePermission() const

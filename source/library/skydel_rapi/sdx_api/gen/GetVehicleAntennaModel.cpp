@@ -1,33 +1,39 @@
+
+#include "GetVehicleAntennaModel.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetVehicleAntennaModel
 ///
-#include "gen/GetVehicleAntennaModel.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetVehicleAntennaModel::CmdName = "GetVehicleAntennaModel";
-    const char* const GetVehicleAntennaModel::Documentation = "Get  all infos about this antenna model.";
+    const char* const GetVehicleAntennaModel::Documentation = "Get  all infos about this antenna model.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ --------------------------\n"
+      "Name string Vehicle antenna model name";
+    const char* const GetVehicleAntennaModel::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetVehicleAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetVehicleAntennaModel);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetVehicleAntennaModel);
 
 
     GetVehicleAntennaModel::GetVehicleAntennaModel()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetVehicleAntennaModel::GetVehicleAntennaModel(const std::string& name)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setName(name);
     }
-
 
     GetVehicleAntennaModelPtr GetVehicleAntennaModel::create(const std::string& name)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetVehicleAntennaModel::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetVehicleAntennaModel::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Name"}; 
+      return names; 
+    }
 
 
     int GetVehicleAntennaModel::executePermission() const

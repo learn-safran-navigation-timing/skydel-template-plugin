@@ -1,33 +1,39 @@
+
+#include "GetMessageSequence.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetMessageSequence
 ///
-#include "gen/GetMessageSequence.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetMessageSequence::CmdName = "GetMessageSequence";
-    const char* const GetMessageSequence::Documentation = "Get the messages sequence for the signal";
+    const char* const GetMessageSequence::Documentation = "Get the messages sequence for the signal\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------\n"
+      "Signal string Signal Name (\"L2C\" for example)";
+    const char* const GetMessageSequence::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetMessageSequence);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetMessageSequence);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetMessageSequence);
 
 
     GetMessageSequence::GetMessageSequence()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     GetMessageSequence::GetMessageSequence(const std::string& signal)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSignal(signal);
     }
-
 
     GetMessageSequencePtr GetMessageSequence::create(const std::string& signal)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string GetMessageSequence::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetMessageSequence::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Signal"}; 
+      return names; 
+    }
 
 
     int GetMessageSequence::executePermission() const

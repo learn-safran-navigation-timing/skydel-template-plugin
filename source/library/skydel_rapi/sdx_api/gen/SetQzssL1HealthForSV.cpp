@@ -1,35 +1,43 @@
+
+#include "SetQzssL1HealthForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetQzssL1HealthForSV
 ///
-#include "gen/SetQzssL1HealthForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetQzssL1HealthForSV::CmdName = "SetQzssL1HealthForSV";
-    const char* const SetQzssL1HealthForSV::Documentation = "Please note the command SetQzssSatelliteL1Health is deprecated since 21.3. You may use SetQzssL1HealthForSV.\n\nSet QZSS L1 health (Health of L1C/A signal)";
+    const char* const SetQzssL1HealthForSV::Documentation = "Set QZSS L1 health (Health of L1C/A signal)\n"
+      "\n"
+      "Name        Type            Description\n"
+      "----------- --------------- -------------------------------------------------------------------------------------------\n"
+      "SvId        int             Satellite SV ID 1..10, or use 0 to apply new value to all satellites.\n"
+      "Health      bool            L1 health, false = signal OK, true = signal bad\n"
+      "DataSetName optional string Optional name of the data set to use. If no value is provided, the active data set is used.";
+    const char* const SetQzssL1HealthForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetQzssL1HealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetQzssL1HealthForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetQzssL1HealthForSV);
 
 
     SetQzssL1HealthForSV::SetQzssL1HealthForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetQzssL1HealthForSV::SetQzssL1HealthForSV(int svId, bool health, const Sdx::optional<std::string>& dataSetName)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSvId(svId);
       setHealth(health);
       setDataSetName(dataSetName);
     }
-
 
     SetQzssL1HealthForSVPtr SetQzssL1HealthForSV::create(int svId, bool health, const Sdx::optional<std::string>& dataSetName)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetQzssL1HealthForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetQzssL1HealthForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health", "DataSetName"}; 
+      return names; 
+    }
 
 
     int SetQzssL1HealthForSV::executePermission() const

@@ -1,33 +1,39 @@
+
+#include "ShowMapAnalysis.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of ShowMapAnalysis
 ///
-#include "gen/ShowMapAnalysis.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const ShowMapAnalysis::CmdName = "ShowMapAnalysis";
-    const char* const ShowMapAnalysis::Documentation = "Set if map is show/hide in Analysis tab.";
+    const char* const ShowMapAnalysis::Documentation = "Set if map is show/hide in Analysis tab.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- -------------\n"
+      "Show bool Show map flag";
+    const char* const ShowMapAnalysis::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(ShowMapAnalysis);
+    REGISTER_COMMAND_TO_FACTORY_DECL(ShowMapAnalysis);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(ShowMapAnalysis);
 
 
     ShowMapAnalysis::ShowMapAnalysis()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     ShowMapAnalysis::ShowMapAnalysis(bool show)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setShow(show);
     }
-
 
     ShowMapAnalysisPtr ShowMapAnalysis::create(bool show)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string ShowMapAnalysis::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& ShowMapAnalysis::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Show"}; 
+      return names; 
+    }
 
 
     int ShowMapAnalysis::executePermission() const

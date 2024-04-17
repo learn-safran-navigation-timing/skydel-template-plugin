@@ -1,34 +1,54 @@
+
+#include "GetGlonassEphemerisHealthFlagForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetGlonassEphemerisHealthFlagForSVResult
 ///
-#include "gen/GetGlonassEphemerisHealthFlagForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetGlonassEphemerisHealthFlagForSVResult::CmdName = "GetGlonassEphemerisHealthFlagForSVResult";
-    const char* const GetGlonassEphemerisHealthFlagForSVResult::Documentation = "Result of GetGlonassEphemerisHealthFlagForSV.";
+    const char* const GetGlonassEphemerisHealthFlagForSVResult::Documentation = "Result of GetGlonassEphemerisHealthFlagForSV.\n"
+      "\n"
+      "Name   Type Description\n"
+      "------ ---- --------------------------------------\n"
+      "SvId   int  The satellite's SV ID 1..24\n"
+      "Health bool Status, false = OK, true = Malfunction";
+    const char* const GetGlonassEphemerisHealthFlagForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetGlonassEphemerisHealthFlagForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetGlonassEphemerisHealthFlagForSVResult);
 
 
     GetGlonassEphemerisHealthFlagForSVResult::GetGlonassEphemerisHealthFlagForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetGlonassEphemerisHealthFlagForSVResult::GetGlonassEphemerisHealthFlagForSVResult(CommandBasePtr relatedCommand, int svId, bool health)
-      : CommandResult(CmdName, relatedCommand)
+    GetGlonassEphemerisHealthFlagForSVResult::GetGlonassEphemerisHealthFlagForSVResult(int svId, bool health)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSvId(svId);
       setHealth(health);
     }
 
+    GetGlonassEphemerisHealthFlagForSVResult::GetGlonassEphemerisHealthFlagForSVResult(CommandBasePtr relatedCommand, int svId, bool health)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSvId(svId);
+      setHealth(health);
+    }
+
+
+    GetGlonassEphemerisHealthFlagForSVResultPtr GetGlonassEphemerisHealthFlagForSVResult::create(int svId, bool health)
+    {
+      return std::make_shared<GetGlonassEphemerisHealthFlagForSVResult>(svId, health);
+    }
 
     GetGlonassEphemerisHealthFlagForSVResultPtr GetGlonassEphemerisHealthFlagForSVResult::create(CommandBasePtr relatedCommand, int svId, bool health)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetGlonassEphemerisHealthFlagForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetGlonassEphemerisHealthFlagForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"SvId", "Health"}; 
+      return names; 
+    }
 
 
     int GetGlonassEphemerisHealthFlagForSVResult::svId() const

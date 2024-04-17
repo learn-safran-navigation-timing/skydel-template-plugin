@@ -1,28 +1,36 @@
+
+#include "GetIssueOfDataQzssResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIssueOfDataQzssResult
 ///
-#include "gen/GetIssueOfDataQzssResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIssueOfDataQzssResult::CmdName = "GetIssueOfDataQzssResult";
-    const char* const GetIssueOfDataQzssResult::Documentation = "Result of GetIssueOfDataQzss.";
+    const char* const GetIssueOfDataQzssResult::Documentation = "Result of GetIssueOfDataQzss.\n"
+      "\n"
+      "Name          Type          Description\n"
+      "------------- ------------- ---------------------------------------------------\n"
+      "Clock         int           Issue of data, clock\n"
+      "Ephemeris     int           Issue of data, ephemeris\n"
+      "OverrideRinex optional bool If the IOD overrides the RINEX IOD, default is True";
+    const char* const GetIssueOfDataQzssResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIssueOfDataQzssResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIssueOfDataQzssResult);
 
 
     GetIssueOfDataQzssResult::GetIssueOfDataQzssResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIssueOfDataQzssResult::GetIssueOfDataQzssResult(CommandBasePtr relatedCommand, int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
-      : CommandResult(CmdName, relatedCommand)
+    GetIssueOfDataQzssResult::GetIssueOfDataQzssResult(int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
+      : CommandResult(CmdName, TargetId)
     {
 
       setClock(clock);
@@ -30,6 +38,20 @@ namespace Sdx
       setOverrideRinex(overrideRinex);
     }
 
+    GetIssueOfDataQzssResult::GetIssueOfDataQzssResult(CommandBasePtr relatedCommand, int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setClock(clock);
+      setEphemeris(ephemeris);
+      setOverrideRinex(overrideRinex);
+    }
+
+
+    GetIssueOfDataQzssResultPtr GetIssueOfDataQzssResult::create(int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
+    {
+      return std::make_shared<GetIssueOfDataQzssResult>(clock, ephemeris, overrideRinex);
+    }
 
     GetIssueOfDataQzssResultPtr GetIssueOfDataQzssResult::create(CommandBasePtr relatedCommand, int clock, int ephemeris, const Sdx::optional<bool>& overrideRinex)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetIssueOfDataQzssResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIssueOfDataQzssResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Clock", "Ephemeris", "OverrideRinex"}; 
+      return names; 
+    }
 
 
     int GetIssueOfDataQzssResult::clock() const

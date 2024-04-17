@@ -1,28 +1,39 @@
+
+#include "GetQzssL1SAugmentationResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetQzssL1SAugmentationResult
 ///
-#include "gen/GetQzssL1SAugmentationResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetQzssL1SAugmentationResult::CmdName = "GetQzssL1SAugmentationResult";
-    const char* const GetQzssL1SAugmentationResult::Documentation = "Result of GetQzssL1SAugmentation.";
+    const char* const GetQzssL1SAugmentationResult::Documentation = "Result of GetQzssL1SAugmentation.\n"
+      "\n"
+      "Name       Type   Description\n"
+      "---------- ------ ----------------------------------------------------------------------------------\n"
+      "System     string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\" or \"QZSS\"\n"
+      "Prn        int    Satellite PRN number.\n"
+      "AugmentIOD bool   Include the satellite Issue Of Data in L1S message.\n"
+      "AugmentPRC bool   Include the satellite Pseudorange Correction in L1S message.\n"
+      "Prc        double Pseudorange Correction to include in L1S message. Only used if AugmentPSR is True.\n"
+      "Id         string Unique identifier of the augmentation.";
+    const char* const GetQzssL1SAugmentationResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetQzssL1SAugmentationResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetQzssL1SAugmentationResult);
 
 
     GetQzssL1SAugmentationResult::GetQzssL1SAugmentationResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetQzssL1SAugmentationResult::GetQzssL1SAugmentationResult(CommandBasePtr relatedCommand, const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetQzssL1SAugmentationResult::GetQzssL1SAugmentationResult(const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -33,6 +44,23 @@ namespace Sdx
       setId(id);
     }
 
+    GetQzssL1SAugmentationResult::GetQzssL1SAugmentationResult(CommandBasePtr relatedCommand, const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setPrn(prn);
+      setAugmentIOD(augmentIOD);
+      setAugmentPRC(augmentPRC);
+      setPrc(prc);
+      setId(id);
+    }
+
+
+    GetQzssL1SAugmentationResultPtr GetQzssL1SAugmentationResult::create(const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id)
+    {
+      return std::make_shared<GetQzssL1SAugmentationResult>(system, prn, augmentIOD, augmentPRC, prc, id);
+    }
 
     GetQzssL1SAugmentationResultPtr GetQzssL1SAugmentationResult::create(CommandBasePtr relatedCommand, const std::string& system, int prn, bool augmentIOD, bool augmentPRC, double prc, const std::string& id)
     {
@@ -59,6 +87,12 @@ namespace Sdx
     }
 
     std::string GetQzssL1SAugmentationResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetQzssL1SAugmentationResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "Prn", "AugmentIOD", "AugmentPRC", "Prc", "Id"}; 
+      return names; 
+    }
 
 
     std::string GetQzssL1SAugmentationResult::system() const

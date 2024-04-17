@@ -1,33 +1,39 @@
+
+#include "SetExternalChannelsPath.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetExternalChannelsPath
 ///
-#include "gen/SetExternalChannelsPath.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetExternalChannelsPath::CmdName = "SetExternalChannelsPath";
-    const char* const SetExternalChannelsPath::Documentation = "Set external channels path.";
+    const char* const SetExternalChannelsPath::Documentation = "Set external channels path.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ -----------------------------\n"
+      "Path string Path to the sdxpand directory";
+    const char* const SetExternalChannelsPath::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetExternalChannelsPath);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetExternalChannelsPath);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetExternalChannelsPath);
 
 
     SetExternalChannelsPath::SetExternalChannelsPath()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetExternalChannelsPath::SetExternalChannelsPath(const std::string& path)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setPath(path);
     }
-
 
     SetExternalChannelsPathPtr SetExternalChannelsPath::create(const std::string& path)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetExternalChannelsPath::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetExternalChannelsPath::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Path"}; 
+      return names; 
+    }
 
 
     int SetExternalChannelsPath::executePermission() const

@@ -1,28 +1,36 @@
+
+#include "IsLosEnabledForSVResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsLosEnabledForSVResult
 ///
-#include "gen/IsLosEnabledForSVResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsLosEnabledForSVResult::CmdName = "IsLosEnabledForSVResult";
-    const char* const IsLosEnabledForSVResult::Documentation = "Result of IsLosEnabledForSV.";
+    const char* const IsLosEnabledForSVResult::Documentation = "Result of IsLosEnabledForSV.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ --------------------------------------------------------------------------\n"
+      "System  string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId    int    The satellite's SV ID\n"
+      "Enabled bool   Direct Line of Sight enabled or not";
+    const char* const IsLosEnabledForSVResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsLosEnabledForSVResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsLosEnabledForSVResult);
 
 
     IsLosEnabledForSVResult::IsLosEnabledForSVResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsLosEnabledForSVResult::IsLosEnabledForSVResult(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsLosEnabledForSVResult::IsLosEnabledForSVResult(const std::string& system, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -30,6 +38,20 @@ namespace Sdx
       setEnabled(enabled);
     }
 
+    IsLosEnabledForSVResult::IsLosEnabledForSVResult(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setSvId(svId);
+      setEnabled(enabled);
+    }
+
+
+    IsLosEnabledForSVResultPtr IsLosEnabledForSVResult::create(const std::string& system, int svId, bool enabled)
+    {
+      return std::make_shared<IsLosEnabledForSVResult>(system, svId, enabled);
+    }
 
     IsLosEnabledForSVResultPtr IsLosEnabledForSVResult::create(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string IsLosEnabledForSVResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsLosEnabledForSVResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Enabled"}; 
+      return names; 
+    }
 
 
     std::string IsLosEnabledForSVResult::system() const

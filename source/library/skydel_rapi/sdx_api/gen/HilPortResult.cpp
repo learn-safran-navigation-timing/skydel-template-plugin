@@ -1,33 +1,51 @@
+
+#include "HilPortResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of HilPortResult
 ///
-#include "gen/HilPortResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const HilPortResult::CmdName = "HilPortResult";
-    const char* const HilPortResult::Documentation = "Result of GetHilPort.";
+    const char* const HilPortResult::Documentation = "Result of GetHilPort.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- ---------------\n"
+      "Port int  Hil Server Port";
+    const char* const HilPortResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(HilPortResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(HilPortResult);
 
 
     HilPortResult::HilPortResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    HilPortResult::HilPortResult(CommandBasePtr relatedCommand, int port)
-      : CommandResult(CmdName, relatedCommand)
+    HilPortResult::HilPortResult(int port)
+      : CommandResult(CmdName, TargetId)
     {
 
       setPort(port);
     }
 
+    HilPortResult::HilPortResult(CommandBasePtr relatedCommand, int port)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setPort(port);
+    }
+
+
+    HilPortResultPtr HilPortResult::create(int port)
+    {
+      return std::make_shared<HilPortResult>(port);
+    }
 
     HilPortResultPtr HilPortResult::create(CommandBasePtr relatedCommand, int port)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string HilPortResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& HilPortResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Port"}; 
+      return names; 
+    }
 
 
     int HilPortResult::port() const

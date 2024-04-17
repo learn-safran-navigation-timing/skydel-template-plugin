@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "gen/GNSSBand.h"
 #include "sdx_optional.h"
 #include <string>
@@ -14,9 +15,9 @@ namespace Sdx
     /// Get space vehicle gain antenna pattern. If no name is specified, the command is aplied to Basic SV Antenna.
     ///
     /// Name   Type            Description
-    /// ------ --------------- ----------------------------------------------------------------
+    /// ------ --------------- --------------------------------------------------------------------------
     /// Band   GNSSBand        Frequency band
-    /// System string          "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System string          "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// Name   optional string SV antenna name
     ///
 
@@ -29,16 +30,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetSVAntennaGain();
 
       GetSVAntennaGain(const Sdx::GNSSBand& band, const std::string& system, const Sdx::optional<std::string>& name = {});
-  
+
       static GetSVAntennaGainPtr create(const Sdx::GNSSBand& band, const std::string& system, const Sdx::optional<std::string>& name = {});
       static GetSVAntennaGainPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -57,6 +60,7 @@ namespace Sdx
       Sdx::optional<std::string> name() const;
       void setName(const Sdx::optional<std::string>& name);
     };
+    
   }
 }
 

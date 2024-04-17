@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_result.h"
+#include "command_factory.h"
 #include "sdx_optional.h"
 #include <string>
 
@@ -33,16 +34,22 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       GetVehicleTrajectoryCircularResult();
 
+      GetVehicleTrajectoryCircularResult(const std::string& type, double lat, double lon, double alt, double radius, double speed, bool clockwise, const Sdx::optional<double>& originAngle = {});
+
       GetVehicleTrajectoryCircularResult(CommandBasePtr relatedCommand, const std::string& type, double lat, double lon, double alt, double radius, double speed, bool clockwise, const Sdx::optional<double>& originAngle = {});
-  
+
+      static GetVehicleTrajectoryCircularResultPtr create(const std::string& type, double lat, double lon, double alt, double radius, double speed, bool clockwise, const Sdx::optional<double>& originAngle = {});
+
       static GetVehicleTrajectoryCircularResultPtr create(CommandBasePtr relatedCommand, const std::string& type, double lat, double lon, double alt, double radius, double speed, bool clockwise, const Sdx::optional<double>& originAngle = {});
       static GetVehicleTrajectoryCircularResultPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
 
       // **** type ****
@@ -84,6 +91,7 @@ namespace Sdx
       Sdx::optional<double> originAngle() const;
       void setOriginAngle(const Sdx::optional<double>& originAngle);
     };
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetVehicleTrajectoryCircularResult);
   }
 }
 

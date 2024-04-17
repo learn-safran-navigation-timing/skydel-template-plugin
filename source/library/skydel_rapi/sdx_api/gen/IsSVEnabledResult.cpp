@@ -1,28 +1,36 @@
+
+#include "IsSVEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsSVEnabledResult
 ///
-#include "gen/IsSVEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsSVEnabledResult::CmdName = "IsSVEnabledResult";
-    const char* const IsSVEnabledResult::Documentation = "Result of IsSVEnabled.";
+    const char* const IsSVEnabledResult::Documentation = "Result of IsSVEnabled.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ ----------------------------------------------------------------------------------------------------------------\n"
+      "System  string The satellite's constellation. Can be \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId    int    The satellite's SV ID (use 0 for all SVs).\n"
+      "Enabled bool   The satellite will be present/absent from the constellation";
+    const char* const IsSVEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsSVEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsSVEnabledResult);
 
 
     IsSVEnabledResult::IsSVEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsSVEnabledResult::IsSVEnabledResult(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsSVEnabledResult::IsSVEnabledResult(const std::string& system, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -30,6 +38,20 @@ namespace Sdx
       setEnabled(enabled);
     }
 
+    IsSVEnabledResult::IsSVEnabledResult(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setSystem(system);
+      setSvId(svId);
+      setEnabled(enabled);
+    }
+
+
+    IsSVEnabledResultPtr IsSVEnabledResult::create(const std::string& system, int svId, bool enabled)
+    {
+      return std::make_shared<IsSVEnabledResult>(system, svId, enabled);
+    }
 
     IsSVEnabledResultPtr IsSVEnabledResult::create(CommandBasePtr relatedCommand, const std::string& system, int svId, bool enabled)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string IsSVEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsSVEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Enabled"}; 
+      return names; 
+    }
 
 
     std::string IsSVEnabledResult::system() const

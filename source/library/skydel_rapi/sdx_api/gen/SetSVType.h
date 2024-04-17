@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 
 namespace Sdx
@@ -29,16 +30,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetSVType();
 
       SetSVType(const std::string& system, int svId, const std::string& svType);
-  
+
       static SetSVTypePtr create(const std::string& system, int svId, const std::string& svType);
       static SetSVTypePtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -57,6 +60,7 @@ namespace Sdx
       std::string svType() const;
       void setSvType(const std::string& svType);
     };
+    
   }
 }
 

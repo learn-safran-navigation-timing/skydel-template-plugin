@@ -1,28 +1,36 @@
+
+#include "GetAntennaChangeResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAntennaChangeResult
 ///
-#include "gen/GetAntennaChangeResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetAntennaChangeResult::CmdName = "GetAntennaChangeResult";
-    const char* const GetAntennaChangeResult::Documentation = "Result of GetAntennaChange.";
+    const char* const GetAntennaChangeResult::Documentation = "Result of GetAntennaChange.\n"
+      "\n"
+      "Name      Type   Description\n"
+      "--------- ------ --------------------------------------------------\n"
+      "StartTime double Elapsed time in seconds since start of simulation.\n"
+      "Antenna   string Antenna model name\n"
+      "Id        string Unique identifier of the event";
+    const char* const GetAntennaChangeResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetAntennaChangeResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAntennaChangeResult);
 
 
     GetAntennaChangeResult::GetAntennaChangeResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetAntennaChangeResult::GetAntennaChangeResult(CommandBasePtr relatedCommand, double startTime, const std::string& antenna, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetAntennaChangeResult::GetAntennaChangeResult(double startTime, const std::string& antenna, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setStartTime(startTime);
@@ -30,6 +38,20 @@ namespace Sdx
       setId(id);
     }
 
+    GetAntennaChangeResult::GetAntennaChangeResult(CommandBasePtr relatedCommand, double startTime, const std::string& antenna, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setStartTime(startTime);
+      setAntenna(antenna);
+      setId(id);
+    }
+
+
+    GetAntennaChangeResultPtr GetAntennaChangeResult::create(double startTime, const std::string& antenna, const std::string& id)
+    {
+      return std::make_shared<GetAntennaChangeResult>(startTime, antenna, id);
+    }
 
     GetAntennaChangeResultPtr GetAntennaChangeResult::create(CommandBasePtr relatedCommand, double startTime, const std::string& antenna, const std::string& id)
     {
@@ -53,6 +75,12 @@ namespace Sdx
     }
 
     std::string GetAntennaChangeResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAntennaChangeResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"StartTime", "Antenna", "Id"}; 
+      return names; 
+    }
 
 
     double GetAntennaChangeResult::startTime() const

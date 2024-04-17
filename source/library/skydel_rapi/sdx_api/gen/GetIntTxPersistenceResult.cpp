@@ -1,34 +1,54 @@
+
+#include "GetIntTxPersistenceResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetIntTxPersistenceResult
 ///
-#include "gen/GetIntTxPersistenceResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const GetIntTxPersistenceResult::CmdName = "GetIntTxPersistenceResult";
-    const char* const GetIntTxPersistenceResult::Documentation = "Result of GetIntTxPersistence.";
+    const char* const GetIntTxPersistenceResult::Documentation = "Result of GetIntTxPersistence.\n"
+      "\n"
+      "Name        Type   Description\n"
+      "----------- ------ ------------------------------------------------------\n"
+      "Persistence bool   True to keep the modifications, false to discard them.\n"
+      "Id          string Transmitter unique identifier.";
+    const char* const GetIntTxPersistenceResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(GetIntTxPersistenceResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetIntTxPersistenceResult);
 
 
     GetIntTxPersistenceResult::GetIntTxPersistenceResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    GetIntTxPersistenceResult::GetIntTxPersistenceResult(CommandBasePtr relatedCommand, bool persistence, const std::string& id)
-      : CommandResult(CmdName, relatedCommand)
+    GetIntTxPersistenceResult::GetIntTxPersistenceResult(bool persistence, const std::string& id)
+      : CommandResult(CmdName, TargetId)
     {
 
       setPersistence(persistence);
       setId(id);
     }
 
+    GetIntTxPersistenceResult::GetIntTxPersistenceResult(CommandBasePtr relatedCommand, bool persistence, const std::string& id)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setPersistence(persistence);
+      setId(id);
+    }
+
+
+    GetIntTxPersistenceResultPtr GetIntTxPersistenceResult::create(bool persistence, const std::string& id)
+    {
+      return std::make_shared<GetIntTxPersistenceResult>(persistence, id);
+    }
 
     GetIntTxPersistenceResultPtr GetIntTxPersistenceResult::create(CommandBasePtr relatedCommand, bool persistence, const std::string& id)
     {
@@ -51,6 +71,12 @@ namespace Sdx
     }
 
     std::string GetIntTxPersistenceResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetIntTxPersistenceResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Persistence", "Id"}; 
+      return names; 
+    }
 
 
     bool GetIntTxPersistenceResult::persistence() const

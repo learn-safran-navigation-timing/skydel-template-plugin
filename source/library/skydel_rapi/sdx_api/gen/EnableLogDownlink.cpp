@@ -1,35 +1,43 @@
+
+#include "EnableLogDownlink.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of EnableLogDownlink
 ///
-#include "gen/EnableLogDownlink.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const EnableLogDownlink::CmdName = "EnableLogDownlink";
-    const char* const EnableLogDownlink::Documentation = "Enable (or disable) downlink data logging in csv format";
+    const char* const EnableLogDownlink::Documentation = "Enable (or disable) downlink data logging in csv format\n"
+      "\n"
+      "Name           Type          Description\n"
+      "-------------- ------------- ----------------------------------------------------------------------------------------------------------------------\n"
+      "Enabled        bool          If true, files will be created during simulation. By default, the downlink files will be created after signal encoding\n"
+      "BeforeEncoding optional bool (Optional) If true, files will be created before signal encoding. Can be used with AfterEncoding\n"
+      "AfterEncoding  optional bool (Optional) If true, files will be created after signal encoding. Can be used with BeforeEncoding";
+    const char* const EnableLogDownlink::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(EnableLogDownlink);
+    REGISTER_COMMAND_TO_FACTORY_DECL(EnableLogDownlink);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(EnableLogDownlink);
 
 
     EnableLogDownlink::EnableLogDownlink()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     EnableLogDownlink::EnableLogDownlink(bool enabled, const Sdx::optional<bool>& beforeEncoding, const Sdx::optional<bool>& afterEncoding)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setEnabled(enabled);
       setBeforeEncoding(beforeEncoding);
       setAfterEncoding(afterEncoding);
     }
-
 
     EnableLogDownlinkPtr EnableLogDownlink::create(bool enabled, const Sdx::optional<bool>& beforeEncoding, const Sdx::optional<bool>& afterEncoding)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string EnableLogDownlink::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& EnableLogDownlink::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled", "BeforeEncoding", "AfterEncoding"}; 
+      return names; 
+    }
 
 
     int EnableLogDownlink::executePermission() const

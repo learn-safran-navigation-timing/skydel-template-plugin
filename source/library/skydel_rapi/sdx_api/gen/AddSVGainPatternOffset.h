@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include "gen/GNSSBand.h"
 #include "sdx_optional.h"
 #include <string>
@@ -16,7 +17,7 @@ namespace Sdx
     /// Name        Type            Description
     /// ----------- --------------- ------------------------------------------------------------------------------------
     /// Band        GNSSBand        Offset will be apply to this band. ("L1", "L2" or "L5")
-    /// System      string          "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS" or "NavIC"
+    /// System      string          "GPS", "GLONASS", "Galileo", "BeiDou", "SBAS", "QZSS", "NavIC" or "PULSAR"
     /// Offset      double          Power offset
     /// AntennaName optional string Vehicle antenna name. If no name is specified, apply the offset to the Basic Antenna
     ///
@@ -30,16 +31,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       AddSVGainPatternOffset();
 
       AddSVGainPatternOffset(const Sdx::GNSSBand& band, const std::string& system, double offset, const Sdx::optional<std::string>& antennaName = {});
-  
+
       static AddSVGainPatternOffsetPtr create(const Sdx::GNSSBand& band, const std::string& system, double offset, const Sdx::optional<std::string>& antennaName = {});
       static AddSVGainPatternOffsetPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -63,6 +66,7 @@ namespace Sdx
       Sdx::optional<std::string> antennaName() const;
       void setAntennaName(const Sdx::optional<std::string>& antennaName);
     };
+    
   }
 }
 

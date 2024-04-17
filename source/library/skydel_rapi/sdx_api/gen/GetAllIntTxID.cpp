@@ -1,11 +1,12 @@
+
+#include "GetAllIntTxID.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of GetAllIntTxID
 ///
-#include "gen/GetAllIntTxID.h"
 
 namespace Sdx
 {
@@ -13,16 +14,17 @@ namespace Sdx
   {
     const char* const GetAllIntTxID::CmdName = "GetAllIntTxID";
     const char* const GetAllIntTxID::Documentation = "Get the ID of all interferences transmitters.";
+    const char* const GetAllIntTxID::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(GetAllIntTxID);
+    REGISTER_COMMAND_TO_FACTORY_DECL(GetAllIntTxID);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(GetAllIntTxID);
 
 
     GetAllIntTxID::GetAllIntTxID()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
     }
-
 
     GetAllIntTxIDPtr GetAllIntTxID::create()
     {
@@ -43,6 +45,12 @@ namespace Sdx
     }
 
     std::string GetAllIntTxID::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& GetAllIntTxID::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {}; 
+      return names; 
+    }
 
 
     int GetAllIntTxID::executePermission() const

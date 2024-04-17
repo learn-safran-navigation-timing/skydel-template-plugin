@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "command_base.h"
+
 #include <string>
 #include <vector>
 
@@ -29,16 +30,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetGlonassDoubleParams();
 
       SetGlonassDoubleParams(const std::string& paramName, const std::vector<double>& val);
-  
+
       static SetGlonassDoubleParamsPtr create(const std::string& paramName, const std::vector<double>& val);
       static SetGlonassDoubleParamsPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -52,6 +55,7 @@ namespace Sdx
       std::vector<double> val() const;
       void setVal(const std::vector<double>& val);
     };
+    
   }
 }
 

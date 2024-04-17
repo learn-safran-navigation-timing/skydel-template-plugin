@@ -4,6 +4,7 @@
 #include "command_base.h"
 
 
+
 namespace Sdx
 {
   namespace Cmd
@@ -26,16 +27,18 @@ namespace Sdx
     public:
       static const char* const CmdName;
       static const char* const Documentation;
+      static const char* const TargetId;
 
 
       SetRfGain();
 
       SetRfGain(int output, double gain);
-  
+
       static SetRfGainPtr create(int output, double gain);
       static SetRfGainPtr dynamicCast(CommandBasePtr ptr);
       virtual bool isValid() const override;
       virtual std::string documentation() const override;
+      virtual const std::vector<std::string>& fieldNames() const override;
 
       virtual int executePermission() const override;
 
@@ -49,6 +52,7 @@ namespace Sdx
       double gain() const;
       void setGain(double gain);
     };
+    
   }
 }
 

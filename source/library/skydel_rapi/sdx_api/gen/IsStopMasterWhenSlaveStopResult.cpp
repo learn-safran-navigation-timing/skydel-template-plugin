@@ -1,33 +1,51 @@
+
+#include "IsStopMasterWhenSlaveStopResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsStopMasterWhenSlaveStopResult
 ///
-#include "gen/IsStopMasterWhenSlaveStopResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsStopMasterWhenSlaveStopResult::CmdName = "IsStopMasterWhenSlaveStopResult";
-    const char* const IsStopMasterWhenSlaveStopResult::Documentation = "Result of IsStopMasterWhenSlaveStop.";
+    const char* const IsStopMasterWhenSlaveStopResult::Documentation = "Result of IsStopMasterWhenSlaveStop.\n"
+      "\n"
+      "Name    Type Description\n"
+      "------- ---- ---------------------------------------\n"
+      "Enabled bool Enable master stop when slave fail flag";
+    const char* const IsStopMasterWhenSlaveStopResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsStopMasterWhenSlaveStopResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsStopMasterWhenSlaveStopResult);
 
 
     IsStopMasterWhenSlaveStopResult::IsStopMasterWhenSlaveStopResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsStopMasterWhenSlaveStopResult::IsStopMasterWhenSlaveStopResult(CommandBasePtr relatedCommand, bool enabled)
-      : CommandResult(CmdName, relatedCommand)
+    IsStopMasterWhenSlaveStopResult::IsStopMasterWhenSlaveStopResult(bool enabled)
+      : CommandResult(CmdName, TargetId)
     {
 
       setEnabled(enabled);
     }
 
+    IsStopMasterWhenSlaveStopResult::IsStopMasterWhenSlaveStopResult(CommandBasePtr relatedCommand, bool enabled)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setEnabled(enabled);
+    }
+
+
+    IsStopMasterWhenSlaveStopResultPtr IsStopMasterWhenSlaveStopResult::create(bool enabled)
+    {
+      return std::make_shared<IsStopMasterWhenSlaveStopResult>(enabled);
+    }
 
     IsStopMasterWhenSlaveStopResultPtr IsStopMasterWhenSlaveStopResult::create(CommandBasePtr relatedCommand, bool enabled)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsStopMasterWhenSlaveStopResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsStopMasterWhenSlaveStopResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Enabled"}; 
+      return names; 
+    }
 
 
     bool IsStopMasterWhenSlaveStopResult::enabled() const

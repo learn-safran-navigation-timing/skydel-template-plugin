@@ -1,33 +1,51 @@
+
+#include "IsMapAnalysisEnabledResult.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of IsMapAnalysisEnabledResult
 ///
-#include "gen/IsMapAnalysisEnabledResult.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const IsMapAnalysisEnabledResult::CmdName = "IsMapAnalysisEnabledResult";
-    const char* const IsMapAnalysisEnabledResult::Documentation = "Result of IsMapAnalysisEnabled.";
+    const char* const IsMapAnalysisEnabledResult::Documentation = "Result of IsMapAnalysisEnabled.\n"
+      "\n"
+      "Name Type Description\n"
+      "---- ---- -------------\n"
+      "Show bool Show map flag";
+    const char* const IsMapAnalysisEnabledResult::TargetId = "";
 
-    REGISTER_COMMAND_RESULT_FACTORY(IsMapAnalysisEnabledResult);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(IsMapAnalysisEnabledResult);
 
 
     IsMapAnalysisEnabledResult::IsMapAnalysisEnabledResult()
-      : CommandResult(CmdName)
+      : CommandResult(CmdName, TargetId)
     {}
 
-    IsMapAnalysisEnabledResult::IsMapAnalysisEnabledResult(CommandBasePtr relatedCommand, bool show)
-      : CommandResult(CmdName, relatedCommand)
+    IsMapAnalysisEnabledResult::IsMapAnalysisEnabledResult(bool show)
+      : CommandResult(CmdName, TargetId)
     {
 
       setShow(show);
     }
 
+    IsMapAnalysisEnabledResult::IsMapAnalysisEnabledResult(CommandBasePtr relatedCommand, bool show)
+      : CommandResult(CmdName, TargetId, relatedCommand)
+    {
+
+      setShow(show);
+    }
+
+
+    IsMapAnalysisEnabledResultPtr IsMapAnalysisEnabledResult::create(bool show)
+    {
+      return std::make_shared<IsMapAnalysisEnabledResult>(show);
+    }
 
     IsMapAnalysisEnabledResultPtr IsMapAnalysisEnabledResult::create(CommandBasePtr relatedCommand, bool show)
     {
@@ -49,6 +67,12 @@ namespace Sdx
     }
 
     std::string IsMapAnalysisEnabledResult::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& IsMapAnalysisEnabledResult::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Show"}; 
+      return names; 
+    }
 
 
     bool IsMapAnalysisEnabledResult::show() const

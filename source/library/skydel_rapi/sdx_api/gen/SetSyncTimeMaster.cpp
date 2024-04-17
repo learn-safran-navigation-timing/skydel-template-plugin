@@ -1,33 +1,43 @@
+
+#include "SetSyncTimeMaster.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSyncTimeMaster
 ///
-#include "gen/SetSyncTimeMaster.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSyncTimeMaster::CmdName = "SetSyncTimeMaster";
-    const char* const SetSyncTimeMaster::Documentation = "Set time delay to start streaming after PPS synchronization. A value of 1500\nmeans the simulation will start streaming 1.5 sec after the PPS used for\nsynchornization.";
+    const char* const SetSyncTimeMaster::Documentation = "Please note the command SetSyncTimeMaster is deprecated since 23.11. You may use SetSyncTimeMainInstance.\n"
+      "\n"
+      "Set time delay to start streaming after PPS synchronization. A value of 1500\n"
+      "means the simulation will start streaming 1.5 sec after the PPS used for\n"
+      "synchornization.\n"
+      "\n"
+      "Name Type   Description\n"
+      "---- ------ ----------------------------------------\n"
+      "Time double Time delay in msec (minimum is 500 msec)";
+    const char* const SetSyncTimeMaster::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSyncTimeMaster);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSyncTimeMaster);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSyncTimeMaster);
 
 
     SetSyncTimeMaster::SetSyncTimeMaster()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSyncTimeMaster::SetSyncTimeMaster(double time)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setTime(time);
     }
-
 
     SetSyncTimeMasterPtr SetSyncTimeMaster::create(double time)
     {
@@ -49,6 +59,12 @@ namespace Sdx
     }
 
     std::string SetSyncTimeMaster::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSyncTimeMaster::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Time"}; 
+      return names; 
+    }
 
 
     int SetSyncTimeMaster::executePermission() const

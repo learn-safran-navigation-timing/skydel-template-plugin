@@ -1,33 +1,39 @@
+
+#include "SetWavefrontJamCalibrationState.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetWavefrontJamCalibrationState
 ///
-#include "gen/SetWavefrontJamCalibrationState.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetWavefrontJamCalibrationState::CmdName = "SetWavefrontJamCalibrationState";
-    const char* const SetWavefrontJamCalibrationState::Documentation = "Set whether the JAM Calibration output is transmitting.";
+    const char* const SetWavefrontJamCalibrationState::Documentation = "Set whether the JAM Calibration output is transmitting.\n"
+      "\n"
+      "Name  Type Description\n"
+      "----- ---- ------------------------------------------------------------------------------\n"
+      "State bool True for the signal to go through the JAM Calibration output, False otherwise.";
+    const char* const SetWavefrontJamCalibrationState::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetWavefrontJamCalibrationState);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetWavefrontJamCalibrationState);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetWavefrontJamCalibrationState);
 
 
     SetWavefrontJamCalibrationState::SetWavefrontJamCalibrationState()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetWavefrontJamCalibrationState::SetWavefrontJamCalibrationState(bool state)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setState(state);
     }
-
 
     SetWavefrontJamCalibrationStatePtr SetWavefrontJamCalibrationState::create(bool state)
     {
@@ -49,6 +55,12 @@ namespace Sdx
     }
 
     std::string SetWavefrontJamCalibrationState::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetWavefrontJamCalibrationState::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"State"}; 
+      return names; 
+    }
 
 
     int SetWavefrontJamCalibrationState::executePermission() const

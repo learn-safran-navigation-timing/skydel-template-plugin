@@ -1,34 +1,41 @@
+
+#include "SetIntTxIgnoreRxAntennaGainPattern.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetIntTxIgnoreRxAntennaGainPattern
 ///
-#include "gen/SetIntTxIgnoreRxAntennaGainPattern.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetIntTxIgnoreRxAntennaGainPattern::CmdName = "SetIntTxIgnoreRxAntennaGainPattern";
-    const char* const SetIntTxIgnoreRxAntennaGainPattern::Documentation = "Set whether a dynamic transmitter should ignore the receiver's antenna gain pattern.";
+    const char* const SetIntTxIgnoreRxAntennaGainPattern::Documentation = "Set whether a dynamic transmitter should ignore the receiver's antenna gain pattern.\n"
+      "\n"
+      "Name   Type   Description\n"
+      "------ ------ -------------------------------------------------------------\n"
+      "Ignore bool   If true, the receiver's antenna gain pattern will be ignored.\n"
+      "Id     string Transmitter unique identifier.";
+    const char* const SetIntTxIgnoreRxAntennaGainPattern::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetIntTxIgnoreRxAntennaGainPattern);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetIntTxIgnoreRxAntennaGainPattern);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetIntTxIgnoreRxAntennaGainPattern);
 
 
     SetIntTxIgnoreRxAntennaGainPattern::SetIntTxIgnoreRxAntennaGainPattern()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetIntTxIgnoreRxAntennaGainPattern::SetIntTxIgnoreRxAntennaGainPattern(bool ignore, const std::string& id)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setIgnore(ignore);
       setId(id);
     }
-
 
     SetIntTxIgnoreRxAntennaGainPatternPtr SetIntTxIgnoreRxAntennaGainPattern::create(bool ignore, const std::string& id)
     {
@@ -51,6 +58,12 @@ namespace Sdx
     }
 
     std::string SetIntTxIgnoreRxAntennaGainPattern::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetIntTxIgnoreRxAntennaGainPattern::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"Ignore", "Id"}; 
+      return names; 
+    }
 
 
     int SetIntTxIgnoreRxAntennaGainPattern::executePermission() const

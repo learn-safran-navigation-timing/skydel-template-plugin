@@ -1,28 +1,38 @@
+
+#include "SetPseudorangeNoiseOffsetForSV.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetPseudorangeNoiseOffsetForSV
 ///
-#include "gen/SetPseudorangeNoiseOffsetForSV.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetPseudorangeNoiseOffsetForSV::CmdName = "SetPseudorangeNoiseOffsetForSV";
-    const char* const SetPseudorangeNoiseOffsetForSV::Documentation = "Set the satellite pseudorange noise constant offset.";
+    const char* const SetPseudorangeNoiseOffsetForSV::Documentation = "Set the satellite pseudorange noise constant offset.\n"
+      "\n"
+      "Name    Type   Description\n"
+      "------- ------ --------------------------------------------------------------------------\n"
+      "System  string \"GPS\", \"GLONASS\", \"Galileo\", \"BeiDou\", \"SBAS\", \"QZSS\", \"NavIC\" or \"PULSAR\"\n"
+      "SvId    int    Satellite SV ID.\n"
+      "Enabled bool   If true, the offset is enabled (applied)\n"
+      "Offset  double The constant offset in metters";
+    const char* const SetPseudorangeNoiseOffsetForSV::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetPseudorangeNoiseOffsetForSV);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetPseudorangeNoiseOffsetForSV);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetPseudorangeNoiseOffsetForSV);
 
 
     SetPseudorangeNoiseOffsetForSV::SetPseudorangeNoiseOffsetForSV()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetPseudorangeNoiseOffsetForSV::SetPseudorangeNoiseOffsetForSV(const std::string& system, int svId, bool enabled, double offset)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setSystem(system);
@@ -30,7 +40,6 @@ namespace Sdx
       setEnabled(enabled);
       setOffset(offset);
     }
-
 
     SetPseudorangeNoiseOffsetForSVPtr SetPseudorangeNoiseOffsetForSV::create(const std::string& system, int svId, bool enabled, double offset)
     {
@@ -55,6 +64,12 @@ namespace Sdx
     }
 
     std::string SetPseudorangeNoiseOffsetForSV::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetPseudorangeNoiseOffsetForSV::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"System", "SvId", "Enabled", "Offset"}; 
+      return names; 
+    }
 
 
     int SetPseudorangeNoiseOffsetForSV::executePermission() const

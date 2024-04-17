@@ -1,35 +1,43 @@
+
+#include "SetSpoofSignalManualPropagationLoss.h"
+
 #include "command_factory.h"
-#include "command_result_factory.h"
 #include "parse_json.hpp"
 
 ///
 /// Definition of SetSpoofSignalManualPropagationLoss
 ///
-#include "gen/SetSpoofSignalManualPropagationLoss.h"
 
 namespace Sdx
 {
   namespace Cmd
   {
     const char* const SetSpoofSignalManualPropagationLoss::CmdName = "SetSpoofSignalManualPropagationLoss";
-    const char* const SetSpoofSignalManualPropagationLoss::Documentation = "Set the manual propagation loss for the given spoofer signal. Value is used only if SetSpoofTxUseManualPropagationLoss has been set on the corresponding spoofer. This value is not preserved after simulation end.";
+    const char* const SetSpoofSignalManualPropagationLoss::Documentation = "Set the manual propagation loss for the given spoofer signal. Value is used only if SetSpoofTxUseManualPropagationLoss has been set on the corresponding spoofer. This value is not preserved after simulation end.\n"
+      "\n"
+      "Name            Type   Description\n"
+      "--------------- ------ --------------------------------------------------------------------------------------------------------\n"
+      "PropagationLoss double The propagation loss in dB to use until the next call of this command, or until manual mode is disabled.\n"
+      "TransmitterId   string Transmitter unique identifier.\n"
+      "SignalId        string Signal unique identifier.";
+    const char* const SetSpoofSignalManualPropagationLoss::TargetId = "";
 
-    REGISTER_COMMAND_FACTORY(SetSpoofSignalManualPropagationLoss);
+    REGISTER_COMMAND_TO_FACTORY_DECL(SetSpoofSignalManualPropagationLoss);
+    REGISTER_COMMAND_TO_FACTORY_IMPL(SetSpoofSignalManualPropagationLoss);
 
 
     SetSpoofSignalManualPropagationLoss::SetSpoofSignalManualPropagationLoss()
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {}
 
     SetSpoofSignalManualPropagationLoss::SetSpoofSignalManualPropagationLoss(double propagationLoss, const std::string& transmitterId, const std::string& signalId)
-      : CommandBase(CmdName)
+      : CommandBase(CmdName, TargetId)
     {
 
       setPropagationLoss(propagationLoss);
       setTransmitterId(transmitterId);
       setSignalId(signalId);
     }
-
 
     SetSpoofSignalManualPropagationLossPtr SetSpoofSignalManualPropagationLoss::create(double propagationLoss, const std::string& transmitterId, const std::string& signalId)
     {
@@ -53,6 +61,12 @@ namespace Sdx
     }
 
     std::string SetSpoofSignalManualPropagationLoss::documentation() const { return Documentation; }
+
+    const std::vector<std::string>& SetSpoofSignalManualPropagationLoss::fieldNames() const 
+    { 
+      static const std::vector<std::string> names {"PropagationLoss", "TransmitterId", "SignalId"}; 
+      return names; 
+    }
 
 
     int SetSpoofSignalManualPropagationLoss::executePermission() const
