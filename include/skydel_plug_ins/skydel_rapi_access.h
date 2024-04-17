@@ -1,33 +1,37 @@
 #ifndef SKYDEL_RAPI_ACCESS_H
 #define SKYDEL_RAPI_ACCESS_H
 
+#include <QString>
+
 #include <stdexcept>
-#include <utility>
 
 #include "command_base.h"
-#include "command_result_factory.h"
+#include "command_factory.h"
 #include "internal/skydel_rapi_interface.h"
 
 class SkydelRapiAccess : public SkydelRapiInterface
 {
 public:
+  SkydelRapiAccess(const QString& name) : m_name(name.toStdString()) {}
   inline void setRapi(SkydelRapi* rapi) override { m_rapi = rapi; }
 
   inline void post(Sdx::CommandBasePtr cmd,
-                   double timestamp = 0.0,
+                   double timestamp,
                    std::function<void(Sdx::CommandResultPtr)> callback = {},
                    bool hideFromAutomationTab = false)
   {
     if (m_rapi)
     {
-      cmd->setHidden(hideFromAutomationTab);
+      if (hideFromAutomationTab)
+      {
+        cmd->setHidden(true);
+      }
 
       if (callback)
       {
         m_rapi->post(cmd->toString(), timestamp, [callback = std::move(callback)](const std::string& result) {
           std::string errorMsg;
-          Sdx::CommandResultPtr commandResult = Sdx::CommandResultFactory::instance()->createCommandResult(result,
-                                                                                                           &errorMsg);
+          auto commandResult = Sdx::CommandFactory::instance()->createCommandResult(result, &errorMsg);
 
           if (!commandResult)
             throw std::runtime_error(errorMsg.c_str());
@@ -63,8 +67,8 @@ public:
       auto result = m_rapi->call(cmd->toString());
 
       std::string errorMsg;
-      Sdx::CommandResultPtr commandResult = Sdx::CommandResultFactory::instance()->createCommandResult(result,
-                                                                                                       &errorMsg);
+      auto commandResult = Sdx::CommandFactory::instance()->createCommandResult(result, &errorMsg);
+
       if (!commandResult)
         throw std::runtime_error(errorMsg.c_str());
 
@@ -76,6 +80,7 @@ public:
 
 private:
   SkydelRapi* m_rapi;
+  std::string m_name;
 };
 
 #endif // SKYDEL_RAPI_ACCESS_H
