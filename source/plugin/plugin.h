@@ -1,5 +1,4 @@
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#pragma once
 
 #include "skydel_plug_ins/skydel_plugin.h"
 
@@ -14,16 +13,8 @@ public:
   inline void setNotifier(SkydelNotifierInterface*) override {}
   inline void setConfiguration(const QString&, const QJsonObject&) override {}
   inline QJsonObject getConfiguration() const override { return {}; }
-  inline QWidget* createUI() override { return nullptr; }
+  inline SkydelWidgets createUI() override { return {}; }
   inline void initialize() override {}
 };
 
-// Required boilerplate
-class PluginFactory : public QObject, public SkydelPlugin<Plugin>
-{
-  Q_OBJECT
-  Q_PLUGIN_METADATA(IID "Plugin" FILE "plugin.json")
-  Q_INTERFACES(SkydelPluginBase)
-};
-
-#endif // PLUGIN_H
+REGISTER_SKYDEL_PLUGIN(Plugin)
