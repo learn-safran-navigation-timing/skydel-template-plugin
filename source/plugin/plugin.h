@@ -10,6 +10,7 @@ class Plugin : public QObject, public SkydelCoreInterface
 public:
   // SkydelCoreInterface
   inline void setLogPath(const QString&) override {}
+  inline void setInstanceIdentifier(uint32_t) override {}
   inline void setNotifier(SkydelNotifierInterface*) override {}
   inline void setConfiguration(const QString&, const QJsonObject&) override {}
   inline QJsonObject getConfiguration() const override { return {}; }
